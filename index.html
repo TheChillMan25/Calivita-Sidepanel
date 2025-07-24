@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <script
+      src="https://kit.fontawesome.com/62786e1e62.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="ui_controlls.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="body" class="editable">
+        <div
+          id="element1"
+          class="editable"
+          style="width: 10rem; height: 7rem; background-color: red"
+        >
+          <span>abc</span>
+          <span>def</span>
+        </div>
+      </div>
+      <div id="sidepanel">
+        <div id="panel-header">
+          <span id="name" class="title">Name</span>
+        </div>
+        <hr />
+        <span id="select-smt">Select something</span>
+        <div id="settings">
+          <div id="layout">
+            <span class="title">Layout</span>
+            <div id="layout-display-options">
+              <div id="primary-display-settings">
+                <div id="display" class="setting-name">Display</div>
+                <div id="displays">
+                  <div id="block" value="block" class="button">Block</div>
+                  <div id="flex" value="flex" class="button">Flex</div>
+                  <div id="grid" value="grid" class="button">Grid</div>
+                  <div id="other-display">
+                    <span id="od-text">Other</span
+                    ><i
+                      id="displays-toggle"
+                      class="fa-solid fa-angle-down toggle"
+                      style="display: flex; align-items: center"
+                    ></i>
+                  </div>
+                  <div id="display-ui-container" class="ui-container">
+                    <div id="display-options" class="menu-container">
+                      <div
+                        id="inline-block"
+                        value="inline-block"
+                        type="display-button"
+                        class="button menu-button"
+                      >
+                        Inline-block
+                      </div>
+                      <div
+                        id="inline-flex"
+                        value="inline-flex"
+                        type="display-button"
+                        class="button menu-button"
+                      >
+                        Inline-flex
+                      </div>
+                      <div
+                        id="inline-grid"
+                        value="inline-grid"
+                        type="display-button"
+                        class="button menu-button"
+                      >
+                        Inline-grid
+                      </div>
+                      <div
+                        id="inline"
+                        value="inline"
+                        type="display-button"
+                        class="button menu-button"
+                      >
+                        Inline
+                      </div>
+                      <hr />
+                      <div
+                        id="none"
+                        value="none"
+                        type="display-button"
+                        class="button menu-button"
+                      >
+                        None
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="secondary-display-settings">
+                <div id="flex-settings" class="secondary-display-setting">
+                  <span id="direction" class="setting-name">Direction</span>
+                  <div id="flex-directions">
+                    <div id="row" value="row" class="button">
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div id="column" value="column" class="button">
+                      <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+                    <div id="wrap" value="wrap">
+                      <span id="wrap-text">Wrap</span>
+                      <div id="other-wrap">
+                        <i
+                          id="wrap-toggle"
+                          class="fa-solid fa-angle-down toggle"
+                          style="display: flex; align-items: center"
+                        ></i>
+                        <div id="wrap-ui-container" class="ui-container">
+                          <div id="wrap-options" class="menu-container">
+                            <div id="ltr">
+                              <h4>Left to right</h4>
+                              <div id="ltr-wraps" class="wrap-selection">
+                                <div
+                                  id="ltr-wrap-down"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="ltr-wrap-down"
+                                >
+                                  Wrap down
+                                </div>
+                                <div
+                                  id="ltr-wrap-up"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="ltr-wrap-up"
+                                >
+                                  Wrap up
+                                </div>
+                              </div>
+                              <hr />
+                            </div>
+                            <div id="rtl">
+                              <h4>Right to left</h4>
+                              <div id="rtl-wraps" class="wrap-selection">
+                                <div
+                                  id="rtl-single-row"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="rtl-single-row"
+                                >
+                                  Single row
+                                </div>
+                                <div
+                                  id="rtl-wrap-down"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="rtl-wrap-down"
+                                >
+                                  Wrap down
+                                </div>
+                                <div
+                                  id="rtl-wrap-up"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="rtl-wrap-up"
+                                >
+                                  Wrap up
+                                </div>
+                              </div>
+                              <hr />
+                            </div>
+                            <div id="ttb">
+                              <h4>Top to bottom</h4>
+                              <div id="ttb-wraps" class="wrap-selection">
+                                <div
+                                  id="ttb-wrap-right"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="ttb-wrap-right"
+                                >
+                                  Wrap right
+                                </div>
+                                <div
+                                  id="ttb-wrap-left"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="ttb-wrap-left"
+                                >
+                                  Wrap left
+                                </div>
+                              </div>
+                              <hr />
+                            </div>
+                            <div id="btt">
+                              <h4>Bottom to top</h4>
+                              <div id="btt-wraps" class="wrap-selection">
+                                <div
+                                  id="btt-single-column"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="btt-single-column"
+                                >
+                                  Single column
+                                </div>
+                                <div
+                                  id="btt-wrap-right"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="btt-wrap-right"
+                                >
+                                  Wrap right
+                                </div>
+                                <div
+                                  id="btt-wrap-left"
+                                  type="wrap-button"
+                                  class="button menu-button"
+                                  value="btt-wrap-left"
+                                >
+                                  Wrap left
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span id="align" class="setting-name">Align</span>
+                  <div id="flex-align">
+                    <div id="align-box">
+                      <div id="top-left" value="top-left" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="top-center" value="top-center" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="top-right" value="top-right" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="left" value="left" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="center" value="center" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="right" value="right" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div id="bottom-left" value="bottom-left" class="button">
+                        <rect class="rect"></rect>
+                      </div>
+                      <div
+                        id="bottom-center"
+                        value="bottom-center"
+                        class="button"
+                      >
+                        <rect class="rect"></rect>
+                      </div>
+                      <div
+                        id="bottom-right"
+                        value="bottom-right"
+                        class="button"
+                      >
+                        <rect class="rect"></rect>
+                      </div>
+                    </div>
+                    <div id="align-axis">
+                      <span class="setting-name">X</span>
+                      <div
+                        id="align-x"
+                        value="center"
+                        class="align-axis toggle"
+                      >
+                        Center
+                      </div>
+                      <span class="setting-name">Y</span>
+                      <div
+                        id="align-y"
+                        value="center"
+                        class="align-axis toggle"
+                      >
+                        Center
+                      </div>
+                      <div id="alignment-ui-container" class="ui-container">
+                        <div id="align-horizontal" class="menu-container">
+                          <div
+                            id="x-left"
+                            class="alignment-option button horizontal menu-button"
+                            value="flex-start"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_horizontal_left </span
+                            >Left
+                          </div>
+                          <div
+                            id="x-center"
+                            class="alignment-option button horizontal menu-button"
+                            value="center"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_horizontal_center </span
+                            >Center
+                          </div>
+                          <div
+                            id="x-right"
+                            class="alignment-option button horizontal menu-button"
+                            value="flex-end"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_horizontal_right </span
+                            >Right
+                          </div>
+                          <hr />
+                          <div
+                            id="space-between"
+                            class="alignment-option button horizontal menu-button"
+                            value="space-between"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_justify_space_between </span
+                            >Space between
+                          </div>
+                          <div
+                            id="space-around"
+                            class="alignment-option button horizontal menu-button"
+                            value="space-around"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_justify_space_around </span
+                            >Space around
+                          </div>
+                        </div>
+                        <div id="align-vertical" class="menu-container">
+                          <div
+                            id="y-top"
+                            class="alignment-option button vertical menu-button"
+                            value="flex-start"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_vertical_top </span
+                            >Top
+                          </div>
+                          <div
+                            id="y-center"
+                            class="alignment-option button vertical menu-button"
+                            value="center"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_vertical_center </span
+                            >Center
+                          </div>
+                          <div
+                            id="y-bottom"
+                            class="alignment-option button vertical menu-button"
+                            value="flex-end"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_vertical_bottom </span
+                            >Bottom
+                          </div>
+                          <hr />
+                          <div
+                            id="stretch"
+                            class="alignment-option button vertical menu-button"
+                            value="stretch"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_justify_space_between </span
+                            >Stretch
+                          </div>
+                          <div
+                            id="baseline"
+                            class="alignment-option button vertical menu-button"
+                            value="baseline"
+                          >
+                            <span class="material-symbols-outlined">
+                              align_justify_space_around </span
+                            >Baseline
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span id="flex-gap" class="setting-name">Gap</span>
+                  <div id="flex-gap">
+                    <input
+                      type="range"
+                      name="flex-gap-range"
+                      id="flex-gap-range"
+                      min="0"
+                      max="100"
+                      value="0"
+                    />
+                    <input
+                      type="number"
+                      name="flex-gap-number"
+                      id="flex-gap-number"
+                      min="0"
+                      max="100"
+                      step="10"
+                      value="0"
+                    />
+                    <span>px</span>
+                  </div>
+                </div>
+                <div id="grid-settings" class="secondary-display-setting"></div>
+                <div
+                  id="inline-block-settings"
+                  class="secondary-display-setting"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

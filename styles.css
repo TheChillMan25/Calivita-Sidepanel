@@ -1,0 +1,273 @@
+* {
+  user-select: none;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-size: large;
+}
+
+html,
+body,
+#page {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+h4 {
+  color: whitesmoke;
+}
+#page {
+  display: flex;
+}
+#body {
+  width: 100%;
+}
+hr {
+  margin: 0.5rem 0;
+  width: 100%;
+  background-color: #999;
+}
+.title {
+  font-size: larger;
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+#sidepanel {
+  box-sizing: border-box;
+  padding: 0.3rem;
+  min-width: 15rem;
+  background-color: #333;
+  color: #999;
+  font-size: small;
+}
+.editable:hover,
+.selected {
+  border: solid #2496ff 1px;
+}
+
+#panel-header {
+  display: flex;
+  align-items: center;
+}
+
+#layout-display-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setting-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button,
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+}
+
+#other-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+}
+
+.pressed-button {
+  background-color: #555;
+  color: whitesmoke;
+}
+
+#displays,
+#flex-directions {
+  border: 0.1rem solid #444;
+  display: flex;
+  background-color: #222;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  width: 100%;
+}
+
+#primary-display-settings,
+#secondary-display-settings {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#secondary-display-settings {
+  flex-direction: column;
+}
+
+.secondary-display-setting {
+  display: none;
+}
+
+#flex-settings {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+#wrap {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+}
+
+#flex-directions .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+#flex-directions .button i {
+  padding: 0;
+}
+
+#flex-align {
+  display: flex;
+  gap: 0.3rem;
+}
+
+#align-box {
+  display: grid;
+  gap: 0.1rem;
+  grid-template-columns: auto auto auto;
+  border-radius: 0.2rem;
+  padding: 0.1rem;
+  background-color: #222;
+  border: 0.1rem solid #444;
+}
+
+#align-box .button {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.rect {
+  width: 3px;
+  height: 3px;
+  background-color: #999;
+}
+
+#align-axis {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.align-axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 5rem;
+  background-color: #555;
+  border-radius: 0.2rem;
+}
+
+.button:hover,
+.toggle:hover {
+  background-color: #777;
+  color: whitesmoke;
+}
+.ui-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.menu-container {
+  display: none;
+  position: absolute;
+  right: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  background-color: #444;
+  color: #999;
+}
+
+#wrap-options {
+  top: 154px;
+  width: 8rem;
+}
+
+#display-options {
+  top: 100px;
+}
+
+.wrap-option {
+  padding: 0.2rem;
+}
+
+#align-horizontal {
+  top: 13rem;
+  width: 9rem;
+}
+
+#align-vertical {
+  top: 16rem;
+  width: 9rem;
+}
+
+.alignment-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#flex-gap {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+#flex-gap-range {
+  width: 50%;
+}
+
+#flex-gap-number {
+  width: 3rem;
+}
+
+input[type="range"] {
+  height: 0.2rem;
+  border-radius: 0%;
+  appearance: none;
+  background-color: #222;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.3rem;
+  height: 0.7rem;
+  background: whitesmoke;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 0.3rem;
+  height: 0.7rem;
+  background: whitesmoke;
+  cursor: pointer;
+}
