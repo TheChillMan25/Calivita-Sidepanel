@@ -3,6 +3,9 @@ let selectedDisplayObject = null;
 let selectedDirectionObject = null;
 let selectedWrapObject = null;
 let selectedAlignmentObject = null;
+let selectedFlexGapObject = null;
+let selectedFlexRowGapObject = null;
+let selectedFlexColumnGapObject = null;
 
 $(document).ready(function () {
   pageRefreshLoad();
@@ -82,7 +85,6 @@ $(document).ready(function () {
     event.stopPropagation();
     let value = $(this).attr("value");
     setWrap(value, $(this));
-    hideWrapOptions();
   });
 
   $("#align-box").on("click", ".button", function () {
@@ -116,14 +118,104 @@ $(document).ready(function () {
     hideAlignmentOptions();
   });
 
-  $("#alignment-ui-container").on("click", ".button", function () {
+  $("#align-axis").on("click", ".button", function () {
     setAlignmentWithMenu($(this).attr("value"), $(this));
   });
 
   $("#flex-gap-range").on("input", function () {
     let gapValue = $(this).val();
-    $("#flex-gap-number").attr("value", gapValue);
-    setGap(gapValue);
+    setGap(gapValue, $("#flex-gap-type").attr("value"));
+  });
+
+  $("#flex-gap-value").on("input", function () {
+    let gapValue = parseInt($(this).val());
+    if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
+      setGap(
+        gapValue,
+        $("#flex-gap-type").attr("value"),
+        selectedFlexGapObject,
+        "gap"
+      );
+    }
+  });
+
+  $("#flex-gap-type").on("click", function () {
+    showFlexGapOptions("gap");
+  });
+
+  $("#flex-gap-ui-container").on("click", function () {
+    hideFlexGapOptions();
+  });
+
+  $("#flex-gap-options").on("click", ".button", function (event) {
+    event.stopPropagation();
+    let gapValue = $("#flex-gap-range").val();
+    let gapType = $(this).attr("value");
+    setGap(gapValue, gapType, $(this));
+  });
+
+  $("#flex-gap-lock").on("click", function () {
+    toggleFlexGapOptions();
+  });
+
+  $("#flex-row-gap-type").on("click", function () {
+    showFlexGapOptions("row-gap");
+  });
+  $("#flex-row-gap-text").on("input", function () {
+    let gapValue = parseInt($(this).val());
+    let colGapValue = parseInt($("#flex-column-gap-text").val());
+    if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
+      setGap(
+        gapValue,
+        $("#flex-row-gap-type").attr("value"),
+        selectedFlexRowGapObject,
+        "row-gap"
+      );
+      if (!isNaN(colGapValue) && colGapValue >= 0 && colGapValue <= 100) {
+        setGap(
+          colGapValue,
+          $("#flex-column-gap-type").attr("value"),
+          selectedFlexColumnGapObject,
+          "column-gap"
+        );
+      }
+    }
+  });
+  $("#flex-row-gap-options").on("click", ".button", function (event) {
+    event.stopPropagation();
+    let gapValue = $("#flex-row-gap-text").val();
+    let gapType = $(this).attr("value");
+    setGap(gapValue, gapType, $(this), "row-gap");
+  });
+
+  $("#flex-column-gap-type").on("click", function () {
+    showFlexGapOptions("column-gap");
+  });
+  $("#flex-column-gap-text").on("input", function () {
+    let gapValue = parseInt($(this).val());
+    let rowGapValue = parseInt($("#flex-row-gap-text").val());
+    if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
+      setGap(
+        gapValue,
+        $("#flex-column-gap-type").attr("value"),
+        selectedFlexColumnGapObject,
+        "column-gap"
+      );
+      if (!isNaN(rowGapValue) && rowGapValue >= 0 && rowGapValue <= 100) {
+        setGap(
+          rowGapValue,
+          $("#flex-row-gap-type").attr("value"),
+          selectedFlexRowGapObject,
+          "row-gap"
+        );
+      }
+    }
+  });
+  $("#flex-column-gap-options").on("click", ".button", function (event) {
+    event.stopPropagation();
+    let gapValue = $("#flex-column-gap-text").val();
+    let gapType = $(this).attr("value");
+    setGap(gapValue, gapType, $(this), "column-gap");
   });
 });
 
@@ -193,10 +285,10 @@ function pageRefreshLoad() {
   if (localStorage.getItem("selectedDomObject") !== null) {
     selectedDomObject = $("#" + localStorage.getItem("selectedDomObject"));
     $("#name").text(getElementName(selectedDomObject));
-    refreshStylePanel();
   } else {
     $("#name").text("None selected");
   }
+  refreshStylePanel();
 }
 
 function refreshStylePanel() {
@@ -238,8 +330,50 @@ function refreshStylePanel() {
           case "justify-content":
             break;
           case "gap":
-            $("#flex-gap-range").attr("value", parseInt(value));
-            $("#flex-gap-number").attr("value", parseInt(value));
+            if (extractGapType(styleData["gap"]) !== "%") {
+              selectedFlexGapObject = $(
+                "#flex-gap-" + extractGapType(styleData["gap"])
+              );
+            } else {
+              selectedFlexGapObject = $("#flex-gap-percent");
+            }
+            selectedFlexGapObject.addClass("pressed-button");
+            $("#flex-gap-range").val(parseInt(value));
+            $("#flex-gap-value").val(parseInt(value));
+            $("#flex-gap-type-text").text(extractGapType(value).toUpperCase());
+            $("#flex-gap-type").attr("value", extractGapType(value));
+            break;
+          case "row-gap":
+            if (extractGapType(styleData["row-gap"]) !== "%") {
+              selectedFlexRowGapObject = $(
+                "#flex-row-gap-" + extractGapType(styleData["row-gap"])
+              );
+            } else {
+              selectedFlexRowGapObject = $("#flex-row-gap-percent");
+            }
+            selectedFlexRowGapObject.addClass("pressed-button");
+            $("#flex-row-gap-range").val(parseInt(value));
+            $("#flex-row-gap-value").val(parseInt(value));
+            $("#flex-row-gap-type-text").text(
+              extractGapType(value).toUpperCase()
+            );
+            $("#flex-row-gap-type").attr("value", extractGapType(value));
+            break;
+          case "column-gap":
+            if (extractGapType(styleData["column-gap"]) !== "%") {
+              selectedFlexColumnGapObject = $(
+                "#flex-column-gap-" + extractGapType(styleData["column-gap"])
+              );
+            } else {
+              selectedFlexColumnGapObject = $("#flex-column-gap-percent");
+            }
+            selectedFlexColumnGapObject.addClass("pressed-button");
+            $("#flex-column-gap-range").val(parseInt(value));
+            $("#flex-column-gap-value").val(parseInt(value));
+            $("#flex-column-gap-type-text").text(
+              extractGapType(value).toUpperCase()
+            );
+            $("#flex-column-gap-type").attr("value", extractGapType(value));
             break;
           default:
             console.warn("Unknown style key: " + key);
@@ -423,14 +557,18 @@ function setDirection(value, button) {
     selectedDomObject.css({
       "flex-direction": value,
       "flex-wrap": "nowrap",
-      "align-items": "flex-start",
-      "justify-content": "flex-start",
     });
+    if (selectedDomObject.css("align-items") === "normal") {
+      selectedDomObject.css("align-items", "flex-start");
+      saveStyle([{ type: "align-items", value: "flex-start" }]);
+    }
+    if (selectedDomObject.css("justify-content") === "normal") {
+      selectedDomObject.css("justify-content", "flex-start");
+      saveStyle([{ type: "justify-content", value: "flex-start" }]);
+    }
     saveStyle([
       { type: "flex-direction", value: value },
       { type: "flex-wrap", value: "nowrap" },
-      { type: "align-items", value: "flex-start" },
-      { type: "justify-content", value: "flex-start" },
     ]);
     handleDisplay($("#directions .button"), button, "direction");
     refreshStylePanel();
@@ -523,7 +661,9 @@ function setAlignmentWithMenu(value, button) {
     },
     { type: "align-items", value: selectedDomObject.css("align-items") },
   ]);
+  resetAlingmentBox();
   refreshStylePanel();
+  hideAlignmentOptions();
 }
 
 function setAlignmentWithBox(value, button) {
@@ -595,8 +735,31 @@ function setAlignmentWithBox(value, button) {
   handleDisplay($("#align-box .button"), button, "alignment");
   refreshStylePanel();
 }
+/**
+ * Sets gap value
+ * @param {*} value Gap size (number)
+ * @param {*} gapType Gap type (ex.: px, em, etc)
+ * @param {*} button Dom element to be presented as active (default: null)
+ * @param {*} type Gap, row-gap, column-gap (default: "gap")
+ */
+function setGap(value, gapType, button = null, type = "gap") {
+  if (value >= 0 && value <= 100) {
+    selectedDomObject.css(type, value + gapType);
+    saveStyle([{ type: type, value: value + gapType }]);
+    if (button) {
+      let objects = button.parent().find(".button");
+      handleDisplay(objects, button, type);
+    }
+    refreshStylePanel();
+  }
+}
 
-function setGap(value) {
-  selectedDomObject.css("gap", value + "px");
-  saveStyle([{ type: "gap", value: value + "px" }]);
+function extractGapType(gapValue) {
+  let gapType = "";
+  for (let i = 0; i < gapValue.length; i++) {
+    if (isNaN(parseInt(gapValue[i], 10))) {
+      gapType += gapValue[i];
+    }
+  }
+  return gapType;
 }

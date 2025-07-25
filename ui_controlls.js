@@ -23,10 +23,45 @@ function showAlignmentOptions(axis) {
   $("#alignment-options").css("display", "flex");
   $("#" + axis).show();
 }
+
 function hideAlignmentOptions() {
   $("#alignment-ui-container").hide();
   $("#align-horizontal").hide();
   $("#align-vertical").hide();
+}
+
+function showFlexGapOptions(type) {
+  switch (type) {
+    case "gap":
+      $("#flex-gap-options").show();
+      $("#flex-gap-ui-container").show();
+      break;
+    case "row-gap":
+      $("#flex-row-gap-options").show();
+      $("#flex-gap-ui-container").show();
+      break;
+    case "column-gap":
+      $("#flex-column-gap-options").show();
+      $("#flex-gap-ui-container").show();
+      break;
+  }
+}
+
+function hideFlexGapOptions() {
+  $("#flex-gap-options").hide();
+  $("#flex-gap-ui-container").hide();
+  $("#flex-row-gap-options").hide();
+  $("#flex-column-gap-options").hide();
+}
+
+function toggleFlexGapOptions() {
+  if ($("#flex-gap-unlocked").css("display") !== "none") {
+    $("#flex-gap-unlocked").hide();
+    $("#flex-gap-default").show();
+  } else {
+    $("#flex-gap-unlocked").css("display", "flex");
+    $("#flex-gap-default").hide();
+  }
 }
 
 function checkForShowDisplaySettings(value) {
@@ -63,15 +98,15 @@ function getDisplayName(display) {
 function getElementName(element) {
   return element.attr("id")[0].toUpperCase() + element.attr("id").slice(1);
 }
-
+/**
+ *
+ * @param {*} objects Dom elements to reset
+ * @param {*} button Dom element to set as active
+ * @param {*} type CSS property that identifies the button
+ */
 function handleDisplay(objects, button, type) {
   if (button && button.object) {
     button = button.object;
-  }
-  if (type !== "wrap") {
-    if ($("#wrap").hasClass("pressed-button")) {
-      $("#wrap").removeClass("pressed-button");
-    }
   }
   objects.removeClass("pressed-button");
   switch (type) {
@@ -80,6 +115,9 @@ function handleDisplay(objects, button, type) {
       break;
     case "direction":
       selectedDirectionObject = button;
+      if ($("#wrap").hasClass("pressed-button")) {
+        $("#wrap").removeClass("pressed-button");
+      }
       break;
     case "wrap":
       selectedWrapObject = button;
@@ -91,6 +129,18 @@ function handleDisplay(objects, button, type) {
         '<span class="material-symbols-outlined">align_justify_center</span>'
       );
       break;
+    case "gap":
+      selectedFlexGapObject = button;
+      hideFlexGapOptions("gap");
+      break;
+    case "row-gap":
+      selectedFlexRowGapObject = button;
+      hideFlexGapOptions("row-gap");
+      break;
+    case "column-gap":
+      selectedFlexColumnGapObject = button;
+      hideFlexGapOptions("column-gap");
+      break;
     default:
       console.error("Unkown case name: " + type);
       break;
@@ -100,10 +150,12 @@ function handleDisplay(objects, button, type) {
       case "display-button":
         $("#od-text").text(getDisplayName(selectedDisplayObject.attr("value")));
         $("#other-display").addClass("pressed-button");
+        hideDisplayOptions();
         break;
       case "wrap-button":
         $("#wrap-text").text(selectedWrapObject.text());
         $("#wrap").addClass("pressed-button");
+        hideWrapOptions();
         break;
       default:
         console.error("Unkown button type: " + button.attr("type"));
