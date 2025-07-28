@@ -38,7 +38,13 @@
         <hr />
         <span id="select-smt">Select something</span>
         <div id="settings">
-          <div id="layout">
+          <!-- <div id="flex-child" class="setting-container">
+            <span class="title">Flex child</span>
+            <div id="sizing-settings">
+              <span class="setting-name">Sizing</span>
+            </div>
+          </div> -->
+          <div id="layout" class="setting-container">
             <span class="title">Layout</span>
             <div id="layout-display-options">
               <div id="primary-display-settings">
@@ -444,8 +450,8 @@
                     <div id="flex-gap-unlocked" class="flex-gap-container">
                       <input
                         type="text"
-                        name="flex-row-gap-text"
-                        id="flex-row-gap-text"
+                        name="flex-row-gap-value"
+                        id="flex-row-gap-value"
                         min="0"
                         max="100"
                         step="10"
@@ -490,8 +496,8 @@
                       </div>
                       <input
                         type="text"
-                        name="flex-column-gap-text"
-                        id="flex-column-gap-text"
+                        name="flex-column-gap-value"
+                        id="flex-column-gap-value"
                         min="0"
                         max="100"
                         step="10"

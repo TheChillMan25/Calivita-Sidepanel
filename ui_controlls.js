@@ -111,34 +111,28 @@ function handleDisplay(objects, button, type) {
   objects.removeClass("pressed-button");
   switch (type) {
     case "display":
-      selectedDisplayObject = button;
       break;
     case "direction":
-      selectedDirectionObject = button;
       if ($("#wrap").hasClass("pressed-button")) {
         $("#wrap").removeClass("pressed-button");
       }
       break;
-    case "wrap":
-      selectedWrapObject = button;
+    case "flex-wrap":
+      displaySelectedWrapOption(button);
       break;
     case "alignment":
-      selectedAlignmentObject = button;
       resetAlingmentBox();
-      selectedAlignmentObject.html(
+      button.html(
         '<span class="material-symbols-outlined">align_justify_center</span>'
       );
       break;
     case "gap":
-      selectedFlexGapObject = button;
       hideFlexGapOptions("gap");
       break;
     case "row-gap":
-      selectedFlexRowGapObject = button;
       hideFlexGapOptions("row-gap");
       break;
     case "column-gap":
-      selectedFlexColumnGapObject = button;
       hideFlexGapOptions("column-gap");
       break;
     default:
@@ -148,12 +142,12 @@ function handleDisplay(objects, button, type) {
   if (button.hasClass("menu-button")) {
     switch (button.attr("type")) {
       case "display-button":
-        $("#od-text").text(getDisplayName(selectedDisplayObject.attr("value")));
+        $("#od-text").text(getDisplayName(button.attr("value")));
         $("#other-display").addClass("pressed-button");
         hideDisplayOptions();
         break;
       case "wrap-button":
-        $("#wrap-text").text(selectedWrapObject.text());
+        $("#wrap-text").text(button.text());
         $("#wrap").addClass("pressed-button");
         hideWrapOptions();
         break;
@@ -165,9 +159,9 @@ function handleDisplay(objects, button, type) {
   button.addClass("pressed-button");
 }
 
-function displaySelectedWrapOption() {
-  if (selectedWrapObject) {
-    switch (selectedWrapObject.attr("value")) {
+function displaySelectedWrapOption(button) {
+  if (button) {
+    switch (button.attr("value")) {
       case "ltr-wrap-down":
         $("#ltr-wrap-down").addClass("pressed-button");
         $("#wrap-text").text("Wrap down");
