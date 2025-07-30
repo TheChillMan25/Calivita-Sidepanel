@@ -1,4 +1,10 @@
 let selectedDomObject = null;
+let alignBoxMarkerCenter =
+  '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
+/* let alignBoxMarkerLeft =
+  '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M2 3h8v2H2zm0 4h12v2H2zm0 4h8v2H2z"/></svg>';
+let alignBoxMarkerRight =
+  '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M6 3h8v2H6zM2 7h12v2H2zm4 4h8v2H6z"/></svg>'; */
 
 $(document).ready(function () {
   pageRefreshLoad();
@@ -12,9 +18,6 @@ $(document).ready(function () {
   }
 
   $(".editable").each(function () {
-    $(this).dblclick(function () {
-      console.log("ASD");
-    });
     $(this).on("click", function (event) {
       if ($(this).attr("id") === "body") {
         $("#none").hide();
@@ -28,7 +31,54 @@ $(document).ready(function () {
     });
   });
 
-  setUpFlexControlls();
+  $(".hoverable").on("mouseenter", function () {
+    if ($(this).attr("data-desc") && !$(this).hasClass("menu-button")) {
+      $("#tooltip").text($(this).attr("data-desc"));
+      let dif = ($("#tooltip").width() - $(this).width()) / 2;
+      let posLeft = $(this).position()["left"] - dif;
+      if (posLeft + $("#tooltip").width() > window.innerWidth) {
+        posLeft = window.innerWidth - $("#tooltip").width() - 8;
+      }
+      if ($("#tooltip").width() > 100) {
+        $("#tooltip").css("right", ".5rem");
+        posLeft = window.innerWidth - 14.5 * 16;
+      }
+      let posTop = window.innerHeight - $(this).position()["top"] + 10;
+      $("#tooltip").css("bottom", posTop);
+      $("#tooltip").css("left", posLeft);
+      $("#tooltip").show();
+    }
+  });
+  $(".hoverable").on("mouseleave", function () {
+    $("#tooltip").hide();
+    $("#tooltip").css("right", "unset");
+  });
+
+  $(".align-hoverable").on("mouseenter", function () {
+    if ($(this).hasClass("horizontal")) {
+      if ($(this).attr("data-desc").includes("Align children to")) {
+        let domDir = selectedDomObject.css("flex-direction");
+        let dir =
+          domDir === "row" || domDir === "row-reverse" ? "row" : "column";
+        $("#align-h-data-desc").text($(this).attr("data-desc") + dir);
+      } else {
+        $("#align-h-data-desc").text($(this).attr("data-desc"));
+      }
+    } else if ($(this).hasClass("vertical")) {
+      if (
+        $(this).attr("data-desc").includes("Align children to") &&
+        !$(this).attr("data-desc").includes("baseline")
+      ) {
+        let domDir = selectedDomObject.css("flex-direction");
+        let dir =
+          domDir === "row" || domDir === "row-reverse" ? "row" : "column";
+        $("#align-v-data-desc").text($(this).attr("data-desc") + dir);
+      } else {
+        $("#align-v-data-desc").text($(this).attr("data-desc"));
+      }
+    }
+  });
+  setUpControlls();
 });
 
 /**
@@ -52,7 +102,7 @@ function selectDomObject(object) {
 
 /**
  * Saves data from objects in array
- * @param {Array} dataObjects Array of objects to save ([{display: "block"}, {etc...}])
+ * @param {Array} dataObjects Array of objects to save - ex.:[{type: "display", value: "block"}, {etc...}]
  */
 function saveStyle(dataObjects) {
   dataObjects.forEach((data) => {
@@ -115,6 +165,11 @@ function pageRefreshLoad() {
 }
 
 function refreshStylePanel() {
+  if (checkFlexChild()) $("#flex-child").show();
+  else $("#flex-child").hide();
+  if (selectedDomObject.attr("id") === "body") {
+    $("#flex-child").hide();
+  }
   $("#sidepanel .button").removeClass("pressed-button");
   try {
     let styleData = JSON.parse(
@@ -150,6 +205,7 @@ function refreshStylePanel() {
             );
             break;
           case "align-items":
+            resetAlingmentBox();
             selectAlignmentObject(
               styleData["align-items"],
               styleData["justify-content"]
@@ -159,44 +215,56 @@ function refreshStylePanel() {
             break;
           case "gap":
             if (extractGapType(styleData["gap"]) !== "%") {
-              $("#flex-gap-" + extractGapType(styleData["gap"])).addClass(
+              $("#gap-" + extractGapType(styleData["gap"])).addClass(
                 "pressed-button"
               );
             } else {
-              $("#flex-gap-percent").addClass("pressed-button");
+              $("#gap-percent").addClass("pressed-button");
             }
-            $("#flex-gap-range").val(parseInt(value));
-            $("#flex-gap-value").val(parseInt(value));
-            $("#flex-gap-type-text").text(extractGapType(value).toUpperCase());
-            $("#flex-gap-type").attr("value", extractGapType(value));
+            $("#gap-range").val(parseInt(value));
+            $("#gap-value").val(parseInt(value));
+            $("#gap-type-text").text(extractGapType(value).toUpperCase());
+            $("#gap-type").attr("data-value", extractGapType(value));
             break;
           case "row-gap":
             if (extractGapType(value) !== "%") {
-              $("#flex-row-gap-" + extractGapType(value)).addClass(
-                "pressed-button"
-              );
+              $("#row-gap-" + extractGapType(value)).addClass("pressed-button");
             } else {
-              $("#flex-row-gap-percent").addClass("pressed-button");
+              $("#row-gap-percent").addClass("pressed-button");
             }
-            $("#flex-row-gap-value").val(parseInt(value));
-            $("#flex-row-gap-type-text").text(
-              extractGapType(value).toUpperCase()
-            );
-            $("#flex-row-gap-type").attr("value", extractGapType(value));
+            $("#row-gap-value").val(parseInt(value));
+            $("#row-gap-type-text").text(extractGapType(value).toUpperCase());
+            $("#row-gap-type").attr("data-value", extractGapType(value));
             break;
           case "column-gap":
             if (extractGapType(value) !== "%") {
-              $("#flex-column-gap-" + extractGapType(value)).addClass(
+              $("#column-gap-" + extractGapType(value)).addClass(
                 "pressed-button"
               );
             } else {
-              $("#flex-column-gap-percent").addClass("pressed-button");
+              $("#column-gap-percent").addClass("pressed-button");
             }
-            $("#flex-column-gap-value").val(parseInt(value));
-            $("#flex-column-gap-type-text").text(
+            $("#column-gap-value").val(parseInt(value));
+            $("#column-gap-type-text").text(
               extractGapType(value).toUpperCase()
             );
-            $("#flex-column-gap-type").attr("value", extractGapType(value));
+            $("#column-gap-type").attr("data-value", extractGapType(value));
+            break;
+          case "grid-template-rows":
+            $("#grid-rows").attr("value", countGridColsRows(value));
+            break;
+          case "grid-template-columns":
+            $("#grid-columns").attr("value", countGridColsRows(value));
+            break;
+          case "grid-auto-flow":
+            switch (value) {
+              case "row":
+                $("#grid-horizontal").addClass("pressed-button");
+                break;
+              case "column":
+                $("#grid-vertical").addClass("pressed-button");
+                break;
+            }
             break;
           default:
             console.warn("Unknown style key: " + key);
@@ -232,6 +300,7 @@ function selectWrapObject(flexDirection, flexWrap) {
   const key = `${flexDirection}|${flexWrap}`;
   if (wrapMap[key]) {
     $("#wrap").addClass("pressed-button");
+    $("#wrap").attr("value", wrapMap[key].slice(1));
     return $(wrapMap[key]);
   } else {
     if (
@@ -239,7 +308,6 @@ function selectWrapObject(flexDirection, flexWrap) {
       (flexDirection === "row" || flexDirection == "column")
     ) {
       $("#wrap").removeClass("pressed-button");
-      $("#wrap-text").text("Wrap");
       return;
     } else
       console.error("Unknown wrap configuration: ", flexDirection, flexWrap);
@@ -283,9 +351,12 @@ function selectAlignmentObject(alignItems, justifyContent) {
     const alignX = $("#align-x");
     const alignY = $("#align-y");
     $(alignmentMap[key]).addClass("pressed-button");
-    $(alignmentMap[key]).html(
-      '<span class="material-symbols-outlined">align_justify_center</span>'
-    );
+    if (
+      selectedDomObject.css("flex-direction") === "row" ||
+      selectedDomObject.css("flex-direction") === "row-reverse"
+    ) {
+    }
+    $(alignmentMap[key]).html(alignBoxMarkerCenter);
     const alignMap = {
       "top-left": {
         css: { "align-items": "flex-start", "justify-content": "flex-start" },
@@ -358,301 +429,51 @@ function selectAlignmentObject(alignItems, justifyContent) {
       $("#align-x").text("Space ar...");
   }
 }
-/**
- *
- * @param {*} value
- * @param {*} button
- */
-function setDisplay(value, button) {
-  if (selectedDomObject) {
-    selectedDomObject.css("display", value);
-    saveStyle([{ type: "display", value: value }]);
-    checkForShowDisplaySettings(value);
-    handleDisplay($("#displays .button"), button.object, button.type);
-    refreshStylePanel();
-  }
-}
-/**
- *
- * @param {string} value Value of the direction property
- * @param {*} button Button to set as active
- */
-function setDirection(value, button) {
-  if (selectedDomObject) {
-    selectedDomObject.css({
-      "flex-direction": value,
-      "flex-wrap": "nowrap",
-    });
-    if (selectedDomObject.css("align-items") === "normal") {
-      selectedDomObject.css("align-items", "flex-start");
-      saveStyle([{ type: "align-items", value: "flex-start" }]);
-    }
-    if (selectedDomObject.css("justify-content") === "normal") {
-      selectedDomObject.css("justify-content", "flex-start");
-      saveStyle([{ type: "justify-content", value: "flex-start" }]);
-    }
-    saveStyle([
-      { type: "flex-direction", value: value },
-      { type: "flex-wrap", value: "nowrap" },
-    ]);
-    handleDisplay($("#directions .button"), button, "direction");
-    refreshStylePanel();
-  }
-}
-/**
- *
- * @param {string} value Value of the pressed button
- * @param {*} button Button to set as active
- */
-function setWrap(value, button) {
-  switch (value) {
-    case "ltr-wrap-down":
-      selectedDomObject.css({
-        "flex-direction": "row",
-        "flex-wrap": "wrap",
-      });
-      break;
-    case "ltr-wrap-up":
-      selectedDomObject.css({
-        "flex-direction": "row",
-        "flex-wrap": "wrap-reverse",
-      });
-      break;
-    case "rtl-single-row":
-      selectedDomObject.css({
-        "flex-direction": "row-reverse",
-        "flex-wrap": "nowrap",
-      });
-      break;
-    case "rtl-wrap-down":
-      selectedDomObject.css({
-        "flex-direction": "row-reverse",
-        "flex-wrap": "wrap",
-      });
-      break;
-    case "rtl-wrap-up":
-      selectedDomObject.css({
-        "flex-direction": "row-reverse",
-        "flex-wrap": "wrap-reverse",
-      });
-      break;
-    case "ttb-wrap-right":
-      selectedDomObject.css({
-        "flex-direction": "column",
-        "flex-wrap": "wrap",
-      });
-      break;
-    case "ttb-wrap-left":
-      selectedDomObject.css({
-        "flex-direction": "column",
-        "flex-wrap": "wrap-reverse",
-      });
-      break;
-    case "btt-single-column":
-      selectedDomObject.css({
-        "flex-direction": "column-reverse",
-        "flex-wrap": "nowrap",
-      });
-      break;
-    case "btt-wrap-right":
-      selectedDomObject.css({
-        "flex-direction": "column-reverse",
-        "flex-wrap": "wrap",
-      });
-      break;
-    case "btt-wrap-left":
-      selectedDomObject.css({
-        "flex-direction": "column-reverse",
-        "flex-wrap": "wrap-reverse",
-      });
-      break;
-    default:
-      console.error("Unknown wrap value: " + value);
-  }
-  saveStyle([
-    { type: "flex-direction", value: selectedDomObject.css("flex-direction") },
-    { type: "flex-wrap", value: selectedDomObject.css("flex-wrap") },
-  ]);
-  handleDisplay($("#wrap-options .button"), button, "flex-wrap");
-  refreshStylePanel();
-}
-/**
- *
- * @param {string} value Value of the alignment
- * @param {*} button The button to set as active (DOM element)
- */
-function setAlignmentWithMenu(value, button) {
-  if (button.hasClass("horizontal")) {
-    selectedDomObject.css("justify-content", value);
-  } else if (button.hasClass("vertical")) {
-    selectedDomObject.css("align-items", value);
-  }
-  saveStyle([
-    {
-      type: "justify-content",
-      value: selectedDomObject.css("justify-content"),
-    },
-    { type: "align-items", value: selectedDomObject.css("align-items") },
-  ]);
-  resetAlingmentBox();
-  refreshStylePanel();
-  hideAlignmentOptions();
-}
-/**
- * Set alignment property of the selected DOM element
- * @param {string} value Value attribute of the pressed button
- * @param {*} button The pressed button to set as active (DOM element)
- */
-function setAlignmentWithBox(value, button) {
-  switch (value) {
-    case "top-left":
-      selectedDomObject.css({
-        "align-items": "flex-start",
-        "justify-content": "flex-start",
-      });
-      break;
-    case "top-center":
-      selectedDomObject.css({
-        "align-items": "flex-start",
-        "justify-content": "center",
-      });
-      break;
-    case "top-right":
-      selectedDomObject.css({
-        "align-items": "flex-start",
-        "justify-content": "flex-end",
-      });
-      break;
-    case "left":
-      selectedDomObject.css({
-        "align-items": "center",
-        "justify-content": "flex-start",
-      });
-      break;
-    case "center":
-      selectedDomObject.css({
-        "align-items": "center",
-        "justify-content": "center",
-      });
-      break;
-    case "right":
-      selectedDomObject.css({
-        "align-items": "center",
-        "justify-content": "flex-end",
-      });
-      break;
-    case "bottom-left":
-      selectedDomObject.css({
-        "align-items": "flex-end",
-        "justify-content": "flex-start",
-      });
-      break;
-    case "bottom-center":
-      selectedDomObject.css({
-        "align-items": "flex-end",
-        "justify-content": "center",
-      });
-      break;
-    case "bottom-right":
-      selectedDomObject.css({
-        "align-items": "flex-end",
-        "justify-content": "flex-end",
-      });
-      break;
-    default:
-      console.error("Unkown alignment: " + value);
-  }
-  saveStyle([
-    {
-      type: "justify-content",
-      value: selectedDomObject.css("justify-content"),
-    },
-    { type: "align-items", value: selectedDomObject.css("align-items") },
-  ]);
-  handleDisplay($("#align-box .button"), button, "alignment");
-  refreshStylePanel();
-}
-/**
- * Sets gap value
- * @param {int} value Gap size (number)
- * @param {string} gapType Gap type (ex.: px, em, etc)
- * @param {*} button Dom element to be presented as active (default: null)
- * @param {string} type Gap, row-gap, column-gap (default: "gap")
- */
-function setGap(value, gapType, button = null, type = "gap") {
-  if (value >= 0 && value <= 100) {
-    selectedDomObject.css(type, value + gapType);
-    saveStyle([{ type: type, value: value + gapType }]);
-    if (button) {
-      let objects = button.parent().find(".button");
-      handleDisplay(objects, button, type);
-    }
-    refreshStylePanel();
-  }
-}
-/**
- * Extracts the unit of measure from the gap value ("12px" -> "px")
- * @param {string} gapValue The value of the gap
- * @returns {string} The unit of measure of the value
- */
-function extractGapType(gapValue) {
-  let gapType = "";
-  for (let i = 0; i < gapValue.length; i++) {
-    if (isNaN(parseInt(gapValue[i], 10))) {
-      gapType += gapValue[i];
-    }
-  }
-  return gapType;
-}
 
-function setUpFlexControlls() {
-  $("#displays-toggle").on("click", function () {
+function setUpControlls() {
+  $("#displays-toggle").on("click", function (event) {
+    event.stopPropagation();
     showDisplayOptions();
   });
-
   $("#display-ui-container").on("click", function () {
     hideDisplayOptions();
   });
-
+  $("#displays").on("click", ".button", function (event) {
+    event.stopPropagation();
+    setDisplay($(this).attr("data-value"), {
+      type: "display",
+      object: $(this),
+    });
+  });
+  $("#flex-direction-container").on("click", ".button", function () {
+    setDirection($(this).attr("data-value"), {
+      type: "direction",
+      object: $(this),
+    });
+  });
   $("#wrap-toggle").on("click", function () {
     showWrapOptions();
   });
-
   $("#wrap-ui-container").on("click", function () {
     hideWrapOptions();
   });
-
-  $("#displays").on("click", ".button", function (event) {
-    event.stopPropagation();
-    setDisplay($(this).attr("value"), { type: "display", object: $(this) });
-  });
-
-  $("#flex-directions").on("click", ".button", function () {
-    setDirection($(this).attr("value"), { type: "direction", object: $(this) });
-  });
-
   $("#wrap-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    setWrap($(this).attr("value"), $(this));
+    setWrap($(this).attr("data-value"), $(this));
   });
-
   $("#align-box").on("click", ".button", function () {
-    setAlignmentWithBox($(this).attr("value"), {
+    setAlignmentWithBox($(this).attr("data-value"), {
       type: "alignment",
       object: $(this),
     });
   });
-
   $("#align-box").on("mouseenter", ".button", function () {
-    $(this).html(
-      '<span class="material-symbols-outlined">align_justify_center</span>'
-    );
+    $(this).html(alignBoxMarkerCenter);
   });
   $("#align-box").on("mouseleave", ".button", function () {
     if (!$(this).hasClass("pressed-button"))
       $(this).html('<rect class="rect"></rect>');
   });
-
   $("#align-axis").on("click", ".toggle", function () {
     switch ($(this).attr("id")) {
       case "align-x":
@@ -664,117 +485,116 @@ function setUpFlexControlls() {
         break;
     }
   });
-
   $("#alignment-ui-container").on("click", function () {
     hideAlignmentOptions();
   });
-
   $("#align-axis").on("click", ".button", function () {
-    setAlignmentWithMenu($(this).attr("value"), $(this));
+    setAlignmentWithMenu($(this).attr("data-value"), $(this));
   });
-
-  $("#flex-gap-range").on("input", function () {
-    setGap($(this).val(), $("#flex-gap-type").attr("value"));
+  $("#gap-range").on("input", function () {
+    setGap($(this).val(), $("#gap-type").attr("data-value"));
   });
-
-  $("#flex-gap-value").on("input", function () {
+  $("#gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
     if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
-      setGap(gapValue, $("#flex-gap-type").attr("value"), $(this), "gap");
+      setGap(gapValue, $("#gap-type").attr("data-value"), $(this), "gap");
     }
   });
-
-  $("#flex-gap-type").on("click", function () {
-    showFlexGapOptions("gap");
+  $("#gap-type").on("click", function () {
+    showGapOptions("gap");
   });
-
-  $("#flex-gap-ui-container").on("click", function () {
-    hideFlexGapOptions();
+  $("#gap-ui-container").on("click", function () {
+    hideGapOptions();
   });
-
-  $("#flex-gap-options").on("click", ".button", function (event) {
+  $("#gap-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    let gapValue = $("#flex-gap-range").val();
-    let gapType = $(this).attr("value");
+    let gapValue = $("#gap-range").val();
+    let gapType = $(this).attr("data-value");
     setGap(gapValue, gapType, $(this));
   });
-
-  $("#flex-gap-lock").on("click", function () {
-    toggleFlexGapOptions();
+  $("#gap-lock").on("click", function () {
+    toggleGapOptions();
   });
-
-  $("#flex-row-gap-type").on("click", function () {
-    showFlexGapOptions("row-gap");
+  $("#row-gap-type").on("click", function () {
+    showGapOptions("row-gap");
   });
-  $("#flex-row-gap-value").on("input", function () {
-    console.log($(this).val());
+  $("#row-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
-    let colGapValue = parseInt($("#flex-column-gap-value").val());
+    let colGapValue = parseInt($("#column-gap-value").val());
     if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
-      let rowAttr = $("#flex-row-gap-type").attr("value");
+      let rowAttr = $("#row-gap-type").attr("data-value");
       if (rowAttr === "percent") rowAttr = "%";
-      console.log(rowAttr);
       setGap(
         gapValue,
-        $("#flex-row-gap-type").attr("value"),
-        $("#flex-row-gap-" + rowAttr),
+        $("#row-gap-type").attr("data-value"),
+        $("#row-gap-" + rowAttr),
         "row-gap"
       );
       if (!isNaN(colGapValue) && colGapValue >= 0 && colGapValue <= 100) {
-        let colAttr = $("#flex-column-gap-type").attr("value");
+        let colAttr = $("#column-gap-type").attr("data-value");
         if (colAttr === "percent") colAttr = "%";
-        console.log(colAttr);
         setGap(
           colGapValue,
-          $("#flex-column-gap-type").attr("value"),
-          $("#flex-column-gap" + colAttr),
+          $("#column-gap-type").attr("data-value"),
+          $("#column-gap" + colAttr),
           "column-gap"
         );
       }
     }
   });
-  $("#flex-row-gap-options").on("click", ".button", function (event) {
+  $("#row-gap-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    let gapValue = $("#flex-row-gap-value").val();
-    let gapType = $(this).attr("value");
+    let gapValue = $("#row-gap-value").val();
+    let gapType = $(this).attr("data-value");
     setGap(gapValue, gapType, $(this), "row-gap");
   });
-
-  $("#flex-column-gap-type").on("click", function () {
-    showFlexGapOptions("column-gap");
+  $("#column-gap-type").on("click", function () {
+    showGapOptions("column-gap");
   });
-  $("#flex-column-gap-value").on("input", function () {
-    console.log($(this).val());
+  $("#column-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
-    let rowGapValue = parseInt($("#flex-row-gap-value").val());
+    let rowGapValue = parseInt($("#row-gap-value").val());
     if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
-      let colAttr = $("#flex-column-gap-type").attr("value");
+      let colAttr = $("#column-gap-type").attr("data-value");
       if (colAttr === "percent") colAttr = "%";
-      console.log(colAttr);
       setGap(
         gapValue,
-        $("#flex-column-gap-type").attr("value"),
-        $("#flex-column-gap" + colAttr),
+        $("#column-gap-type").attr("data-value"),
+        $("#column-gap" + colAttr),
         "column-gap"
       );
       if (!isNaN(rowGapValue) && rowGapValue >= 0 && rowGapValue <= 100) {
-        let rowAttr = $("#flex-row-gap-type").attr("value");
+        let rowAttr = $("#row-gap-type").attr("data-value");
         if (rowAttr === "percent") rowAttr = "%";
-        console.log(rowAttr);
         setGap(
           rowGapValue,
-          $("#flex-row-gap-type").attr("value"),
-          $("#flex-row-gap-" + rowAttr),
+          $("#row-gap-type").attr("data-value"),
+          $("#row-gap-" + rowAttr),
           "row-gap"
         );
       }
     }
   });
-  $("#flex-column-gap-options").on("click", ".button", function (event) {
+  $("#column-gap-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    let gapValue = $("#flex-column-gap-value").val();
-    let gapType = $(this).attr("value");
+    let gapValue = $("#column-gap-value").val();
+    let gapType = $(this).attr("data-value");
     setGap(gapValue, gapType, $(this), "column-gap");
+  });
+  $("#grid-columns").on("input", function () {
+    let colNum = $(this).val();
+    if (!isNaN(colNum) && colNum >= 1 && colNum <= 300) {
+      setGridColsRowsCount($(this).val(), "columns");
+    }
+  });
+  $("#grid-rows").on("input", function () {
+    let rowNum = $("#grid-rows").val();
+    if (!isNaN(rowNum) && rowNum >= 1 && rowNum <= 300) {
+      setGridColsRowsCount($(this).val(), "rows");
+    }
+  });
+  $("#grid-direction-container").on("click", ".button", function () {
+    setGridDirection($(this).attr("data-value"), $(this));
   });
 }
 
@@ -784,8 +604,8 @@ function setUpFlexControlls() {
  */
 function checkFlexChild() {
   if (
-    selectedDomObject.parent().css() === "flex" ||
-    selectedDomObject.parent().css() === "inline-flex"
+    selectedDomObject.parent().css("display") === "flex" ||
+    selectedDomObject.parent().css("display") === "inline-flex"
   )
     return true;
   return false;

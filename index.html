@@ -6,15 +6,14 @@
     <title>Document</title>
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <script
       src="https://kit.fontawesome.com/62786e1e62.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css" />
     <script src="jquery-3.7.1.min.js"></script>
     <script src="ui_controlls.js"></script>
+    <script src="setters.js"></script>
     <script src="main.js"></script>
   </head>
   <body>
@@ -23,14 +22,14 @@
         <div
           id="element1"
           class="editable"
-          style="width: 10rem; height: 7rem; background-color: red"
-        >
+          style="width: 10rem; height: 7rem; background-color: red">
           <span>abc</span>
           <span>def</span>
           <span>ghi</span>
           <span>jkl</span>
         </div>
       </div>
+      <div id="tooltip">asd</div>
       <div id="sidepanel">
         <div id="panel-header">
           <span id="name" class="title">Name</span>
@@ -38,69 +37,87 @@
         <hr />
         <span id="select-smt">Select something</span>
         <div id="settings">
-          <!-- <div id="flex-child" class="setting-container">
+          <div id="flex-child" class="setting-container">
             <span class="title">Flex child</span>
             <div id="sizing-settings">
               <span class="setting-name">Sizing</span>
+              <div id="sizing-options"></div>
             </div>
-          </div> -->
+          </div>
           <div id="layout" class="setting-container">
             <span class="title">Layout</span>
             <div id="layout-display-options">
               <div id="primary-display-settings">
                 <div id="display" class="setting-name">Display</div>
                 <div id="displays">
-                  <div id="block" value="block" class="button">Block</div>
-                  <div id="flex" value="flex" class="button">Flex</div>
-                  <div id="grid" value="grid" class="button">Grid</div>
-                  <div id="other-display">
+                  <div
+                    id="block"
+                    data-value="block"
+                    class="button hoverable"
+                    data-desc="Block elements start on a new line and take up the full available width.">
+                    Block
+                  </div>
+                  <div
+                    id="flex"
+                    data-value="flex"
+                    class="button hoverable"
+                    data-desc="Flex lays out its child elements on a horizontal or vertical axis.">
+                    Flex
+                  </div>
+                  <div
+                    id="grid"
+                    data-value="grid"
+                    class="button hoverable"
+                    data-desc="Grid lets you place items within rows and columns.">
+                    Grid
+                  </div>
+                  <div id="other-display" class="hoverable" data-desc="">
                     <span id="od-text">Other</span
                     ><i
                       id="displays-toggle"
                       class="fa-solid fa-angle-down toggle"
-                      style="display: flex; align-items: center"
-                    ></i>
+                      style="display: flex; align-items: center"></i>
                   </div>
                   <div id="display-options" class="menu-container">
                     <div
                       id="inline-block"
-                      value="inline-block"
-                      type="display-button"
-                      class="button menu-button"
-                    >
+                      data-value="inline-block"
+                      data-type="display-button"
+                      class="button menu-button hoverable"
+                      data-desc="Inline-block behaves like inline, but accepts width and height properties.">
                       Inline-block
                     </div>
                     <div
                       id="inline-flex"
-                      value="inline-flex"
-                      type="display-button"
-                      class="button menu-button"
-                    >
+                      data-value="inline-flex"
+                      data-type="display-button"
+                      class="button menu-button hoverable"
+                      data-desc="Inline-flex behaves as an inline element. It stacks its content horizontally or vertically.">
                       Inline-flex
                     </div>
                     <div
                       id="inline-grid"
-                      value="inline-grid"
-                      type="display-button"
-                      class="button menu-button"
-                    >
+                      data-value="inline-grid"
+                      data-type="display-button"
+                      class="button menu-button hoverable"
+                      data-desc="Inline-grid behaves as an inline element. It stacks its content in rows and columns.">
                       Inline-grid
                     </div>
                     <div
                       id="inline"
-                      value="inline"
-                      type="display-button"
-                      class="button menu-button"
-                    >
+                      data-value="inline"
+                      data-type="display-button"
+                      class="button menu-button hoverable"
+                      data-desc="Inline is the default for text content. The text's font size and line height determine its size.">
                       Inline
                     </div>
                     <hr />
                     <div
                       id="none"
-                      value="none"
-                      type="display-button"
-                      class="button menu-button"
-                    >
+                      data-value="none"
+                      data-type="display-button"
+                      class="button menu-button hoverable"
+                      data-desc="None hides elements">
                       None
                     </div>
                   </div>
@@ -108,494 +125,807 @@
                 </div>
               </div>
               <div id="secondary-display-settings">
-                <div id="flex-settings" class="secondary-display-setting">
-                  <span id="direction" class="setting-name">Direction</span>
-                  <div id="flex-directions">
-                    <div id="row" value="row" class="button">
-                      <i class="fa-solid fa-arrow-right"></i>
-                    </div>
-                    <div id="column" value="column" class="button">
-                      <i class="fa-solid fa-arrow-down"></i>
-                    </div>
-                    <div id="wrap" value="wrap">
-                      <span id="wrap-text">Wrap</span>
-                      <div id="other-wrap">
-                        <i
-                          id="wrap-toggle"
-                          class="fa-solid fa-angle-down toggle"
-                          style="display: flex; align-items: center"
-                        ></i>
-                        <div id="wrap-options" class="menu-container">
-                          <div id="ltr">
-                            <h4>Left to right</h4>
-                            <div id="ltr-wraps" class="wrap-selection">
-                              <div
-                                id="ltr-wrap-down"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="ltr-wrap-down"
-                              >
-                                Wrap down
-                              </div>
-                              <div
-                                id="ltr-wrap-up"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="ltr-wrap-up"
-                              >
-                                Wrap up
-                              </div>
-                            </div>
-                            <hr />
-                          </div>
-                          <div id="rtl">
-                            <h4>Right to left</h4>
-                            <div id="rtl-wraps" class="wrap-selection">
-                              <div
-                                id="rtl-single-row"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="rtl-single-row"
-                              >
-                                Single row
-                              </div>
-                              <div
-                                id="rtl-wrap-down"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="rtl-wrap-down"
-                              >
-                                Wrap down
-                              </div>
-                              <div
-                                id="rtl-wrap-up"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="rtl-wrap-up"
-                              >
-                                Wrap up
-                              </div>
-                            </div>
-                            <hr />
-                          </div>
-                          <div id="ttb">
-                            <h4>Top to bottom</h4>
-                            <div id="ttb-wraps" class="wrap-selection">
-                              <div
-                                id="ttb-wrap-right"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="ttb-wrap-right"
-                              >
-                                Wrap right
-                              </div>
-                              <div
-                                id="ttb-wrap-left"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="ttb-wrap-left"
-                              >
-                                Wrap left
-                              </div>
-                            </div>
-                            <hr />
-                          </div>
-                          <div id="btt">
-                            <h4>Bottom to top</h4>
-                            <div id="btt-wraps" class="wrap-selection">
-                              <div
-                                id="btt-single-column"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="btt-single-column"
-                              >
-                                Single column
-                              </div>
-                              <div
-                                id="btt-wrap-right"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="btt-wrap-right"
-                              >
-                                Wrap right
-                              </div>
-                              <div
-                                id="btt-wrap-left"
-                                type="wrap-button"
-                                class="button menu-button"
-                                value="btt-wrap-left"
-                              >
-                                Wrap left
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="wrap-ui-container" class="ui-container"></div>
-                      </div>
-                    </div>
+                <div id="grid-text" class="setting-name">Grid</div>
+                <div id="grid-layout-container">
+                  <div id="columns" class="grid-setting-container">
+                    <input
+                      type="text"
+                      name="grid-columns"
+                      id="grid-columns"
+                      class="number-input"
+                      value="1" /><span id="grid-column">Columns</span>
                   </div>
-                  <span id="align" class="setting-name">Align</span>
-                  <div id="flex-align">
-                    <div id="align-box">
-                      <div id="top-left" value="top-left" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="top-center" value="top-center" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="top-right" value="top-right" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="left" value="left" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="center" value="center" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="right" value="right" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div id="bottom-left" value="bottom-left" class="button">
-                        <rect class="rect"></rect>
-                      </div>
-                      <div
-                        id="bottom-center"
-                        value="bottom-center"
-                        class="button"
-                      >
-                        <rect class="rect"></rect>
-                      </div>
-                      <div
-                        id="bottom-right"
-                        value="bottom-right"
-                        class="button"
-                      >
-                        <rect class="rect"></rect>
-                      </div>
-                    </div>
-                    <div id="align-axis">
-                      <span class="setting-name">X</span>
-                      <div
-                        id="align-x"
-                        value="center"
-                        class="align-axis toggle"
-                      >
-                        Center
-                      </div>
-                      <span class="setting-name">Y</span>
-                      <div
-                        id="align-y"
-                        value="center"
-                        class="align-axis toggle"
-                      >
-                        Center
-                      </div>
-                      <div id="align-horizontal" class="menu-container">
-                        <div
-                          id="x-left"
-                          class="alignment-option button horizontal menu-button"
-                          value="flex-start"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_horizontal_left </span
-                          >Left
-                        </div>
-                        <div
-                          id="x-center"
-                          class="alignment-option button horizontal menu-button"
-                          value="center"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_horizontal_center </span
-                          >Center
-                        </div>
-                        <div
-                          id="x-right"
-                          class="alignment-option button horizontal menu-button"
-                          value="flex-end"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_horizontal_right </span
-                          >Right
-                        </div>
-                        <hr />
-                        <div
-                          id="space-between"
-                          class="alignment-option button horizontal menu-button"
-                          value="space-between"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_justify_space_between </span
-                          >Space between
-                        </div>
-                        <div
-                          id="space-around"
-                          class="alignment-option button horizontal menu-button"
-                          value="space-around"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_justify_space_around </span
-                          >Space around
-                        </div>
-                      </div>
-                      <div id="align-vertical" class="menu-container">
-                        <div
-                          id="y-top"
-                          class="alignment-option button vertical menu-button"
-                          value="flex-start"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_vertical_top </span
-                          >Top
-                        </div>
-                        <div
-                          id="y-center"
-                          class="alignment-option button vertical menu-button"
-                          value="center"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_vertical_center </span
-                          >Center
-                        </div>
-                        <div
-                          id="y-bottom"
-                          class="alignment-option button vertical menu-button"
-                          value="flex-end"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_vertical_bottom </span
-                          >Bottom
-                        </div>
-                        <hr />
-                        <div
-                          id="stretch"
-                          class="alignment-option button vertical menu-button"
-                          value="stretch"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_justify_space_between </span
-                          >Stretch
-                        </div>
-                        <div
-                          id="baseline"
-                          class="alignment-option button vertical menu-button"
-                          value="baseline"
-                        >
-                          <span class="material-symbols-outlined">
-                            align_justify_space_around </span
-                          >Baseline
-                        </div>
-                      </div>
-                      <div
-                        id="alignment-ui-container"
-                        class="ui-container"
-                      ></div>
-                    </div>
+                  <div id="rows" class="grid-setting-container">
+                    <input
+                      type="text"
+                      name="grid-rows"
+                      id="grid-rows"
+                      class="number-input"
+                      value="1" /><span id="grid-column">Rows</span>
                   </div>
-                  <span id="flex-gap" class="setting-name">Gap</span>
-                  <div id="flex-gap">
-                    <div id="flex-gap-default" class="flex-gap-container">
-                      <input
-                        type="range"
-                        name="flex-gap-range"
-                        id="flex-gap-range"
-                        min="0"
-                        max="100"
-                        value="0"
-                      />
-                      <input
-                        type="text"
-                        name="flex-gap-value"
-                        id="flex-gap-value"
-                        min="0"
-                        max="100"
-                        step="10"
-                        value="0"
-                        class="flex-gap-value"
-                      />
-                      <div id="flex-gap-type" value="px" class="toggle">
-                        <span id="flex-gap-type-text">PX</span>
-                        <div id="flex-gap-options" class="menu-container">
-                          <div id="flex-gap-px" value="px" class="button">
-                            PX
+                </div>
+                <span id="direction" class="setting-name">Direction</span>
+                <div id="flex-direction-container">
+                  <div
+                    id="row"
+                    data-value="row"
+                    class="button hoverable"
+                    data-desc="Horizontal">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </div>
+                  <div
+                    id="column"
+                    data-value="column"
+                    class="button hoverable"
+                    data-desc="Vertical">
+                    <i class="fa-solid fa-arrow-down"></i>
+                  </div>
+                  <div
+                    id="wrap"
+                    data-value="wrap"
+                    class="hoverable"
+                    data-desc="">
+                    <span id="wrap-text">Wrap</span>
+                    <div id="other-wrap">
+                      <i
+                        id="wrap-toggle"
+                        class="fa-solid fa-angle-down toggle"
+                        style="display: flex; align-items: center"></i>
+                      <div id="wrap-options" class="menu-container">
+                        <div id="ltr">
+                          <h4>Left to right</h4>
+                          <div id="ltr-wraps" class="wrap-selection">
+                            <div
+                              id="ltr-wrap-down"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="ltr-wrap-down"
+                              data-desc="Stack children left to right, wrap down.">
+                              <svg
+                                data-wf-icon="FlexFlowRowWrapReverseIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M3 12L11 12L11 13L3 13L3 12ZM13.8536 4.85355L10.8536 7.85355L10.1464 7.14645L12.2929 5L3 5L3 4L12.2929 4L10.1464 1.85355L10.8536 1.14645L13.8536 4.14645L14.2071 4.5L13.8536 4.85355Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M3 5.20711L9.79289 12L11 12L11 11.7929L4.20711 5L3 5L3 5.20711Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap down
+                            </div>
+                            <div
+                              id="ltr-wrap-up"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="ltr-wrap-up"
+                              data-desc="Stack children left to right, wrap up.">
+                              <svg
+                                data-wf-icon="FlexFlowRowWrapReverseIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M3 12L11 12L11 13L3 13L3 12ZM13.8536 4.85355L10.8536 7.85355L10.1464 7.14645L12.2929 5L3 5L3 4L12.2929 4L10.1464 1.85355L10.8536 1.14645L13.8536 4.14645L14.2071 4.5L13.8536 4.85355Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M3 5.20711L9.79289 12L11 12L11 11.7929L4.20711 5L3 5L3 5.20711Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap up
+                            </div>
                           </div>
-                          <div id="flex-gap-em" value="em" class="button">
-                            EM
+                          <hr />
+                        </div>
+                        <div id="rtl">
+                          <h4>Right to left</h4>
+                          <div id="rtl-wraps" class="wrap-selection">
+                            <div
+                              id="rtl-single-row"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="rtl-single-row"
+                              data-desc="Stack children right to left, single row.">
+                              <svg
+                                data-wf-icon="ArrowLeftIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M3.70712 7.00004L6.85357 3.85359L6.14646 3.14648L1.79291 7.50004L6.14646 11.8536L6.85357 11.1465L3.70712 8.00004H13V7.00004H3.70712Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Single row
+                            </div>
+                            <div
+                              id="rtl-wrap-down"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="rtl-wrap-down"
+                              data-desc="Stack children right to left, wrap down.">
+                              <svg
+                                data-wf-icon="FlexFlowRowReverseWrapIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M13 4H5V3H13L13 4ZM2.14645 11.1464L5.14645 8.14645L5.85355 8.85355L3.70711 11H13L13 12H3.70711L5.85355 14.1464L5.14645 14.8536L2.14645 11.8536L1.79289 11.5L2.14645 11.1464Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M13 10.7929L6.20711 4H5V4.20711L11.7929 11H13L13 10.7929Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap down
+                            </div>
+                            <div
+                              id="rtl-wrap-up"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="rtl-wrap-up"
+                              data-desc="Stack children right to left, wrap up">
+                              <svg
+                                data-wf-icon="FlexFlowRowReverseWrapReverseIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M13 12L5 12L5 13L13 13L13 12ZM2.14645 4.85355L5.14645 7.85355L5.85355 7.14645L3.70711 5L13 5L13 4L3.70711 4L5.85355 1.85355L5.14645 1.14645L2.14645 4.14645L1.79289 4.5L2.14645 4.85355Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M13 5.20711L6.20711 12L5 12L5 11.7929L11.7929 5L13 5L13 5.20711Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap up
+                            </div>
                           </div>
-                          <div id="flex-gap-rem" value="rem" class="button">
-                            REM
+                          <hr />
+                        </div>
+                        <div id="ttb">
+                          <h4>Top to bottom</h4>
+                          <div id="ttb-wraps" class="wrap-selection">
+                            <div
+                              id="ttb-wrap-right"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="ttb-wrap-right"
+                              data-desc="">
+                              <svg
+                                data-wf-icon="FlexFlowColumnWrapIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M4 3L4 11L3 11L3 3L4 3ZM11.1464 13.8536L8.14645 10.8536L8.85355 10.1464L11 12.2929L11 3L12 3L12 12.2929L14.1464 10.1464L14.8536 10.8536L11.8536 13.8536L11.5 14.2071L11.1464 13.8536Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M10.7929 3L4 9.79289L4 11L4.20711 11L11 4.20711L11 3L10.7929 3Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap right
+                            </div>
+                            <div
+                              id="ttb-wrap-left"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="ttb-wrap-left"
+                              data-desc="">
+                              <svg
+                                data-wf-icon="FlexFlowColumnWrapReverseIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M12 3L12 11L13 11L13 3L12 3ZM4.85355 13.8536L7.85355 10.8536L7.14645 10.1464L5 12.2929L5 3L4 3L4 12.2929L1.85355 10.1464L1.14645 10.8536L4.14645 13.8536L4.5 14.2071L4.85355 13.8536Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M5.20711 3L12 9.79289L12 11L11.7929 11L5 4.20711L5 3L5.20711 3Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap left
+                            </div>
                           </div>
-                          <div id="flex-gap-ch" value="ch" class="button">
-                            CH
-                          </div>
-                          <div id="flex-gap-vw" value="vw" class="button">
-                            VW
-                          </div>
-                          <div id="flex-gap-vh" value="vh" class="button">
-                            VH
-                          </div>
-                          <div id="flex-gap-svw" value="svw" class="button">
-                            SVW
-                          </div>
-                          <div id="flex-gap-svh" value="svh" class="button">
-                            SVH
-                          </div>
-                          <div id="flex-gap-percent" value="%" class="button">
-                            %
+                          <hr />
+                        </div>
+                        <div id="btt">
+                          <h4>Bottom to top</h4>
+                          <div id="btt-wraps" class="wrap-selection">
+                            <div
+                              id="btt-single-column"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="btt-single-column"
+                              data-desc="">
+                              <svg
+                                data-wf-icon="ArrowUpIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M9.00004 3.70721L12.1465 6.85363L12.8536 6.14652L8.50001 1.79297L4.14645 6.14652L4.85356 6.85363L8.00004 3.70715L8.00004 13.0001H9.00004L9.00004 3.70721Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Single column
+                            </div>
+                            <div
+                              id="btt-wrap-right"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="btt-wrap-right"
+                              data-desc="">
+                              <svg
+                                data-wf-icon="FlexFlowColumnReverseWrapIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M4 13L4 5L3 5L3 13L4 13ZM11.1464 2.14645L8.14645 5.14645L8.85355 5.85355L11 3.70711L11 13L12 13L12 3.70711L14.1464 5.85355L14.8536 5.14645L11.8536 2.14645L11.5 1.79289L11.1464 2.14645Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M10.7929 13L4 6.20711L4 5L4.20711 5L11 11.7929L11 13L10.7929 13Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap right
+                            </div>
+                            <div
+                              id="btt-wrap-left"
+                              data-type="wrap-button"
+                              class="button menu-button"
+                              data-value="btt-wrap-left"
+                              data-desc="">
+                              <svg
+                                data-wf-icon="FlexFlowColumnReverseWrapReverseIcon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M12 13L12 5L13 5L13 13L12 13ZM4.85355 2.14645L7.85355 5.14645L7.14645 5.85355L5 3.70711L5 13L4 13L4 3.70711L1.85355 5.85355L1.14645 5.14645L4.14645 2.14645L4.5 1.79289L4.85355 2.14645Z"
+                                  fill="currentColor"></path>
+                                <path
+                                  opacity="0.4"
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M5.20711 13L12 6.20711L12 5L11.7929 5L5 11.7929L5 13L5.20711 13Z"
+                                  fill="currentColor"></path>
+                              </svg>
+                              Wrap left
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div id="flex-gap-ui-container" class="ui-container"></div>
-                    <div id="flex-gap-unlocked" class="flex-gap-container">
-                      <input
-                        type="text"
-                        name="flex-row-gap-value"
-                        id="flex-row-gap-value"
-                        min="0"
-                        max="100"
-                        step="10"
-                        value="0"
-                        class="flex-gap-value"
-                      />
-                      <div id="flex-row-gap-type" value="px" class="toggle">
-                        <span id="flex-row-gap-type-text">PX</span>
-                        <div id="flex-row-gap-options" class="menu-container">
-                          <div id="flex-row-gap-px" value="px" class="button">
-                            PX
-                          </div>
-                          <div id="flex-row-gap-em" value="em" class="button">
-                            EM
-                          </div>
-                          <div id="flex-row-gap-rem" value="rem" class="button">
-                            REM
-                          </div>
-                          <div id="flex-row-gap-ch" value="ch" class="button">
-                            CH
-                          </div>
-                          <div id="flex-row-gap-vw" value="vw" class="button">
-                            VW
-                          </div>
-                          <div id="flex-row-gap-vh" value="vh" class="button">
-                            VH
-                          </div>
-                          <div id="flex-row-gap-svw" value="svw" class="button">
-                            SVW
-                          </div>
-                          <div id="flex-row-gap-svh" value="svh" class="button">
-                            SVH
-                          </div>
-                          <div
-                            id="flex-row-gap-percent"
-                            value="%"
-                            class="button"
-                          >
-                            %
-                          </div>
-                        </div>
-                      </div>
-                      <input
-                        type="text"
-                        name="flex-column-gap-value"
-                        id="flex-column-gap-value"
-                        min="0"
-                        max="100"
-                        step="10"
-                        value="0"
-                        class="flex-gap-value"
-                      />
-                      <div id="flex-column-gap-type" value="px" class="toggle">
-                        <span id="flex-column-gap-type-text">PX</span>
-                        <div
-                          id="flex-column-gap-options"
-                          class="menu-container"
-                        >
-                          <div
-                            id="flex-column-gap-px"
-                            value="px"
-                            class="button"
-                          >
-                            PX
-                          </div>
-                          <div
-                            id="flex-column-gap-em"
-                            value="em"
-                            class="button"
-                          >
-                            EM
-                          </div>
-                          <div
-                            id="flex-column-gap-rem"
-                            value="rem"
-                            class="button"
-                          >
-                            REM
-                          </div>
-                          <div
-                            id="flex-column-gap-ch"
-                            value="ch"
-                            class="button"
-                          >
-                            CH
-                          </div>
-                          <div
-                            id="flex-column-gap-vw"
-                            value="vw"
-                            class="button"
-                          >
-                            VW
-                          </div>
-                          <div
-                            id="flex-column-gap-vh"
-                            value="vh"
-                            class="button"
-                          >
-                            VH
-                          </div>
-                          <div
-                            id="flex-column-gap-svw"
-                            value="svw"
-                            class="button"
-                          >
-                            SVW
-                          </div>
-                          <div
-                            id="flex-column-gap-svh"
-                            value="svh"
-                            class="button"
-                          >
-                            SVH
-                          </div>
-                          <div
-                            id="flex-column-gap-percent"
-                            value="%"
-                            class="button"
-                          >
-                            %
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      id="flex-gap-lock"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      "
-                      class="toggle"
-                    >
-                      <span class="material-symbols-outlined"> lock </span>
+                      <div id="wrap-ui-container" class="ui-container"></div>
                     </div>
                   </div>
                 </div>
-                <div id="grid-settings" class="secondary-display-setting"></div>
-                <div
-                  id="inline-block-settings"
-                  class="secondary-display-setting"
-                ></div>
+                <div id="grid-direction-container">
+                  <div
+                    id="grid-horizontal"
+                    class="button hoverable" data-value="row"
+                    data-desc="Horizontal">
+                    <svg
+                      data-wf-icon="FlexFlowWrapIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M3 4H11V3H3V4ZM13.8536 11.1464L10.8536 8.14645L10.1464 8.85355L12.2929 11H3V12H12.2929L10.1464 14.1464L10.8536 14.8536L13.8536 11.8536L14.2071 11.5L13.8536 11.1464Z"
+                        fill="currentColor"></path>
+                      <path
+                        opacity="0.4"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M3 10.7929L9.79289 4H11V4.20711L4.20711 11H3V10.7929Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                  <div id="grid-vertical" class="button hoverable" data-value="column" data-desc="Vertical">
+                    <svg
+                      data-wf-icon="FlexFlowColumnWrapIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4 3L4 11L3 11L3 3L4 3ZM11.1464 13.8536L8.14645 10.8536L8.85355 10.1464L11 12.2929L11 3L12 3L12 12.2929L14.1464 10.1464L14.8536 10.8536L11.8536 13.8536L11.5 14.2071L11.1464 13.8536Z"
+                        fill="currentColor"></path>
+                      <path
+                        opacity="0.4"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.7929 3L4 9.79289L4 11L4.20711 11L11 4.20711L11 3L10.7929 3Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                </div>
+                <span class="setting-name">Align</span>
+                <div id="align">
+                  <div id="align-box">
+                    <div id="top-left" data-value="top-left" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div id="top-center" data-value="top-center" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div id="top-right" data-value="top-right" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div id="left" data-value="left" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div id="center" data-value="center" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div id="right" data-value="right" class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div
+                      id="bottom-left"
+                      data-value="bottom-left"
+                      class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div
+                      id="bottom-center"
+                      data-value="bottom-center"
+                      class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                    <div
+                      id="bottom-right"
+                      data-value="bottom-right"
+                      class="button">
+                      <rect class="rect"></rect>
+                    </div>
+                  </div>
+                  <div id="align-axis">
+                    <span class="setting-name">X</span>
+                    <div
+                      id="align-x"
+                      data-value="center"
+                      class="align-axis toggle">
+                      Center
+                    </div>
+                    <span class="setting-name">Y</span>
+                    <div
+                      id="align-y"
+                      data-value="center"
+                      class="align-axis toggle">
+                      Center
+                    </div>
+                    <div id="align-horizontal" class="menu-container">
+                      <div
+                        id="x-left"
+                        class="alignment-option button horizontal menu-button align-hoverable"
+                        data-value="flex-start"
+                        data-desc="Align children to the left of the ">
+                        <svg
+                          data-wf-icon="AlignItemsStartColumnIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M2 14V1H3V5H11.5C11.7761 5 12 5.22386 12 5.5V6.5C12 6.77614 11.7761 7 11.5 7H3V8H7.5C7.77614 8 8 8.22386 8 8.5V9.5C8 9.77614 7.77614 10 7.5 10H3V14H2Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Left
+                      </div>
+                      <div
+                        id="x-center"
+                        class="alignment-option button horizontal menu-button align-hoverable"
+                        data-value="center"
+                        data-desc="Align children to the center of the ">
+                        <svg
+                          data-wf-icon="AlignItemsStartColumnIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M2 14V1H3V5H11.5C11.7761 5 12 5.22386 12 5.5V6.5C12 6.77614 11.7761 7 11.5 7H3V8H7.5C7.77614 8 8 8.22386 8 8.5V9.5C8 9.77614 7.77614 10 7.5 10H3V14H2Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Center
+                      </div>
+                      <div
+                        id="x-right"
+                        class="alignment-option button horizontal menu-button align-hoverable"
+                        data-value="flex-end"
+                        data-desc="Align children to the right of the ">
+                        <svg
+                          data-wf-icon="AlignItemsEndColumnIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M13 14V10H8.5C8.22386 10 8 9.77614 8 9.5V8.5C8 8.22386 8.22386 8 8.5 8H13V7H4.5C4.22386 7 4 6.77614 4 6.5V5.5C4 5.22386 4.22386 5 4.5 5H13V1H14V14H13Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Right
+                      </div>
+                      <hr />
+                      <div
+                        id="space-between"
+                        class="alignment-option button horizontal menu-button align-hoverable"
+                        data-value="space-between"
+                        data-desc="Distribute children evenly. The first and last child is flush with the element.">
+                        <svg
+                          data-wf-icon="JustifyContentSpaceBetweenRowReverseIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M14 4L14 1L15 1L15 14L14 14L14 11L12.5 11C12.2239 11 12 10.7761 12 10.5L12 4.5C12 4.22386 12.2239 4 12.5 4L14 4Z"
+                            fill="currentColor"></path>
+                          <path
+                            d="M2 14L2 0.999999L3 0.999999L3 4L4.5 4C4.77614 4 5 4.22386 5 4.5L5 10.5C5 10.7761 4.77614 11 4.5 11L3 11L3 14L2 14Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Space between
+                      </div>
+                      <div
+                        id="space-around"
+                        class="alignment-option button horizontal menu-button align-hoverable"
+                        data-value="space-around"
+                        data-desc="Distribute children evenly. Start and last gaps are half the size of the space between each child.">
+                        <svg
+                          data-wf-icon="JustifyContentSpaceAroundRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path d="M2 14V1H3V14H2Z" fill="currentColor"></path>
+                          <path
+                            d="M4.5 4C4.22386 4 4 4.22386 4 4.5L4 10.5C4 10.7761 4.22386 11 4.5 11H5.5C5.77614 11 6 10.7761 6 10.5L6 4.5C6 4.22386 5.77614 4 5.5 4L4.5 4Z"
+                            fill="currentColor"></path>
+                          <path
+                            d="M11.5 11C11.2239 11 11 10.7761 11 10.5V4.5C11 4.22386 11.2239 4 11.5 4L12.5 4C12.7761 4 13 4.22386 13 4.5V10.5C13 10.7761 12.7761 11 12.5 11H11.5Z"
+                            fill="currentColor"></path>
+                          <path
+                            d="M14 14V1H15V14H14Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Space around
+                      </div>
+                      <hr />
+                      <div id="align-h-data-desc"></div>
+                    </div>
+                    <div id="align-vertical" class="menu-container">
+                      <div
+                        id="y-top"
+                        class="alignment-option button vertical menu-button align-hoverable"
+                        data-value="flex-start"
+                        data-desc="Align children to the top of the ">
+                        <svg
+                          data-wf-icon="AlignItemsStartRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M2 2H15V3H11V7.5C11 7.77614 10.7761 8 10.5 8L9.5 8C9.22386 8 9 7.77614 9 7.5V3L8 3L8 11.5C8 11.7761 7.77614 12 7.5 12H6.5C6.22386 12 6 11.7761 6 11.5L6 3L2 3V2Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Top
+                      </div>
+                      <div
+                        id="y-center"
+                        class="alignment-option button vertical menu-button align-hoverable"
+                        data-value="center"
+                        data-desc="Align children to the center of the ">
+                        <svg
+                          data-wf-icon="AlignItemsCenterRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M8 7V2.5C8 2.22386 7.77614 2 7.5 2H6.5C6.22386 2 6 2.22386 6 2.5V7L2 7V8L15 8V7H11V4.5C11 4.22386 10.7761 4 10.5 4L9.5 4C9.22386 4 9 4.22386 9 4.5V7H8Z"
+                            fill="currentColor"></path>
+                          <path
+                            d="M8 9V13.5C8 13.7761 7.77614 14 7.5 14H6.5C6.22386 14 6 13.7761 6 13.5V9H8Z"
+                            fill="currentColor"></path>
+                          <path
+                            d="M10.5 12C10.7761 12 11 11.7761 11 11.5V9H9V11.5C9 11.7761 9.22386 12 9.5 12H10.5Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Center
+                      </div>
+                      <div
+                        id="y-bottom"
+                        class="alignment-option button vertical menu-button align-hoverable"
+                        data-value="flex-end"
+                        data-desc="Align children to the bottom of the ">
+                        <svg
+                          data-wf-icon="AlignItemsEndRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M8 13L8 4.5C8 4.22386 7.77614 4 7.5 4H6.5C6.22386 4 6 4.22386 6 4.5L6 13L2 13V14L15 14V13H11V8.5C11 8.22386 10.7761 8 10.5 8L9.5 8C9.22386 8 9 8.22386 9 8.5V13H8Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Bottom
+                      </div>
+                      <hr />
+                      <div
+                        id="stretch"
+                        class="alignment-option button vertical menu-button align-hoverable"
+                        data-value="stretch"
+                        data-desc="Stretch children to fill the space.">
+                        <svg
+                          data-wf-icon="AlignItemsStretchRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M6 3L2 3V2H15V3L11 3V13L15 13V14L2 14V13H6L6 3ZM8 3L9 3L9 13H8L8 3Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Stretch
+                      </div>
+                      <div
+                        id="baseline"
+                        class="alignment-option button vertical menu-button align-hoverable"
+                        data-value="baseline"
+                        data-desc="Align children to the baseline.">
+                        <svg
+                          data-wf-icon="AlignItemsBaselineRowIcon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8 7V3.5C8 3.22386 7.77614 3 7.5 3H5.5C5.22386 3 5 3.22386 5 3.5L5 7H2V8H5V13.5C5 13.7761 5.22386 14 5.5 14H7.5C7.77614 14 8 13.7761 8 13.5V8H9V10.5C9 10.7761 9.22386 11 9.5 11H11.5C11.7761 11 12 10.7761 12 10.5V8L15 8V7L12 7V3.5C12 3.22386 11.7761 3 11.5 3H9.5C9.22386 3 9 3.22386 9 3.5V7H8ZM6 4V7H7V4L6 4ZM10 7H11V4L10 4V7Z"
+                            fill="currentColor"></path>
+                        </svg>
+                        Baseline
+                      </div>
+                      <hr />
+                      <div id="align-v-data-desc"></div>
+                    </div>
+                    <div id="alignment-ui-container" class="ui-container"></div>
+                  </div>
+                </div>
+                <span
+                  id="gap"
+                  class="setting-name hoverable"
+                  data-desc="The space between grid cells, often called a gutter."
+                  >Gap</span
+                >
+                <div id="gap-settings">
+                  <div id="gap-default" class="gap-container">
+                    <input
+                      type="range"
+                      name="gap-range"
+                      id="gap-range"
+                      value="0" />
+                    <input
+                      type="text"
+                      name="gap-value"
+                      id="gap-value"
+                      value="0"
+                      class="number-input" />
+                    <div id="gap-type" data-value="px" class="toggle">
+                      <span id="gap-type-text">PX</span>
+                      <div id="gap-options" class="menu-container">
+                        <div id="gap-px" data-value="px" class="button">PX</div>
+                        <div id="gap-em" data-value="em" class="button">EM</div>
+                        <div id="gap-rem" data-value="rem" class="button">
+                          REM
+                        </div>
+                        <div id="gap-ch" data-value="ch" class="button">CH</div>
+                        <div id="gap-vw" data-value="vw" class="button">VW</div>
+                        <div id="gap-vh" data-value="vh" class="button">VH</div>
+                        <div id="gap-svw" data-value="svw" class="button">
+                          SVW
+                        </div>
+                        <div id="gap-svh" data-value="svh" class="button">
+                          SVH
+                        </div>
+                        <div id="gap-percent" data-value="%" class="button">
+                          %
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="gap-ui-container" class="ui-container"></div>
+                  <div id="gap-unlocked" class="gap-container">
+                    <div id="row-gap-setting" class="gap-setting-container">
+                      <input
+                        type="text"
+                        name="row-gap-value"
+                        id="row-gap-value"
+                        value="0"
+                        class="number-input" />
+                      <span>Row</span>
+                    </div>
+                    <div id="row-gap-type" data-value="px" class="toggle">
+                      <span id="row-gap-type-text">PX</span>
+                      <div id="row-gap-options" class="menu-container">
+                        <div id="row-gap-px" data-value="px" class="button">
+                          PX
+                        </div>
+                        <div id="row-gap-em" data-value="em" class="button">
+                          EM
+                        </div>
+                        <div id="row-gap-rem" data-value="rem" class="button">
+                          REM
+                        </div>
+                        <div id="row-gap-ch" data-value="ch" class="button">
+                          CH
+                        </div>
+                        <div id="row-gap-vw" data-value="vw" class="button">
+                          VW
+                        </div>
+                        <div id="row-gap-vh" data-value="vh" class="button">
+                          VH
+                        </div>
+                        <div id="row-gap-svw" data-value="svw" class="button">
+                          SVW
+                        </div>
+                        <div id="row-gap-svh" data-value="svh" class="button">
+                          SVH
+                        </div>
+                        <div id="row-gap-percent" data-value="%" class="button">
+                          %
+                        </div>
+                      </div>
+                    </div>
+                    <div id="column-gap-setting" class="gap-setting-container">
+                      <input
+                        type="text"
+                        name="column-gap-value"
+                        id="column-gap-value"
+                        value="0"
+                        class="number-input" />
+                      <span>Column</span>
+                    </div>
+                    <div id="column-gap-type" data-value="px" class="toggle">
+                      <span id="column-gap-type-text">PX</span>
+                      <div id="column-gap-options" class="menu-container">
+                        <div id="column-gap-px" data-value="px" class="button">
+                          PX
+                        </div>
+                        <div id="column-gap-em" data-value="em" class="button">
+                          EM
+                        </div>
+                        <div
+                          id="column-gap-rem"
+                          data-value="rem"
+                          class="button">
+                          REM
+                        </div>
+                        <div id="column-gap-ch" data-value="ch" class="button">
+                          CH
+                        </div>
+                        <div id="column-gap-vw" data-value="vw" class="button">
+                          VW
+                        </div>
+                        <div id="column-gap-vh" data-value="vh" class="button">
+                          VH
+                        </div>
+                        <div
+                          id="column-gap-svw"
+                          data-value="svw"
+                          class="button">
+                          SVW
+                        </div>
+                        <div
+                          id="column-gap-svh"
+                          data-value="svh"
+                          class="button">
+                          SVH
+                        </div>
+                        <div
+                          id="column-gap-percent"
+                          data-value="%"
+                          class="button">
+                          %
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    id="gap-lock"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                    data-desc="Unlock gap"
+                    class="toggle hoverable">
+                    <span class="material-symbols-outlined"> lock </span>
+                  </div>
+                </div>
+              </div>
+              <div id="more-layout-options-container">More options
+                <div id="more-layout-options"></div>
               </div>
             </div>
+            <div id="spacing"></div>
           </div>
         </div>
       </div>

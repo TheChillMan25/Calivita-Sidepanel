@@ -46,6 +46,18 @@ hr {
   color: #999;
   font-size: small;
 }
+
+#tooltip {
+  display: none;
+  position: absolute;
+  padding: 0.2rem;
+  background-color: #444;
+  color: #999;
+  border-radius: 0.2rem;
+  font-size: small;
+  z-index: 15;
+}
+
 .editable:hover,
 .selected {
   border: solid #2496ff 1px;
@@ -75,6 +87,7 @@ hr {
   justify-content: center;
   padding: 0.3rem;
   border-radius: 0.2rem;
+  flex-grow: 1;
 }
 
 #other-display {
@@ -92,7 +105,9 @@ hr {
 }
 
 #displays,
-#flex-directions {
+#flex-direction-container,
+#grid-layout-container,
+#grid-direction-container {
   border: 0.1rem solid #444;
   display: flex;
   background-color: #222;
@@ -101,18 +116,15 @@ hr {
   width: 100%;
 }
 
-#primary-display-settings,
-#secondary-display-settings {
+#primary-display-settings {
   display: flex;
   gap: 0.5rem;
 }
 
 #secondary-display-settings {
-  flex-direction: column;
-}
-
-.secondary-display-setting {
   display: none;
+  gap: 0.5rem;
+  grid-template-columns: auto auto;
 }
 
 #flex-settings {
@@ -129,7 +141,7 @@ hr {
   border-radius: 0.2rem;
 }
 
-#flex-directions .button {
+#flex-direction-container .button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,11 +149,11 @@ hr {
   width: 100%;
 }
 
-#flex-directions .button i {
+#flex-direction-container .button i {
   padding: 0;
 }
 
-#flex-align {
+#align {
   display: flex;
   gap: 0.3rem;
 }
@@ -157,8 +169,8 @@ hr {
 }
 
 #align-box .button {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.7rem;
+  height: 1.7rem;
 }
 
 .rect {
@@ -212,8 +224,11 @@ hr {
   width: 8rem;
 }
 
-.wrap-option {
+#wrap-options .button {
   padding: 0.2rem;
+  justify-content: space-between;
+  text-align: right;
+  gap: 0;
 }
 
 #align-horizontal {
@@ -230,13 +245,17 @@ hr {
   justify-content: space-between;
 }
 
-#flex-gap {
+#gap {
   display: flex;
   align-items: center;
   gap: 0.2rem;
 }
 
-.flex-gap-container {
+#gap-settings {
+  display: flex;
+}
+
+.gap-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -244,11 +263,18 @@ hr {
   gap: 0.2rem;
 }
 
-#flex-gap-range {
+.gap-setting-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+#gap-range {
   width: 50%;
 }
 
-.flex-gap-value {
+.number-input {
   width: 2rem;
   padding: 0.2rem;
   border: 0.1rem solid #555;
@@ -257,7 +283,7 @@ hr {
   background-color: #222;
 }
 
-#flex-gap-unlocked {
+#gap-unlocked {
   display: none;
 }
 
@@ -282,4 +308,45 @@ input[type="range"]::-moz-range-thumb {
   height: 0.7rem;
   background: whitesmoke;
   cursor: pointer;
+}
+
+.margin-container {
+  background-color: #555;
+}
+.box {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  background: red;
+}
+
+.box::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid red;
+}
+
+.grid-setting-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  gap: 0.3rem;
+}
+
+#grid-layout-container {
+  background-color: transparent;
+  border: none;
+}
+
+#grid-columns,
+#grid-rows {
+  width: 4rem;
 }

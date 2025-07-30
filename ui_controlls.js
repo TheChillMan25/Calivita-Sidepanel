@@ -30,51 +30,72 @@ function hideAlignmentOptions() {
   $("#align-vertical").hide();
 }
 
-function showFlexGapOptions(type) {
+function showGapOptions(type) {
   switch (type) {
     case "gap":
-      $("#flex-gap-options").show();
-      $("#flex-gap-ui-container").show();
+      $("#gap-options").show();
+      $("#gap-ui-container").show();
       break;
     case "row-gap":
-      $("#flex-row-gap-options").show();
-      $("#flex-gap-ui-container").show();
+      $("#row-gap-options").show();
+      $("#gap-ui-container").show();
       break;
     case "column-gap":
-      $("#flex-column-gap-options").show();
-      $("#flex-gap-ui-container").show();
+      $("#column-gap-options").show();
+      $("#gap-ui-container").show();
       break;
   }
 }
 
-function hideFlexGapOptions() {
-  $("#flex-gap-options").hide();
-  $("#flex-gap-ui-container").hide();
-  $("#flex-row-gap-options").hide();
-  $("#flex-column-gap-options").hide();
+function hideGapOptions() {
+  $("#gap-options").hide();
+  $("#gap-ui-container").hide();
+  $("#row-gap-options").hide();
+  $("#column-gap-options").hide();
 }
 
-function toggleFlexGapOptions() {
-  if ($("#flex-gap-unlocked").css("display") !== "none") {
-    $("#flex-gap-unlocked").hide();
-    $("#flex-gap-default").show();
+function hideGridSettings() {
+  $("#grid-text").hide();
+  $("#grid-layout").hide();
+  $("#grid-layout-container").hide();
+  $("#grid-direction-container").hide();
+}
+function showGridSettings() {
+  $("#grid-text").show();
+  $("#grid-layout").show();
+  $("#grid-layout-container").show();
+  $("#grid-direction-container").show();
+}
+
+function toggleGapOptions() {
+  if ($("#gap-unlocked").css("display") !== "none") {
+    $("#gap-unlocked").hide();
+    $("#gap-default").show();
   } else {
-    $("#flex-gap-unlocked").css("display", "flex");
-    $("#flex-gap-default").hide();
+    $("#gap-unlocked").css("display", "flex");
+    $("#gap-default").hide();
   }
 }
 
 function checkForShowDisplaySettings(value) {
   if (value === "flex" || value === "inline-flex") {
-    $("#flex-settings").css("display", "grid");
+    $("#secondary-display-settings").css("display", "grid");
+    $("#flex-direction-container").show();
+    hideGridSettings();
   } else if (value === "block" || value === "inline-block") {
-    $("#flex-settings").css("display", "none");
+    $("#secondary-display-settings").hide();
+    $("#flex-direction-container").hide();
+    hideGridSettings();
   } else if (value === "grid" || value === "inline-grid") {
-    $("#flex-settings").css("display", "none");
+    $("#secondary-display-settings").css("display", "grid");
+    $("#flex-direction-container").hide();
+    showGridSettings();
   } else if (value === "inline") {
-    $("#flex-settings").css("display", "none");
+    $("#secondary-display-settings").hide();
+    $("#flex-direction-container").hide();
+    hideGridSettings();
   } else {
-    $("#flex-settings").css("display", "none");
+    $("#flex-direction-container").hide();
   }
 }
 
@@ -100,17 +121,17 @@ function getElementName(element) {
 }
 /**
  *
- * @param {*} objects Dom elements to reset
+ * @param {object} objects Dom elements to reset
  * @param {*} button Dom element to set as active
  * @param {*} type CSS property that identifies the button
  */
-function handleDisplay(objects, button, type) {
+function handleDisplay(objects, button, type = "") {
   if (button && button.object) {
     button = button.object;
   }
   objects.removeClass("pressed-button");
   switch (type) {
-    case "display":
+    case "":
       break;
     case "direction":
       if ($("#wrap").hasClass("pressed-button")) {
@@ -122,37 +143,41 @@ function handleDisplay(objects, button, type) {
       break;
     case "alignment":
       resetAlingmentBox();
-      button.html(
-        '<span class="material-symbols-outlined">align_justify_center</span>'
-      );
+      if (!button.hasClass("menu-button")) {
+        button.html(alignBoxMarkerCenter);
+      }
       break;
     case "gap":
-      hideFlexGapOptions("gap");
+      hideGapOptions("gap");
       break;
     case "row-gap":
-      hideFlexGapOptions("row-gap");
+      hideGapOptions("row-gap");
       break;
     case "column-gap":
-      hideFlexGapOptions("column-gap");
+      hideGapOptions("column-gap");
       break;
     default:
       console.error("Unkown case name: " + type);
       break;
   }
   if (button.hasClass("menu-button")) {
-    switch (button.attr("type")) {
+    switch (button.attr("data-type")) {
       case "display-button":
-        $("#od-text").text(getDisplayName(button.attr("value")));
+        $("#od-text").text(getDisplayName(button.attr("data-value")));
         $("#other-display").addClass("pressed-button");
+        $("#other-display").attr("data-desc", button.attr("data-desc"));
         hideDisplayOptions();
         break;
       case "wrap-button":
         $("#wrap-text").text(button.text());
         $("#wrap").addClass("pressed-button");
+        $("#wrap").attr("data-desc", button.attr("data-desc"));
         hideWrapOptions();
         break;
+      case "align-button":
+        break;
       default:
-        console.error("Unkown button type: " + button.attr("type"));
+        console.error("Unkown button type: " + button.attr("data-type"));
         break;
     }
   }
@@ -161,7 +186,7 @@ function handleDisplay(objects, button, type) {
 
 function displaySelectedWrapOption(button) {
   if (button) {
-    switch (button.attr("value")) {
+    switch (button.attr("data-value")) {
       case "ltr-wrap-down":
         $("#ltr-wrap-down").addClass("pressed-button");
         $("#wrap-text").text("Wrap down");
@@ -213,4 +238,31 @@ function resetAlingmentBox() {
   $("#align-box .button").each(function () {
     $(this).html('<rect class="rect"></rect>');
   });
+}
+
+/**
+ * Extracts the unit of measure from the gap value ("12px" -> "px")
+ * @param {string} gapValue The value of the gap
+ * @returns {string} The unit of measure of the value
+ */
+function extractGapType(gapValue) {
+  let gapType = "";
+  for (let i = 0; i < gapValue.length; i++) {
+    if (isNaN(parseInt(gapValue[i], 10))) {
+      gapType += gapValue[i];
+    }
+  }
+  return gapType;
+}
+/**
+ * Counts the rows or columns
+ * @param {string} value grid-template-rows | grid-template-columns
+ * @returns The number of rows or columns
+ */
+function countGridColsRows(value) {
+  let count = 0;
+  for (let index = 0; index < value.length; index++) {
+    if (value[index] === " ") count++;
+  }
+  return count;
 }
