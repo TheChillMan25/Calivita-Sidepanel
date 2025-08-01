@@ -35,7 +35,7 @@ function setDirection(value, button) {
       { type: "flex-direction", value: value },
       { type: "flex-wrap", value: "nowrap" },
     ]);
-    handleDisplay($("#directions .button"), button, "direction");
+    //handleDisplay($("#directions .button"), button, "direction");
     refreshStylePanel();
   }
 }
@@ -113,7 +113,6 @@ function setWrap(value, button) {
     { type: "flex-direction", value: selectedDomObject.css("flex-direction") },
     { type: "flex-wrap", value: selectedDomObject.css("flex-wrap") },
   ]);
-  handleDisplay($("#wrap-options .button"), button, "flex-wrap");
   refreshStylePanel();
 }
 /**
@@ -211,7 +210,7 @@ function setAlignmentWithBox(value, button) {
     },
     { type: "align-items", value: selectedDomObject.css("align-items") },
   ]);
-  handleDisplay($("#align-box .button"), button, "alignment");
+  //handleDisplay($("#align-box .button"), button, "alignment");
   refreshStylePanel();
 }
 /**
@@ -251,6 +250,18 @@ function setGridColsRowsCount(value, type) {
 function setGridDirection(value, button) {
   selectedDomObject.css("grid-auto-flow", value);
   saveStyle([{ type: "grid-auto-flow", value: value }]);
-  handleDisplay($("#grid-direction-container .button"), button);
+  //handleDisplay($("#grid-direction-container .button"), button);
+  refreshStylePanel();
+}
+/**
+ *
+ * @param {string} justifyContent Value of the justify-content attribute (start, center, end, stretch, space-between, space-around)
+ * @param {string} alignContent Value of the align-content attribute (start, center, end, stretch, space-between, space-around)
+ * @param {*} button Dom element to set as active
+ */
+function setGridInnerAlignment(justifyContent, alignContent, button) {
+  let value = alignContent + " " + justifyContent;
+  selectedDomObject.css("place-content", value);
+  saveStyle([{ type: "place-content", value: value }]);
   refreshStylePanel();
 }

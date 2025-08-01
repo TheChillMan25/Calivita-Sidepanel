@@ -59,21 +59,27 @@ function hideGridSettings() {
   $("#grid-layout").hide();
   $("#grid-layout-container").hide();
   $("#grid-direction-container").hide();
+  $("#more-grid-options-container").hide();
 }
 function showGridSettings() {
   $("#grid-text").show();
   $("#grid-layout").show();
   $("#grid-layout-container").show();
   $("#grid-direction-container").show();
+  $("#more-grid-options-container").show();
 }
 
 function toggleGapOptions() {
   if ($("#gap-unlocked").css("display") !== "none") {
     $("#gap-unlocked").hide();
     $("#gap-default").show();
+    $("#gap-lock").html('<span class="material-symbols-outlined">lock</span>');
   } else {
     $("#gap-unlocked").css("display", "flex");
     $("#gap-default").hide();
+    $("#gap-lock").html(
+      '<span class="material-symbols-outlined">lock_open_right</span>'
+    );
   }
 }
 
@@ -133,14 +139,6 @@ function handleDisplay(objects, button, type = "") {
   switch (type) {
     case "":
       break;
-    case "direction":
-      if ($("#wrap").hasClass("pressed-button")) {
-        $("#wrap").removeClass("pressed-button");
-      }
-      break;
-    case "flex-wrap":
-      displaySelectedWrapOption(button);
-      break;
     case "alignment":
       resetAlingmentBox();
       if (!button.hasClass("menu-button")) {
@@ -163,10 +161,7 @@ function handleDisplay(objects, button, type = "") {
   if (button.hasClass("menu-button")) {
     switch (button.attr("data-type")) {
       case "display-button":
-        $("#od-text").text(getDisplayName(button.attr("data-value")));
-        $("#other-display").addClass("pressed-button");
         $("#other-display").attr("data-desc", button.attr("data-desc"));
-        hideDisplayOptions();
         break;
       case "wrap-button":
         $("#wrap-text").text(button.text());
@@ -254,6 +249,25 @@ function extractGapType(gapValue) {
   }
   return gapType;
 }
+
+/**
+ *
+ * @param {string} value Value of the place-content attribute
+ * @returns Object of the separated values ({"align-content": "xXx", "justify-content": "xXx"})
+ */
+function extractPlaceContentValue(value) {
+  let alighContent = "";
+  let justifyContent = "";
+  let trigger = false;
+  for (let i = 0; i < value.length; i++) {
+    if (value[i] === " ") {
+      trigger = true;
+    } else if (!trigger) alighContent += value[i];
+    else justifyContent += value[i];
+  }
+  return { "align-content": alighContent, "justify-content": justifyContent };
+}
+
 /**
  * Counts the rows or columns
  * @param {string} value grid-template-rows | grid-template-columns

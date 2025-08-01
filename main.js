@@ -176,102 +176,113 @@ function refreshStylePanel() {
       localStorage.getItem(selectedDomObject.attr("id"))
     );
     for (const [key, value] of Object.entries(styleData)) {
-      try {
-        switch (key) {
-          case "display":
-            $("#" + value).addClass("pressed-button");
-            if (styleData.display.includes("inline")) {
-              $("#od-text").text(getDisplayName(styleData.display));
-              $("#other-display").addClass("pressed-button");
-            } else {
-              $("#other-display").removeClass("pressed-button");
-            }
-            checkForShowDisplaySettings(styleData.display);
-            break;
-          case "flex-direction":
-            $("#" + value).addClass("pressed-button");
-            break;
-          case "flex-wrap":
-            if (value !== "nowrap") {
-              $("#row").removeClass("pressed-button");
-              $("#column").removeClass("pressed-button");
-            }
-            $("#" + value).addClass("pressed-button");
-            displaySelectedWrapOption(
-              selectWrapObject(
-                styleData["flex-direction"],
-                styleData["flex-wrap"]
-              )
+      switch (key) {
+        case "display":
+          $("#" + value).addClass("pressed-button");
+          if (
+            styleData.display.includes("inline") ||
+            styleData.display === "none"
+          ) {
+            $("#od-text").text(getDisplayName(styleData.display));
+            $("#other-display").addClass("pressed-button");
+            hideDisplayOptions();
+          } else {
+            $("#other-display").removeClass("pressed-button");
+          }
+          checkForShowDisplaySettings(styleData.display);
+          break;
+        case "flex-direction":
+          $("#" + value).addClass("pressed-button");
+          break;
+        case "flex-wrap":
+          if (value !== "nowrap") {
+            $("#row").removeClass("pressed-button");
+            $("#column").removeClass("pressed-button");
+          } 
+          $("#" + value).addClass("pressed-button");
+          displaySelectedWrapOption(
+            selectWrapObject(
+              styleData["flex-direction"],
+              styleData["flex-wrap"]
+            )
+          );
+          break;
+        case "align-items":
+          resetAlingmentBox();
+          selectAlignmentObject(
+            styleData["align-items"],
+            styleData["justify-content"]
+          );
+          break;
+        case "justify-content":
+          break;
+        case "gap":
+          if (extractGapType(styleData["gap"]) !== "%") {
+            $("#gap-" + extractGapType(styleData["gap"])).addClass(
+              "pressed-button"
             );
-            break;
-          case "align-items":
-            resetAlingmentBox();
-            selectAlignmentObject(
-              styleData["align-items"],
-              styleData["justify-content"]
+          } else {
+            $("#gap-percent").addClass("pressed-button");
+          }
+          $("#gap-range").val(parseInt(value));
+          $("#gap-value").val(parseInt(value));
+          $("#gap-type-text").text(extractGapType(value).toUpperCase());
+          $("#gap-type").attr("data-value", extractGapType(value));
+          break;
+        case "row-gap":
+          if (extractGapType(value) !== "%") {
+            $("#row-gap-" + extractGapType(value)).addClass("pressed-button");
+          } else {
+            $("#row-gap-percent").addClass("pressed-button");
+          }
+          $("#row-gap-value").val(parseInt(value));
+          $("#row-gap-type-text").text(extractGapType(value).toUpperCase());
+          $("#row-gap-type").attr("data-value", extractGapType(value));
+          break;
+        case "column-gap":
+          if (extractGapType(value) !== "%") {
+            $("#column-gap-" + extractGapType(value)).addClass(
+              "pressed-button"
             );
-            break;
-          case "justify-content":
-            break;
-          case "gap":
-            if (extractGapType(styleData["gap"]) !== "%") {
-              $("#gap-" + extractGapType(styleData["gap"])).addClass(
-                "pressed-button"
-              );
-            } else {
-              $("#gap-percent").addClass("pressed-button");
-            }
-            $("#gap-range").val(parseInt(value));
-            $("#gap-value").val(parseInt(value));
-            $("#gap-type-text").text(extractGapType(value).toUpperCase());
-            $("#gap-type").attr("data-value", extractGapType(value));
-            break;
-          case "row-gap":
-            if (extractGapType(value) !== "%") {
-              $("#row-gap-" + extractGapType(value)).addClass("pressed-button");
-            } else {
-              $("#row-gap-percent").addClass("pressed-button");
-            }
-            $("#row-gap-value").val(parseInt(value));
-            $("#row-gap-type-text").text(extractGapType(value).toUpperCase());
-            $("#row-gap-type").attr("data-value", extractGapType(value));
-            break;
-          case "column-gap":
-            if (extractGapType(value) !== "%") {
-              $("#column-gap-" + extractGapType(value)).addClass(
-                "pressed-button"
-              );
-            } else {
-              $("#column-gap-percent").addClass("pressed-button");
-            }
-            $("#column-gap-value").val(parseInt(value));
-            $("#column-gap-type-text").text(
-              extractGapType(value).toUpperCase()
-            );
-            $("#column-gap-type").attr("data-value", extractGapType(value));
-            break;
-          case "grid-template-rows":
-            $("#grid-rows").attr("value", countGridColsRows(value));
-            break;
-          case "grid-template-columns":
-            $("#grid-columns").attr("value", countGridColsRows(value));
-            break;
-          case "grid-auto-flow":
-            switch (value) {
-              case "row":
-                $("#grid-horizontal").addClass("pressed-button");
-                break;
-              case "column":
-                $("#grid-vertical").addClass("pressed-button");
-                break;
-            }
-            break;
-          default:
-            console.warn("Unknown style key: " + key);
-        }
-      } catch (error) {
-        console.error("Error applying style: " + error);
-        return;
+          } else {
+            $("#column-gap-percent").addClass("pressed-button");
+          }
+          $("#column-gap-value").val(parseInt(value));
+          $("#column-gap-type-text").text(extractGapType(value).toUpperCase());
+          $("#column-gap-type").attr("data-value", extractGapType(value));
+          break;
+        case "grid-template-rows":
+          $("#grid-rows").attr("value", countGridColsRows(value));
+          break;
+        case "grid-template-columns":
+          $("#grid-columns").attr("value", countGridColsRows(value));
+          break;
+        case "grid-auto-flow":
+          switch (value) {
+            case "row":
+              $("#grid-horizontal").addClass("pressed-button");
+              break;
+            case "column":
+              $("#grid-vertical").addClass("pressed-button");
+              break;
+          }
+          break;
+        case "place-content":
+          let c = extractPlaceContentValue(value);
+          if (c["align-content"] === "space-between")
+            $("#grid-row-sb").addClass("pressed-button");
+          else if (c["align-content"] === "space-around")
+            $("#grid-row-sa").addClass("pressed-button");
+          else $("#grid-row-" + c["align-content"]).addClass("pressed-button");
+          if (c["justify-content"] === "space-between")
+            $("#grid-col-sb").addClass("pressed-button");
+          else if (c["justify-content"] === "space-around")
+            $("#grid-col-sa").addClass("pressed-button");
+          else
+            $("#grid-col-" + c["justify-content"]).addClass("pressed-button");
+          break;
+        default:
+          console.warn("Unknown style key: " + key);
       }
     }
   } catch (error) {
@@ -595,6 +606,18 @@ function setUpControlls() {
   });
   $("#grid-direction-container").on("click", ".button", function () {
     setGridDirection($(this).attr("data-value"), $(this));
+  });
+  $("#more-column-settings").on("click", ".button", function () {
+    let aC = $("#more-row-settings .pressed-button");
+    setGridInnerAlignment(
+      $(this).attr("data-value"),
+      aC.attr("data-value"),
+      $(this)
+    );
+  });
+  $("#more-row-settings").on("click", ".button", function () {
+    let jC = $("#more-column-settings .pressed-button");
+    setGridInnerAlignment(jC.attr("data-value"), $(this).attr("data-value"));
   });
 }
 

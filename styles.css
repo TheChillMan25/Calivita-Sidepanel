@@ -104,10 +104,7 @@ hr {
   color: whitesmoke;
 }
 
-#displays,
-#flex-direction-container,
-#grid-layout-container,
-#grid-direction-container {
+.button-container {
   border: 0.1rem solid #444;
   display: flex;
   background-color: #222;
@@ -349,4 +346,13 @@ input[type="range"]::-moz-range-thumb {
 #grid-columns,
 #grid-rows {
   width: 4rem;
+}
+
+#more-grid-options{
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.more-grid-option-container{
+  display: flex;
 }
