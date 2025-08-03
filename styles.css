@@ -31,6 +31,9 @@ hr {
   width: 100%;
   background-color: #999;
 }
+.title-container {
+  margin-bottom: 0.3rem;
+}
 .title {
   font-size: larger;
   color: whitesmoke;
@@ -39,7 +42,6 @@ hr {
 
 #sidepanel {
   box-sizing: border-box;
-  padding: 0.3rem;
   min-width: 15rem;
   max-width: 15rem;
   background-color: #333;
@@ -51,7 +53,7 @@ hr {
   display: none;
   position: absolute;
   padding: 0.2rem;
-  background-color: #444;
+  background-color: #555;
   color: #999;
   border-radius: 0.2rem;
   font-size: small;
@@ -66,12 +68,22 @@ hr {
 #panel-header {
   display: flex;
   align-items: center;
+  padding: 0.5rem;
+  border-bottom: 0.1rem solid #777;
 }
 
 #layout-display-options {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.setting-container {
+  padding: 0.3rem;
+}
+
+.setting-container:not(:last-child) {
+  border-bottom: 0.1rem solid #777;
 }
 
 .setting-name {
@@ -310,25 +322,6 @@ input[type="range"]::-moz-range-thumb {
 .margin-container {
   background-color: #555;
 }
-.box {
-  position: relative;
-  width: 200px;
-  height: 100px;
-  background: red;
-}
-
-.box::after {
-  content: "";
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 20px solid red;
-}
 
 .grid-setting-container {
   display: flex;
@@ -348,11 +341,76 @@ input[type="range"]::-moz-range-thumb {
   width: 4rem;
 }
 
-#more-grid-options{
+#more-grid-options {
   display: grid;
   grid-template-columns: auto auto;
 }
 
-.more-grid-option-container{
+.more-grid-option-container {
   display: flex;
+}
+
+#margin-text,
+#padding-text {
+  position: relative;
+  top: 1rem;
+}
+
+#margin-container,
+#padding-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-rows: auto 3fr auto;
+  border-radius: 0.3rem;
+  background-color: #444;
+  overflow: hidden;
+}
+
+.spacing-filling-div,
+.spacing-setting {
+  padding: 0.5rem;
+}
+
+#padding-container {
+  grid-template-columns: 1fr 2fr 1fr;
+  border: 0.2rem solid #333;
+  padding: 0;
+}
+
+#spacing-setting-ui {
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  top: 0.5rem;
+  right: 0;
+  padding: 0.3rem;
+}
+
+#spacing-range-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .toggle {
+    flex-grow: 0;
+  }
+}
+
+#spacing-value {
+  width: 4rem;
+}
+
+#spacing-button-container {
+  display: flex;
+  gap: 0.2rem;
+  .button {
+    background-color: #555;
+  }
+}
+
+#spacing-buttons {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  flex-grow: 1;
+  gap: 0.2rem;
 }

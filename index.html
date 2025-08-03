@@ -18,11 +18,21 @@
   </head>
   <body>
     <div id="page">
+      <div
+        id="version"
+        style="position: absolute; bottom: 1rem; right: 1rem; color: white">
+        v0.0.2
+      </div>
       <div id="body" class="editable">
         <div
           id="element1"
           class="editable"
-          style="width: 10rem; height: 7rem; background-color: red">
+          style="
+            width: 10rem;
+            height: 7rem;
+            background-color: red;
+            margin-left: calc(auto - 2rem);
+          ">
           <span>abc</span>
           <span>def</span>
           <span>ghi</span>
@@ -34,19 +44,26 @@
         <div id="panel-header">
           <span id="name" class="title">Name</span>
         </div>
-        <hr />
         <span id="select-smt">Select something</span>
         <div id="settings">
           <div id="flex-child" class="setting-container">
-            <span class="title">Flex child</span>
+            <div class="title-container">
+              <span class="title">Flex child</span>
+            </div>
             <div id="sizing-settings">
               <span class="setting-name">Sizing</span>
               <div id="sizing-options"></div>
             </div>
           </div>
-          <div id="grid-child"></div>
+          <div id="grid-child">
+            <div class="title-container">
+              <span class="title">Grid child</span>
+            </div>
+          </div>
           <div id="layout" class="setting-container">
-            <span class="title">Layout</span>
+            <div class="title-container">
+              <span class="title">Layout</span>
+            </div>
             <div id="layout-display-options">
               <div id="primary-display-settings">
                 <div id="display" class="setting-name">Display</div>
@@ -152,14 +169,34 @@
                     data-value="row"
                     class="button hoverable"
                     data-desc="Horizontal">
-                    <i class="fa-solid fa-arrow-right"></i>
+                    <svg
+                      data-wf-icon="ArrowRightIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M12.2929 7.00004L9.14645 3.85359L9.85355 3.14648L14.2071 7.50004L9.85355 11.8536L9.14645 11.1465L12.2929 8.00004H3V7.00004H12.2929Z"
+                        fill="currentColor"></path>
+                    </svg>
                   </div>
                   <div
                     id="column"
                     data-value="column"
                     class="button hoverable"
                     data-desc="Vertical">
-                    <i class="fa-solid fa-arrow-down"></i>
+                    <svg
+                      data-wf-icon="ArrowDownIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M8.00001 12.2929L4.85356 9.14645L4.14645 9.85355L8.50001 14.2071L12.8536 9.85355L12.1465 9.14645L9.00001 12.2929L9.00001 3H8.00001L8.00001 12.2929Z"
+                        fill="currentColor"></path>
+                    </svg>
                   </div>
                   <div
                     id="wrap"
@@ -1216,6 +1253,197 @@
               </div>
             </div>
             <div id="spacing"></div>
+          </div>
+          <div id="spacing" class="setting-container">
+            <div class="title-container">
+              <span class="title">Sizing</span>
+              <span id="margin-text" style="top: 1.7rem; left: -2.5rem"
+                >Margin</span
+              >
+              <span id="padding-text" style="top: 3.7rem; left: -2.7rem"
+                >Padding</span
+              >
+            </div>
+            <div id="margin-container">
+              <div class="spacing-filling-div"></div>
+              <div
+                id="margin-top"
+                class="spacing-setting toggle hoverable"
+                data-desc="Edit margin top"
+                data-type="margin"
+                data-value="0px">
+                0
+              </div>
+              <div class="spacing-filling-div"></div>
+              <div
+                id="margin-left"
+                class="spacing-setting toggle hoverable"
+                data-desc="Edit margin left"
+                data-type="margin"
+                data-value="0px">
+                0
+              </div>
+              <div id="padding-container" class="spacing-filling-div">
+                <div class="spacing-filling-div"></div>
+                <div
+                  id="padding-top"
+                  class="spacing-setting toggle hoverable"
+                  data-desc="Edit padding top"
+                  data-type="padding"
+                  data-value="0px">
+                  0
+                </div>
+                <div class="spacing-filling-div"></div>
+                <div
+                  id="padding-left"
+                  class="spacing-setting toggle hoverable"
+                  data-desc="Edit padding left"
+                  data-type="padding"
+                  data-value="0px">
+                  0
+                </div>
+                <div
+                  class="spacing-filling-div"
+                  style="background-color: #333; border-radius: 0.3rem"></div>
+                <div
+                  id="padding-right"
+                  class="spacing-setting toggle hoverable"
+                  data-desc="Edit padding right"
+                  data-type="padding"
+                  data-value="0px">
+                  0
+                </div>
+                <div class="spacing-filling-div"></div>
+                <div
+                  id="padding-bottom"
+                  class="spacing-setting toggle hoverable"
+                  data-desc="Edit padding bottom"
+                  data-type="padding"
+                  data-value="0px">
+                  0
+                </div>
+                <div class="spacing-filling-div"></div>
+              </div>
+              <div
+                id="margin-right"
+                class="spacing-setting toggle hoverable"
+                data-desc="Edit margin right"
+                data-type="margin"
+                data-value="0px">
+                0
+              </div>
+              <div class="spacing-filling-div"></div>
+              <div
+                id="margin-bottom"
+                class="spacing-setting toggle hoverable"
+                data-desc="Edit margin bottom"
+                data-type="margin"
+                data-value="0px">
+                0
+              </div>
+              <div class="spacing-filling-div"></div>
+            </div>
+            <div id="spacing-setting-ui" class="menu-container">
+              <div id="spacing-range-container">
+                <svg
+                  data-wf-icon="MarginLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    d="M14 2L14 13L10 13L10 2L14 2Z"
+                    fill="currentColor"
+                    fill-opacity="0.67"></path>
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7.99995 7L7.99995 1H8.99995L8.99995 14H7.99995L7.99995 8L3.70706 8L5.85351 10.1464L5.1464 10.8536L1.79285 7.5L5.1464 4.14645L5.85351 4.85355L3.70706 7L7.99995 7Z"
+                    fill="currentColor"></path>
+                </svg>
+                <input
+                  type="range"
+                  name="spacing-range"
+                  id="spacing-range"
+                  value="0"
+                  style="width: 6rem" />
+                <input
+                  type="text"
+                  name="spacing-value"
+                  id="spacing-value"
+                  class="number-input"
+                  value="0" />
+                <div id="spacing-type" class="toggle" data-value="px">
+                  <span id="spacing-type-text">PX</span>
+                  <div id="spacing-type-options" class="menu-container">
+                    <div id="spacing-type-px" data-value="px" class="button">
+                      PX
+                    </div>
+                    <div id="spacing-type-em" data-value="em" class="button">
+                      EM
+                    </div>
+                    <div id="spacing-type-rem" data-value="rem" class="button">
+                      REM
+                    </div>
+                    <div id="spacing-type-ch" data-value="ch" class="button">
+                      CH
+                    </div>
+                    <div id="spacing-type-vw" data-value="vw" class="button">
+                      VW
+                    </div>
+                    <div id="spacing-type-vh" data-value="vh" class="button">
+                      VH
+                    </div>
+                    <div id="spacing-type-svw" data-value="svw" class="button">
+                      SVW
+                    </div>
+                    <div id="spacing-type-svh" data-value="svh" class="button">
+                      SVH
+                    </div>
+                    <div
+                      id="spacing-type-percent"
+                      data-value="%"
+                      class="button">
+                      %
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="spacing-button-container">
+                <div id="spacing-auto" class="button" data-value="auto">
+                  Auto
+                </div>
+                <div id="spacing-buttons">
+                  <div class="button" data-value="0">0</div>
+                  <div class="button" data-value="10">10</div>
+                  <div class="button" data-value="15">15</div>
+                  <div class="button" data-value="20">20</div>
+                  <div class="button" data-value="25">25</div>
+                  <div class="button" data-value="50">50</div>
+                  <div class="button" data-value="75">75</div>
+                  <div class="button" data-value="100">100</div>
+                </div>
+              </div>
+              <div
+                id="spacing-reset"
+                class="button"
+                style="justify-content: start; gap: 0.5rem">
+                <svg
+                  data-wf-icon="UndoIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
+                    fill="currentColor"></path></svg
+                >Reset
+              </div>
+            </div>
+            <div id="spacing-ui-container" class="ui-container"></div>
           </div>
         </div>
       </div>

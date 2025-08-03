@@ -1,4 +1,7 @@
 let selectedDomObject = null;
+let currentSpacing = null;
+let isDragging = false;
+let startX, startY;
 let alignBoxMarkerCenter =
   '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
 /* let alignBoxMarkerLeft =
@@ -38,8 +41,9 @@ $(document).ready(function () {
       let posLeft = $(this).position()["left"] - dif;
       if (posLeft + $("#tooltip").width() > window.innerWidth) {
         posLeft = window.innerWidth - $("#tooltip").width() - 8;
+        $("#tooltip").css("right", ".5rem");
       }
-      if ($("#tooltip").width() > 100) {
+      if ($("#tooltip").width() > 150) {
         $("#tooltip").css("right", ".5rem");
         posLeft = window.innerWidth - 14.5 * 16;
       }
@@ -165,10 +169,10 @@ function pageRefreshLoad() {
 }
 
 function refreshStylePanel() {
-  if (checkFlexChild()) $("#flex-child").show();
-  else $("#flex-child").hide();
+  checkChild();
   if (selectedDomObject.attr("id") === "body") {
     $("#flex-child").hide();
+    $("#grid-child").hide();
   }
   $("#sidepanel .button").removeClass("pressed-button");
   try {
@@ -198,7 +202,7 @@ function refreshStylePanel() {
           if (value !== "nowrap") {
             $("#row").removeClass("pressed-button");
             $("#column").removeClass("pressed-button");
-          } 
+          }
           $("#" + value).addClass("pressed-button");
           displaySelectedWrapOption(
             selectWrapObject(
@@ -217,8 +221,8 @@ function refreshStylePanel() {
         case "justify-content":
           break;
         case "gap":
-          if (extractGapType(styleData["gap"]) !== "%") {
-            $("#gap-" + extractGapType(styleData["gap"])).addClass(
+          if (extractType(styleData["gap"]) !== "%") {
+            $("#gap-" + extractType(styleData["gap"])).addClass(
               "pressed-button"
             );
           } else {
@@ -226,30 +230,28 @@ function refreshStylePanel() {
           }
           $("#gap-range").val(parseInt(value));
           $("#gap-value").val(parseInt(value));
-          $("#gap-type-text").text(extractGapType(value).toUpperCase());
-          $("#gap-type").attr("data-value", extractGapType(value));
+          $("#gap-type-text").text(extractType(value).toUpperCase());
+          $("#gap-type").attr("data-value", extractType(value));
           break;
         case "row-gap":
-          if (extractGapType(value) !== "%") {
-            $("#row-gap-" + extractGapType(value)).addClass("pressed-button");
+          if (extractType(value) !== "%") {
+            $("#row-gap-" + extractType(value)).addClass("pressed-button");
           } else {
             $("#row-gap-percent").addClass("pressed-button");
           }
           $("#row-gap-value").val(parseInt(value));
-          $("#row-gap-type-text").text(extractGapType(value).toUpperCase());
-          $("#row-gap-type").attr("data-value", extractGapType(value));
+          $("#row-gap-type-text").text(extractType(value).toUpperCase());
+          $("#row-gap-type").attr("data-value", extractType(value));
           break;
         case "column-gap":
-          if (extractGapType(value) !== "%") {
-            $("#column-gap-" + extractGapType(value)).addClass(
-              "pressed-button"
-            );
+          if (extractType(value) !== "%") {
+            $("#column-gap-" + extractType(value)).addClass("pressed-button");
           } else {
             $("#column-gap-percent").addClass("pressed-button");
           }
           $("#column-gap-value").val(parseInt(value));
-          $("#column-gap-type-text").text(extractGapType(value).toUpperCase());
-          $("#column-gap-type").attr("data-value", extractGapType(value));
+          $("#column-gap-type-text").text(extractType(value).toUpperCase());
+          $("#column-gap-type").attr("data-value", extractType(value));
           break;
         case "grid-template-rows":
           $("#grid-rows").attr("value", countGridColsRows(value));
@@ -281,12 +283,52 @@ function refreshStylePanel() {
           else
             $("#grid-col-" + c["justify-content"]).addClass("pressed-button");
           break;
+        case "margin-top":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "margin-right":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "margin-bottom":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "margin-left":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "padding-top":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "padding-right":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "padding-bottom":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
+        case "padding-left":
+          $("#" + key)
+            .text(extractValue(value))
+            .attr("data-value", value);
+          break;
         default:
           console.warn("Unknown style key: " + key);
       }
     }
   } catch (error) {
-    return;
+    console.log(error);
   }
 }
 /**
@@ -442,6 +484,7 @@ function selectAlignmentObject(alignItems, justifyContent) {
 }
 
 function setUpControlls() {
+  console.log("Setting up controls");
   $("#displays-toggle").on("click", function (event) {
     event.stopPropagation();
     showDisplayOptions();
@@ -619,6 +662,55 @@ function setUpControlls() {
     let jC = $("#more-column-settings .pressed-button");
     setGridInnerAlignment(jC.attr("data-value"), $(this).attr("data-value"));
   });
+  $(".spacing-setting.toggle").on("click", function () {
+    console.log("asd");
+    currentSpacing = $(this).attr("id");
+    showSpacingSettings($(this).attr("data-value"));
+  });
+  $("#spacing-type").on("click", function () {
+    showSpacingType();
+  });
+  $("#spacing-ui-container").on("click", function (event) {
+    event.stopPropagation();
+    if ($("#spacing-type-options").css("display") !== "none") {
+      hideSpacingType();
+      return;
+    }
+    hideSpacingSettings();
+    currentSpacing = null;
+  });
+  $("#spacing-range").on("input", function () {
+    let val = $(this).val();
+    let type = $("#spacing-type").attr("data-value");
+    setSpacing(currentSpacing, val, type);
+  });
+  $("#spacing-type-options").on("click", ".button", function (event) {
+    $("#spacing-type").attr("data-value", $(this).attr("data-value"));
+    $("#spacing-type-text").text($(this).attr("data-value").toUpperCase());
+    event.stopPropagation();
+    let val = $("#spacing-range").val();
+    let type = $(this).attr("data-value");
+    setSpacing(currentSpacing, val, type, $(this));
+  });
+  $("#spacing-button-container").on("click", ".button", function () {
+    $("#spacing-value").val($(this).attr("data-value"));
+    $("#spacing-range").val($(this).attr("data-value"));
+    let val = $(this).attr("data-value");
+    let type = $("#spacing-type").attr("data-value");
+    setSpacing(currentSpacing, val, type);
+  });
+  $("#spacing-reset").on("click", function () {
+    $("#spacing-range").val(0);
+    setSpacing(currentSpacing, 0, "px");
+    hideSpacingSettings();
+  });
+}
+
+function checkChild() {
+  if (checkFlexChild()) $("#flex-child").show();
+  else $("#flex-child").hide();
+  if (checkGridChild()) $("#grid-child").show();
+  else $("#grid-child").hide();
 }
 
 /**
@@ -629,6 +721,15 @@ function checkFlexChild() {
   if (
     selectedDomObject.parent().css("display") === "flex" ||
     selectedDomObject.parent().css("display") === "inline-flex"
+  )
+    return true;
+  return false;
+}
+
+function checkGridChild() {
+  if (
+    selectedDomObject.parent().css("display") === "grid" ||
+    selectedDomObject.parent().css("display") === "inline-grid"
   )
     return true;
   return false;

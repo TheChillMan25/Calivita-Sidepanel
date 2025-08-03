@@ -265,3 +265,22 @@ function setGridInnerAlignment(justifyContent, alignContent, button) {
   saveStyle([{ type: "place-content", value: value }]);
   refreshStylePanel();
 }
+
+function setSpacing(currentSpacing, value, type, button = null) {
+  $("#spacing-value").val(value);
+  if (value === "auto") {
+    $("#" + currentSpacing).attr("data-value", value);
+    selectedDomObject.css(currentSpacing, value);
+    saveStyle([{ type: currentSpacing, value: value }]);
+  } else {
+    $("#" + currentSpacing).text(value);
+    $("#" + currentSpacing).attr("data-value", value + type);
+    selectedDomObject.css(currentSpacing, value + type);
+    saveStyle([{ type: currentSpacing, value: value + type }]);
+  }
+  if (button) {
+    console.log("asd");
+    handleDisplay(button.parent().find(".button"), button, "spacing");
+  }
+  refreshStylePanel();
+}

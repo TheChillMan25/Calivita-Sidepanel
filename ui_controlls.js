@@ -30,6 +30,38 @@ function hideAlignmentOptions() {
   $("#align-vertical").hide();
 }
 
+function showSpacingSettings(value) {
+  if (currentSpacing.includes("padding")) {
+    $("#spacing-auto").hide();
+  } else {
+    $("#spacing-auto").show();
+  }
+  $("#spacing-range").val(extractValue(value));
+  $("#spacing-value").val(extractValue(value));
+  if (value !== "auto") {
+    $("#spacing-type").attr("data-value", extractType(value));
+    $("#spacing-type-text").text(extractType(value).toUpperCase());
+  } else {
+    $("#spacing-type").attr("data-value", "px");
+    $("#spacing-type-text").text("PX");
+  }
+  $("#spacing-setting-ui").css("display", "flex");
+  $("#spacing-ui-container").show();
+}
+
+function hideSpacingSettings() {
+  $("#spacing-setting-ui").hide();
+  $("#spacing-ui-container").hide();
+}
+
+function showSpacingType() {
+  $("#spacing-type-options").show();
+}
+
+function hideSpacingType() {
+  $("#spacing-type-options").hide();
+}
+
 function showGapOptions(type) {
   switch (type) {
     case "gap":
@@ -154,6 +186,9 @@ function handleDisplay(objects, button, type = "") {
     case "column-gap":
       hideGapOptions("column-gap");
       break;
+    case "spacing":
+      hideSpacingType();
+      break;
     default:
       console.error("Unkown case name: " + type);
       break;
@@ -168,8 +203,6 @@ function handleDisplay(objects, button, type = "") {
         $("#wrap").addClass("pressed-button");
         $("#wrap").attr("data-desc", button.attr("data-desc"));
         hideWrapOptions();
-        break;
-      case "align-button":
         break;
       default:
         console.error("Unkown button type: " + button.attr("data-type"));
@@ -236,18 +269,33 @@ function resetAlingmentBox() {
 }
 
 /**
- * Extracts the unit of measure from the gap value ("12px" -> "px")
- * @param {string} gapValue The value of the gap
- * @returns {string} The unit of measure of the value
+ * Extracts the unit of measure from the string ("12px" -> "px")
+ * @param {string} string The string to extract from
+ * @returns {string} The unit of measure
  */
-function extractGapType(gapValue) {
-  let gapType = "";
-  for (let i = 0; i < gapValue.length; i++) {
-    if (isNaN(parseInt(gapValue[i], 10))) {
-      gapType += gapValue[i];
+function extractType(string) {
+  let type = "";
+  for (let i = 0; i < string.length; i++) {
+    if (isNaN(parseInt(string[i], 10))) {
+      type += string[i];
     }
   }
-  return gapType;
+  return type;
+}
+/**
+ * Extract the numbers from a string
+ * @param {string} string The string to extract from
+ * @returns The extracted numbers in a string
+ */
+function extractValue(string) {
+  if (string === "auto") return "Auto";
+  let value = "";
+  for (let i = 0; i < string.length; i++) {
+    if (!isNaN(parseInt(string[i], 10))) {
+      value += string[i];
+    }
+  }
+  return value;
 }
 
 /**
