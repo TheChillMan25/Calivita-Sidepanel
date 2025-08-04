@@ -296,6 +296,11 @@ hr {
   display: none;
 }
 
+#type-options {
+  width: 3.5rem;
+  z-index: 15;
+}
+
 input[type="range"] {
   height: 0.2rem;
   border-radius: 0%;
@@ -413,4 +418,17 @@ input[type="range"]::-moz-range-thumb {
   grid-template-columns: auto auto auto auto;
   flex-grow: 1;
   gap: 0.2rem;
+}
+
+#sizing-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-around;
+  row-gap: 0.5rem;
+  .setting-name {
+    justify-content: start;
+  }
+  .number-input {
+    width: 3rem;
+  }
 }

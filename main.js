@@ -1,7 +1,6 @@
 let selectedDomObject = null;
 let currentSpacing = null;
-let isDragging = false;
-let startX, startY;
+let currentType = null;
 let alignBoxMarkerCenter =
   '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
 /* let alignBoxMarkerLeft =
@@ -226,7 +225,7 @@ function refreshStylePanel() {
               "pressed-button"
             );
           } else {
-            $("#gap-percent").addClass("pressed-button");
+            $("#percent").addClass("pressed-button");
           }
           $("#gap-range").val(parseInt(value));
           $("#gap-value").val(parseInt(value));
@@ -237,7 +236,7 @@ function refreshStylePanel() {
           if (extractType(value) !== "%") {
             $("#row-gap-" + extractType(value)).addClass("pressed-button");
           } else {
-            $("#row-gap-percent").addClass("pressed-button");
+            $("#row-percent").addClass("pressed-button");
           }
           $("#row-gap-value").val(parseInt(value));
           $("#row-gap-type-text").text(extractType(value).toUpperCase());
@@ -247,7 +246,7 @@ function refreshStylePanel() {
           if (extractType(value) !== "%") {
             $("#column-gap-" + extractType(value)).addClass("pressed-button");
           } else {
-            $("#column-gap-percent").addClass("pressed-button");
+            $("#column-percent").addClass("pressed-button");
           }
           $("#column-gap-value").val(parseInt(value));
           $("#column-gap-type-text").text(extractType(value).toUpperCase());
@@ -328,7 +327,7 @@ function refreshStylePanel() {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 /**
@@ -484,7 +483,6 @@ function selectAlignmentObject(alignItems, justifyContent) {
 }
 
 function setUpControlls() {
-  console.log("Setting up controls");
   $("#displays-toggle").on("click", function (event) {
     event.stopPropagation();
     showDisplayOptions();
@@ -555,22 +553,20 @@ function setUpControlls() {
     }
   });
   $("#gap-type").on("click", function () {
-    showGapOptions("gap");
+    showTypeOptions($(this));
   });
-  $("#gap-ui-container").on("click", function () {
-    hideGapOptions();
+  $("#type-ui-container").on("click", function () {
+    hideTypeOptions();
   });
-  $("#gap-options").on("click", ".button", function (event) {
+  $("#type-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    let gapValue = $("#gap-range").val();
-    let gapType = $(this).attr("data-value");
-    setGap(gapValue, gapType, $(this));
+    handeTypeSelection($(this));
   });
   $("#gap-lock").on("click", function () {
     toggleGapOptions();
   });
   $("#row-gap-type").on("click", function () {
-    showGapOptions("row-gap");
+    showTypeOptions($(this));
   });
   $("#row-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
@@ -596,14 +592,8 @@ function setUpControlls() {
       }
     }
   });
-  $("#row-gap-options").on("click", ".button", function (event) {
-    event.stopPropagation();
-    let gapValue = $("#row-gap-value").val();
-    let gapType = $(this).attr("data-value");
-    setGap(gapValue, gapType, $(this), "row-gap");
-  });
   $("#column-gap-type").on("click", function () {
-    showGapOptions("column-gap");
+    showTypeOptions($(this));
   });
   $("#column-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
@@ -628,12 +618,6 @@ function setUpControlls() {
         );
       }
     }
-  });
-  $("#column-gap-options").on("click", ".button", function (event) {
-    event.stopPropagation();
-    let gapValue = $("#column-gap-value").val();
-    let gapType = $(this).attr("data-value");
-    setGap(gapValue, gapType, $(this), "column-gap");
   });
   $("#grid-columns").on("input", function () {
     let colNum = $(this).val();
@@ -663,17 +647,16 @@ function setUpControlls() {
     setGridInnerAlignment(jC.attr("data-value"), $(this).attr("data-value"));
   });
   $(".spacing-setting.toggle").on("click", function () {
-    console.log("asd");
     currentSpacing = $(this).attr("id");
     showSpacingSettings($(this).attr("data-value"));
   });
   $("#spacing-type").on("click", function () {
-    showSpacingType();
+    showTypeOptions($(this));
   });
   $("#spacing-ui-container").on("click", function (event) {
     event.stopPropagation();
     if ($("#spacing-type-options").css("display") !== "none") {
-      hideSpacingType();
+      hidet();
       return;
     }
     hideSpacingSettings();
@@ -683,14 +666,6 @@ function setUpControlls() {
     let val = $(this).val();
     let type = $("#spacing-type").attr("data-value");
     setSpacing(currentSpacing, val, type);
-  });
-  $("#spacing-type-options").on("click", ".button", function (event) {
-    $("#spacing-type").attr("data-value", $(this).attr("data-value"));
-    $("#spacing-type-text").text($(this).attr("data-value").toUpperCase());
-    event.stopPropagation();
-    let val = $("#spacing-range").val();
-    let type = $(this).attr("data-value");
-    setSpacing(currentSpacing, val, type, $(this));
   });
   $("#spacing-button-container").on("click", ".button", function () {
     $("#spacing-value").val($(this).attr("data-value"));
@@ -733,4 +708,50 @@ function checkGridChild() {
   )
     return true;
   return false;
+}
+
+function handeTypeSelection(button) {
+  let value;
+  let type;
+  switch (currentType) {
+    case "gap":
+      value = $("#gap-range").val();
+      type = button.attr("data-value");
+      $("#gap-type").attr("data-value", type);
+      $("#gap-type-text").text(type.toUpperCase());
+      setGap(value, type, button);
+      break;
+    case "row-gap":
+      value = $("#row-gap-value").val();
+      type = button.attr("data-value");
+      $("#row-gap-type").attr("data-value", type);
+      console.log($("#row-gap-type").attr("data-value"));
+      $("#row-gap-type-text").text(type.toUpperCase());
+      setGap(value, type, button, "row-gap");
+      value = $("#column-gap-value").val();
+      type = $("#column-gap-type").attr("data-value");
+      setGap(value, type, null, "column-gap");
+      break;
+    case "column-gap":
+      value = $("#column-gap-value").val();
+      type = button.attr("data-value");
+      $("#column-gap-type").attr("data-value", type);
+      $("#column-gap-type-text").text(type.toUpperCase());
+      setGap(value, type, button, "column-gap");
+      value = $("#row-gap-value").val();
+      type = $("#row-gap-type").attr("data-value");
+      setGap(value, type, null, "row-gap");
+      break;
+    case "spacing":
+      $("#spacing-type").attr("data-value", button.attr("data-value"));
+      $("#spacing-type-text").text(button.attr("data-value").toUpperCase());
+      value = $("#spacing-range").val();
+      type = button.attr("data-value");
+      setSpacing(currentSpacing, value, type, button);
+      break;
+    default:
+      console.error("Can't handle unknown type: ", currentType);
+  }
+  handleDisplay(button.parent().find(".button"), button);
+  hideTypeOptions();
 }

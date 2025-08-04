@@ -210,7 +210,6 @@ function setAlignmentWithBox(value, button) {
     },
     { type: "align-items", value: selectedDomObject.css("align-items") },
   ]);
-  //handleDisplay($("#align-box .button"), button, "alignment");
   refreshStylePanel();
 }
 /**
@@ -279,7 +278,6 @@ function setSpacing(currentSpacing, value, type, button = null) {
     saveStyle([{ type: currentSpacing, value: value + type }]);
   }
   if (button) {
-    console.log("asd");
     handleDisplay(button.parent().find(".button"), button, "spacing");
   }
   refreshStylePanel();

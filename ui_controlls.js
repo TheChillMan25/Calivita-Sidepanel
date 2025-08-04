@@ -61,29 +61,44 @@ function showSpacingType() {
 function hideSpacingType() {
   $("#spacing-type-options").hide();
 }
-
-function showGapOptions(type) {
-  switch (type) {
-    case "gap":
-      $("#gap-options").show();
-      $("#gap-ui-container").show();
-      break;
-    case "row-gap":
-      $("#row-gap-options").show();
-      $("#gap-ui-container").show();
-      break;
-    case "column-gap":
-      $("#column-gap-options").show();
-      $("#gap-ui-container").show();
-      break;
+/**
+ * Shows type settings and sets current type ot use
+ * @param {string} type Type of the element to change (gap, margin, padding, etc)
+ */
+function showTypeOptions(caller) {
+  $("#type-options .button").removeClass("pressed-button");
+  $("#" + caller.attr("data-value")).addClass("pressed-button");
+  currentType = caller.attr("data-type");
+  if (
+    caller.offset()["left"] + $("#type-options").outerWidth() >
+    window.innerWidth
+  ) {
+    $("#type-options").css({
+      top: caller.offset()["top"],
+      left: window.innerWidth - $("#type-options").outerWidth() - 8,
+    });
+  } else if (
+    caller.offset()["top"] + $("#type-options").outerHeight() >
+    window.innerHeight
+  ) {
+    $("#type-options").css({
+      top: window.innerHeight - $("#type-options").outerHeight() - 8,
+      left: caller.offset()["left"],
+    });
+  } else {
+    $("#type-options").css({
+      top: caller.offset()["top"],
+      left: caller.offset()["left"],
+    });
   }
+
+  $("#type-options").show();
+  $("#type-ui-container").show();
 }
 
-function hideGapOptions() {
-  $("#gap-options").hide();
-  $("#gap-ui-container").hide();
-  $("#row-gap-options").hide();
-  $("#column-gap-options").hide();
+function hideTypeOptions() {
+  $("#type-options").hide();
+  $("#type-ui-container").hide();
 }
 
 function hideGridSettings() {
@@ -163,36 +178,11 @@ function getElementName(element) {
  * @param {*} button Dom element to set as active
  * @param {*} type CSS property that identifies the button
  */
-function handleDisplay(objects, button, type = "") {
+function handleDisplay(objects, button) {
   if (button && button.object) {
     button = button.object;
   }
   objects.removeClass("pressed-button");
-  switch (type) {
-    case "":
-      break;
-    case "alignment":
-      resetAlingmentBox();
-      if (!button.hasClass("menu-button")) {
-        button.html(alignBoxMarkerCenter);
-      }
-      break;
-    case "gap":
-      hideGapOptions("gap");
-      break;
-    case "row-gap":
-      hideGapOptions("row-gap");
-      break;
-    case "column-gap":
-      hideGapOptions("column-gap");
-      break;
-    case "spacing":
-      hideSpacingType();
-      break;
-    default:
-      console.error("Unkown case name: " + type);
-      break;
-  }
   if (button.hasClass("menu-button")) {
     switch (button.attr("data-type")) {
       case "display-button":

@@ -831,30 +831,30 @@
                       id="gap-value"
                       value="0"
                       class="number-input" />
-                    <div id="gap-type" data-value="px" class="toggle">
+                    <div
+                      id="gap-type"
+                      data-value="px"
+                      data-type="gap"
+                      class="toggle">
                       <span id="gap-type-text">PX</span>
-                      <div id="gap-options" class="menu-container">
-                        <div id="gap-px" data-value="px" class="button">PX</div>
-                        <div id="gap-em" data-value="em" class="button">EM</div>
-                        <div id="gap-rem" data-value="rem" class="button">
-                          REM
-                        </div>
-                        <div id="gap-ch" data-value="ch" class="button">CH</div>
-                        <div id="gap-vw" data-value="vw" class="button">VW</div>
-                        <div id="gap-vh" data-value="vh" class="button">VH</div>
-                        <div id="gap-svw" data-value="svw" class="button">
-                          SVW
-                        </div>
-                        <div id="gap-svh" data-value="svh" class="button">
-                          SVH
-                        </div>
-                        <div id="gap-percent" data-value="%" class="button">
-                          %
-                        </div>
-                      </div>
                     </div>
                   </div>
-                  <div id="gap-ui-container" class="ui-container"></div>
+                  <div
+                    id="type-ui-container"
+                    class="ui-container"
+                    style="z-index: 11">
+                    <div id="type-options" class="menu-container">
+                      <div id="px" data-value="px" class="button">PX</div>
+                      <div id="em" data-value="em" class="button">EM</div>
+                      <div id="rem" data-value="rem" class="button">REM</div>
+                      <div id="ch" data-value="ch" class="button">CH</div>
+                      <div id="vw" data-value="vw" class="button">VW</div>
+                      <div id="vh" data-value="vh" class="button">VH</div>
+                      <div id="svw" data-value="svw" class="button">SVW</div>
+                      <div id="svh" data-value="svh" class="button">SVH</div>
+                      <div id="percent" data-value="%" class="button">%</div>
+                    </div>
+                  </div>
                   <div id="gap-unlocked" class="gap-container">
                     <div id="row-gap-setting" class="gap-setting-container">
                       <input
@@ -865,37 +865,12 @@
                         class="number-input" />
                       <span>Row</span>
                     </div>
-                    <div id="row-gap-type" data-value="px" class="toggle">
+                    <div
+                      id="row-gap-type"
+                      data-value="px"
+                      data-type="row-gap"
+                      class="toggle">
                       <span id="row-gap-type-text">PX</span>
-                      <div id="row-gap-options" class="menu-container">
-                        <div id="row-gap-px" data-value="px" class="button">
-                          PX
-                        </div>
-                        <div id="row-gap-em" data-value="em" class="button">
-                          EM
-                        </div>
-                        <div id="row-gap-rem" data-value="rem" class="button">
-                          REM
-                        </div>
-                        <div id="row-gap-ch" data-value="ch" class="button">
-                          CH
-                        </div>
-                        <div id="row-gap-vw" data-value="vw" class="button">
-                          VW
-                        </div>
-                        <div id="row-gap-vh" data-value="vh" class="button">
-                          VH
-                        </div>
-                        <div id="row-gap-svw" data-value="svw" class="button">
-                          SVW
-                        </div>
-                        <div id="row-gap-svh" data-value="svh" class="button">
-                          SVH
-                        </div>
-                        <div id="row-gap-percent" data-value="%" class="button">
-                          %
-                        </div>
-                      </div>
                     </div>
                     <div id="column-gap-setting" class="gap-setting-container">
                       <input
@@ -906,49 +881,12 @@
                         class="number-input" />
                       <span>Column</span>
                     </div>
-                    <div id="column-gap-type" data-value="px" class="toggle">
+                    <div
+                      id="column-gap-type"
+                      data-value="px"
+                      data-type="column-gap"
+                      class="toggle">
                       <span id="column-gap-type-text">PX</span>
-                      <div id="column-gap-options" class="menu-container">
-                        <div id="column-gap-px" data-value="px" class="button">
-                          PX
-                        </div>
-                        <div id="column-gap-em" data-value="em" class="button">
-                          EM
-                        </div>
-                        <div
-                          id="column-gap-rem"
-                          data-value="rem"
-                          class="button">
-                          REM
-                        </div>
-                        <div id="column-gap-ch" data-value="ch" class="button">
-                          CH
-                        </div>
-                        <div id="column-gap-vw" data-value="vw" class="button">
-                          VW
-                        </div>
-                        <div id="column-gap-vh" data-value="vh" class="button">
-                          VH
-                        </div>
-                        <div
-                          id="column-gap-svw"
-                          data-value="svw"
-                          class="button">
-                          SVW
-                        </div>
-                        <div
-                          id="column-gap-svh"
-                          data-value="svh"
-                          class="button">
-                          SVH
-                        </div>
-                        <div
-                          id="column-gap-percent"
-                          data-value="%"
-                          class="button">
-                          %
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div
@@ -1252,7 +1190,6 @@
                 </div>
               </div>
             </div>
-            <div id="spacing"></div>
           </div>
           <div id="spacing" class="setting-container">
             <div class="title-container">
@@ -1375,7 +1312,11 @@
                   id="spacing-value"
                   class="number-input"
                   value="0" />
-                <div id="spacing-type" class="toggle" data-value="px">
+                <div
+                  id="spacing-type"
+                  class="toggle"
+                  data-value="px"
+                  data-type="spacing">
                   <span id="spacing-type-text">PX</span>
                   <div id="spacing-type-options" class="menu-container">
                     <div id="spacing-type-px" data-value="px" class="button">
@@ -1430,20 +1371,65 @@
                 id="spacing-reset"
                 class="button"
                 style="justify-content: start; gap: 0.5rem">
-                <svg
-                  data-wf-icon="UndoIcon"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
-                    fill="currentColor"></path></svg
-                >Reset
+                <div>
+                  <svg
+                    data-wf-icon="UndoIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                Reset
               </div>
             </div>
             <div id="spacing-ui-container" class="ui-container"></div>
+          </div>
+          <div id="sizing" class="setting-container">
+            <div class="title-container">Sizing</div>
+            <div id="sizing-container">
+              <span class="setting-name">Width</span>
+              <input
+                type="text"
+                name="width"
+                id="width"
+                placeholder="Auto"
+                class="number-input" /><span class="setting-name">Height</span>
+              <input
+                type="text"
+                name="height"
+                id="height"
+                placeholder="Auto"
+                class="number-input" /><span class="setting-name">Min W</span>
+              <input
+                type="text"
+                name="min-width"
+                id="min-width"
+                placeholder="0"
+                class="number-input" /><span class="setting-name">Min H</span>
+              <input
+                type="text"
+                name="min-height"
+                id="min-height"
+                placeholder="0"
+                class="number-input" /><span class="setting-name">Max W</span>
+              <input
+                type="text"
+                name="max-width"
+                id="max-width"
+                placeholder="None"
+                class="number-input" /><span class="setting-name">Max H</span>
+              <input
+                type="text"
+                name="max-height"
+                id="max-height"
+                placeholder="None"
+                class="number-input" />
+            </div>
           </div>
         </div>
       </div>
