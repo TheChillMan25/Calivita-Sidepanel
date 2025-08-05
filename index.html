@@ -835,7 +835,7 @@
                       id="gap-type"
                       data-value="px"
                       data-type="gap"
-                      class="toggle">
+                      class="toggle type-toggle">
                       <span id="gap-type-text">PX</span>
                     </div>
                   </div>
@@ -869,7 +869,7 @@
                       id="row-gap-type"
                       data-value="px"
                       data-type="row-gap"
-                      class="toggle">
+                      class="toggle type-toggle">
                       <span id="row-gap-type-text">PX</span>
                     </div>
                     <div id="column-gap-setting" class="gap-setting-container">
@@ -885,7 +885,7 @@
                       id="column-gap-type"
                       data-value="px"
                       data-type="column-gap"
-                      class="toggle">
+                      class="toggle type-toggle">
                       <span id="column-gap-type-text">PX</span>
                     </div>
                   </div>
@@ -905,7 +905,12 @@
               <div
                 id="more-grid-options-container"
                 style="display: grid; gap: 0.3rem; text-align: center">
-                <span style="font-size: medium">More options</span>
+                <span
+                  id="more-grid-toggle"
+                  class="toggle"
+                  style="font-size: medium"
+                  >More grid options</span
+                >
                 <div id="more-grid-options">
                   <span
                     class="setting-name hoverable"
@@ -1193,11 +1198,11 @@
           </div>
           <div id="spacing" class="setting-container">
             <div class="title-container">
-              <span class="title">Sizing</span>
-              <span id="margin-text" style="top: 1.7rem; left: -2.5rem"
+              <span class="title">Spacing</span>
+              <span id="margin-text" style="top: 1.7rem; left: -3.5rem"
                 >Margin</span
               >
-              <span id="padding-text" style="top: 3.7rem; left: -2.7rem"
+              <span id="padding-text" style="top: 3.7rem; left: -3.7rem"
                 >Padding</span
               >
             </div>
@@ -1314,7 +1319,7 @@
                   value="0" />
                 <div
                   id="spacing-type"
-                  class="toggle"
+                  class="toggle type-toggle"
                   data-value="px"
                   data-type="spacing">
                   <span id="spacing-type-text">PX</span>
@@ -1390,45 +1395,333 @@
             <div id="spacing-ui-container" class="ui-container"></div>
           </div>
           <div id="sizing" class="setting-container">
-            <div class="title-container">Sizing</div>
+            <div class="title-container title">Sizing</div>
             <div id="sizing-container">
               <span class="setting-name">Width</span>
               <input
                 type="text"
                 name="width"
                 id="width"
+                data-valueid="width"
                 placeholder="Auto"
-                class="number-input" /><span class="setting-name">Height</span>
+                class="number-input" />
+              <div
+                id="width-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="width-type-text">PX</span>
+              </div>
+              <span class="setting-name">Height</span>
               <input
                 type="text"
                 name="height"
                 id="height"
+                data-valueid="height"
                 placeholder="Auto"
-                class="number-input" /><span class="setting-name">Min W</span>
+                class="number-input" />
+              <div
+                id="height-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="height-type-text">PX</span>
+              </div>
+              <span class="setting-name">Min W</span>
               <input
                 type="text"
                 name="min-width"
                 id="min-width"
+                data-value="min-width"
                 placeholder="0"
-                class="number-input" /><span class="setting-name">Min H</span>
+                class="number-input" />
+              <div
+                id="min-width-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="min-width-type-text">PX</span>
+              </div>
+              <span class="setting-name">Min H</span>
               <input
                 type="text"
                 name="min-height"
                 id="min-height"
+                data-value="min-height"
                 placeholder="0"
-                class="number-input" /><span class="setting-name">Max W</span>
+                class="number-input" />
+              <div
+                id="min-height-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="min-height-type-text">PX</span>
+              </div>
+              <span class="setting-name">Max W</span>
               <input
                 type="text"
                 name="max-width"
                 id="max-width"
+                data-value="max-width"
                 placeholder="None"
-                class="number-input" /><span class="setting-name">Max H</span>
+                class="number-input" />
+              <div
+                id="max-width-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="max-width-type-text">PX</span>
+              </div>
+              <span class="setting-name">Max H</span>
               <input
                 type="text"
                 name="max-height"
                 id="max-height"
+                data-value="max-height"
                 placeholder="None"
                 class="number-input" />
+              <div
+                id="max-height-type"
+                class="toggle type-toggle"
+                data-type="sizing"
+                data-value="px">
+                <span id="max-height-type-text">PX</span>
+              </div>
+            </div>
+            <div id="overflow">
+              <span class="setting-name">Overflow</span>
+              <div id="overflow-container" class="button-container">
+                <div
+                  id="overflow-visible"
+                  class="button hoverable"
+                  data-desc="Visible - shows content that overflows its container."
+                  data-value="visible">
+                  <svg
+                    data-wf-icon="ShowIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M8 9.5C8.82843 9.5 9.5 8.82843 9.5 8C9.5 7.17157 8.82843 6.5 8 6.5C7.17157 6.5 6.5 7.17157 6.5 8C6.5 8.82843 7.17157 9.5 8 9.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8.00004 4C5.37598 4 3.11613 5.55492 2.08964 7.79148C2.02887 7.92388 2.02888 8.07621 2.08965 8.20861C3.11615 10.4451 5.37597 12 8.00001 12C10.6241 12 12.8839 10.4451 13.9104 8.20852C13.9712 8.07612 13.9712 7.92379 13.9104 7.79139C12.8839 5.55488 10.6241 4 8.00004 4ZM8.00001 11C5.86346 11 4.01048 9.78173 3.09961 8.00004C4.01047 6.21831 5.86347 5 8.00004 5C10.1366 5 11.9896 6.21827 12.9004 7.99996C11.9896 9.78169 10.1366 11 8.00001 11Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div
+                  id="overflow-hidden"
+                  class="button hoverable"
+                  data-desc="Hidden - hides content that overflows its container."
+                  data-value="hidden">
+                  <svg
+                    data-wf-icon="HideIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10.705 11.4122L13.6464 14.3536L14.3535 13.6465L2.35353 1.64648L1.64642 2.35359L4.38807 5.09524C3.39352 5.76124 2.59317 6.69436 2.08962 7.79152C2.02885 7.92392 2.02885 8.07624 2.08962 8.20865C3.11613 10.4452 5.37595 12 7.99998 12C8.96537 12 9.88147 11.7896 10.705 11.4122ZM9.9407 10.6479L5.11149 5.81865C4.25762 6.3466 3.55885 7.10172 3.09959 8.00007C4.01046 9.78177 5.86344 11 7.99998 11C8.68305 11 9.33713 10.8755 9.9407 10.6479Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M13.9104 8.20856C13.5777 8.93353 13.1153 9.58688 12.553 10.1389L11.846 9.43184C12.2702 9.01685 12.6276 8.5337 12.9004 8C11.9895 6.21831 10.1366 5.00004 8.00002 5.00004C7.81171 5.00004 7.62559 5.0095 7.44213 5.02798L6.57164 4.15749C7.03124 4.05443 7.50926 4.00004 8.00002 4.00004C10.6241 4.00004 12.8839 5.55491 13.9104 7.79143C13.9712 7.92383 13.9712 8.07616 13.9104 8.20856Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div
+                  id="overflow-clip"
+                  class="button hoverable"
+                  data-desc="Clip - clips content to the elements padding box. Similar to hidden, but it also prevent any scrolling of the overflowed content, including programatic scrolling."
+                  data-value="clip">
+                  <svg
+                    data-wf-icon="CropIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 12C12.5523 12 13 11.5523 13 11V5H15.5V4H13V1.5H12V4H5C4.44772 4 4 4.44772 4 5V11H1.5V12H4V14.5H5V12H12ZM5 11H12V5H5V11Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div
+                  id="overflow-scroll"
+                  class="button hoverable"
+                  data-desc="Scroll- always displays scrollbar for overflowing content."
+                  data-value="scroll">
+                  <svg
+                    data-wf-icon="OverflowScrollIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      d="M3 3H8V11H3V3Z"
+                      fill="currentColor"
+                      fill-opacity="0.67"></path>
+                    <path
+                      d="M1 2H15V3L1 3V2Z"
+                      fill="currentColor"
+                      fill-opacity="0.67"></path>
+                    <path
+                      d="M1 11H8V12H1V11Z"
+                      fill="currentColor"
+                      fill-opacity="0.67"></path>
+                    <path
+                      d="M12 11.2929L10.3536 9.64645L9.64645 10.3536L12.5 13.2071L15.3536 10.3536L14.6464 9.64645L13 11.2929V5H12V11.2929Z"
+                      fill="currentColor"
+                      fill-opacity="0.67"></path>
+                  </svg>
+                </div>
+                <div
+                  id="overflow-auto"
+                  class="button hoverable"
+                  data-desc="Auto - only displays scrollbar when content overflows."
+                  data-value="auto">
+                  Auto
+                </div>
+              </div>
+            </div>
+            <span
+              id="more-sizing-toggle"
+              class="toggle"
+              style="font-size: medium"
+              >More sizing options</span
+            >
+            <div id="more-sizing-options">
+              <span class="setting-name">Ration</span>
+              <div id="ratio" class="toggle">
+                <span id="ratio-text">Auto</span>
+              </div>
+              <div id="ratio-ui-container" class="ui-container">
+                <div id="ratio-menu" class="menu-container">
+                  <div
+                    id="ratio-auto"
+                    class="button"
+                    data-name="Auto"
+                    data-value="auto">
+                    Auto
+                  </div>
+                  <div
+                    id="ratio-2.39-1"
+                    class="button"
+                    data-name="Anamorphic"
+                    data-value="2.39 / 1">
+                    Anamorphic(2.39:1)
+                  </div>
+                  <div
+                    id="ratio-2-1"
+                    class="button"
+                    data-name="Univisum"
+                    data-value="2 / 1">
+                    Univisum/Netflix(2:1)
+                  </div>
+                  <div
+                    id="ratio-16-9 "
+                    class="button"
+                    data-name="Widescreen"
+                    data-value="16 / 9">
+                    Widescreen(16:9)
+                  </div>
+                  <div
+                    id="ratio-3-2"
+                    class="button"
+                    data-name="Landscape"
+                    data-value="3 / 2">
+                    Landscape(3:2)
+                  </div>
+                  <div
+                    id="ratio-2-3"
+                    class="button"
+                    data-name="Portrait"
+                    data-value="2 / 3">
+                    Portrait(2:3)
+                  </div>
+                  <div
+                    id="ratio-1-1"
+                    class="button"
+                    data-name="Square"
+                    data-value="1 / 1">
+                    Square (1:1)
+                  </div>
+                  <div id="ratio-custom" class="toggle">Custom</div>
+                </div>
+              </div>
+              <div id="custom-ratio">
+                <input
+                  type="text"
+                  name="ratio-width"
+                  value="1"
+                  id="ratio-width"
+                  class="number-input" />
+                <input
+                  type="text"
+                  name="ratio-height"
+                  value="1"
+                  id="ratio-height"
+                  class="number-input" />
+                <span>Width</span>
+                <span>Height</span>
+              </div>
+              <span class="setting-name">Box size</span>
+              <div id="box-sizing" class="button-container">
+                <div id="border-box" class="button" data-value="border-box">
+                  <svg
+                    data-wf-icon="BorderBoxIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 6H4V10H12V6ZM4 5C3.44772 5 3 5.44772 3 6V10C3 10.5523 3.44772 11 4 11H12C12.5523 11 13 10.5523 13 10V6C13 5.44772 12.5523 5 12 5H4Z"
+                      fill="currentColor"></path>
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 3H4V13H12V3ZM4 2C3.44772 2 3 2.44772 3 3V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V3C13 2.44772 12.5523 2 12 2H4Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="content-box" class="button" data-value="content-box">
+                  <svg
+                    data-wf-icon="ContentBoxIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M13 6H3L3 10H13V6ZM3 5C2.44772 5 2 5.44772 2 6V10C2 10.5523 2.44772 11 3 11H13C13.5523 11 14 10.5523 14 10V6C14 5.44772 13.5523 5 13 5H3Z"
+                      fill="currentColor"></path>
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 3H3L3 13H10V3ZM3 2C2.44772 2 2 2.44772 2 3V13C2 13.5523 2.44772 14 3 14H10C10.5523 14 11 13.5523 11 13V3C11 2.44772 10.5523 2 10 2H3Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
+              <span class="setting-name">Fill</span>
+              <select name="fill" id="fill"></select>
             </div>
           </div>
         </div>

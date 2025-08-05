@@ -249,7 +249,6 @@ function setGridColsRowsCount(value, type) {
 function setGridDirection(value, button) {
   selectedDomObject.css("grid-auto-flow", value);
   saveStyle([{ type: "grid-auto-flow", value: value }]);
-  //handleDisplay($("#grid-direction-container .button"), button);
   refreshStylePanel();
 }
 /**
@@ -280,5 +279,25 @@ function setSpacing(currentSpacing, value, type, button = null) {
   if (button) {
     handleDisplay(button.parent().find(".button"), button, "spacing");
   }
+  refreshStylePanel();
+}
+
+function setSizing(type, value) {
+  selectedDomObject.css(type, value);
+  saveStyle([{ type: type, value: value }]);
+}
+
+function setOverflow(value, button) {
+  selectedDomObject.css("overflow", value);
+  saveStyle([{ type: "overflow", value: value }]);
+  handleDisplay($("#overflow-container .button"), button);
+}
+
+function setRatio(button = null, custom = null) {
+  let value;
+  if (button !== null) value = button.attr("data-value");
+  else if (custom !== null) value = custom.w + " / " + custom.h;
+  selectedDomObject.css("aspect-ratio", value);
+  saveStyle([{ type: "aspect-ratio", value: value }]);
   refreshStylePanel();
 }

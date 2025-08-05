@@ -1,5 +1,6 @@
 let selectedDomObject = null;
-let currentSpacing = null;
+let currentSpacing = null,
+  currentSizing = null;
 let currentType = null;
 let alignBoxMarkerCenter =
   '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
@@ -322,8 +323,21 @@ function refreshStylePanel() {
             .text(extractValue(value))
             .attr("data-value", value);
           break;
+        case "overflow":
+          $("#overflow-" + value).addClass("pressed-button");
+          break;
+        case "aspect-ratio":
+          $("#ratio").text(extractRatio(value));
+          $("#ratio-width").val(extractRatio(value, false, true)["w"]);
+          $("#ratio-height").val(extractRatio(value, false, true)["h"]);
+          break;
         default:
-          console.warn("Unknown style key: " + key);
+          if (key.includes("width") || key.includes("height")) {
+            if (value === "auto" || value === "none") break;
+            $("#" + key).val(extractValue(value));
+            $("#" + key + "-type").attr("data-value", extractType(value));
+            $("#" + key + "-type-text").text(extractType(value).toUpperCase());
+          } else console.warn("Unknown style key: " + key);
       }
     }
   } catch (error) {
@@ -552,7 +566,10 @@ function setUpControlls() {
       setGap(gapValue, $("#gap-type").attr("data-value"), $(this), "gap");
     }
   });
-  $("#gap-type").on("click", function () {
+  $(".toggle.type-toggle").on("click", function () {
+    if ($(this).attr("data-type") === "sizing") {
+      currentSizing = $(this).attr("id").slice(0, -5);
+    }
     showTypeOptions($(this));
   });
   $("#type-ui-container").on("click", function () {
@@ -560,13 +577,10 @@ function setUpControlls() {
   });
   $("#type-options").on("click", ".button", function (event) {
     event.stopPropagation();
-    handeTypeSelection($(this));
+    handleTypeSelection($(this));
   });
   $("#gap-lock").on("click", function () {
     toggleGapOptions();
-  });
-  $("#row-gap-type").on("click", function () {
-    showTypeOptions($(this));
   });
   $("#row-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
@@ -591,9 +605,6 @@ function setUpControlls() {
         );
       }
     }
-  });
-  $("#column-gap-type").on("click", function () {
-    showTypeOptions($(this));
   });
   $("#column-gap-value").on("input", function () {
     let gapValue = parseInt($(this).val());
@@ -634,6 +645,9 @@ function setUpControlls() {
   $("#grid-direction-container").on("click", ".button", function () {
     setGridDirection($(this).attr("data-value"), $(this));
   });
+  $("#more-grid-toggle").on("click", function () {
+    toggleMore("grid");
+  });
   $("#more-column-settings").on("click", ".button", function () {
     let aC = $("#more-row-settings .pressed-button");
     setGridInnerAlignment(
@@ -650,9 +664,6 @@ function setUpControlls() {
     currentSpacing = $(this).attr("id");
     showSpacingSettings($(this).attr("data-value"));
   });
-  $("#spacing-type").on("click", function () {
-    showTypeOptions($(this));
-  });
   $("#spacing-ui-container").on("click", function (event) {
     event.stopPropagation();
     if ($("#spacing-type-options").css("display") !== "none") {
@@ -660,7 +671,6 @@ function setUpControlls() {
       return;
     }
     hideSpacingSettings();
-    currentSpacing = null;
   });
   $("#spacing-range").on("input", function () {
     let val = $(this).val();
@@ -678,6 +688,46 @@ function setUpControlls() {
     $("#spacing-range").val(0);
     setSpacing(currentSpacing, 0, "px");
     hideSpacingSettings();
+  });
+  $("#sizing-container").on("input", ".number-input", function () {
+    let value =
+      $(this).val() + $("#" + $(this).attr("id") + "-type").attr("data-value");
+    if ($(this).val() === "") {
+      if ($(this).attr("id").includes("max")) {
+        value = "none";
+      } else if ($(this).attr("id").includes("min")) {
+        value = "0";
+      } else value = "auto";
+    }
+    setSizing($(this).attr("id"), value);
+  });
+  $("#overflow-container").on("click", ".button", function () {
+    let value = $(this).attr("data-value");
+    setOverflow(value, $(this));
+  });
+  $("#more-sizing-toggle").on("click", function () {
+    toggleMore("sizing");
+  });
+  $("#ratio").on("click", function () {
+    showRatioSettings($(this));
+  });
+  $("#ratio-ui-container").on("click", function () {
+    hideRatioSettings();
+  });
+  $("#ratio-menu").on("click", ".button", function () {
+    setRatio($(this));
+    hideCustomRatio();
+  });
+  $("#ratio-custom").on("click", function () {
+    showCustomRatio();
+  });
+  $("#custom-ratio").on("input", ".number-input", function () {
+    $("#ratio").text("Custom");
+    let w = $("#ratio-width").val(),
+      h = $("#ratio-height").val();
+    if (!isNaN(parseFloat(w)) && !isNaN(parseFloat(h))) {
+      setRatio(null, { w: w, h: h });
+    }
   });
 }
 
@@ -710,23 +760,16 @@ function checkGridChild() {
   return false;
 }
 
-function handeTypeSelection(button) {
+function handleTypeSelection(button) {
   let value;
-  let type;
+  let type = button.attr("data-value");
   switch (currentType) {
     case "gap":
       value = $("#gap-range").val();
-      type = button.attr("data-value");
-      $("#gap-type").attr("data-value", type);
-      $("#gap-type-text").text(type.toUpperCase());
       setGap(value, type, button);
       break;
     case "row-gap":
       value = $("#row-gap-value").val();
-      type = button.attr("data-value");
-      $("#row-gap-type").attr("data-value", type);
-      console.log($("#row-gap-type").attr("data-value"));
-      $("#row-gap-type-text").text(type.toUpperCase());
       setGap(value, type, button, "row-gap");
       value = $("#column-gap-value").val();
       type = $("#column-gap-type").attr("data-value");
@@ -734,24 +777,27 @@ function handeTypeSelection(button) {
       break;
     case "column-gap":
       value = $("#column-gap-value").val();
-      type = button.attr("data-value");
-      $("#column-gap-type").attr("data-value", type);
-      $("#column-gap-type-text").text(type.toUpperCase());
       setGap(value, type, button, "column-gap");
       value = $("#row-gap-value").val();
       type = $("#row-gap-type").attr("data-value");
       setGap(value, type, null, "row-gap");
       break;
     case "spacing":
-      $("#spacing-type").attr("data-value", button.attr("data-value"));
-      $("#spacing-type-text").text(button.attr("data-value").toUpperCase());
       value = $("#spacing-range").val();
-      type = button.attr("data-value");
       setSpacing(currentSpacing, value, type, button);
+      break;
+    case "sizing":
+      value = $("#" + currentSizing).val();
+      setSizing(currentSizing, value + type);
       break;
     default:
       console.error("Can't handle unknown type: ", currentType);
   }
+  if (currentType === "sizing") currentType = currentSizing;
+  $("#" + currentType + "-type").attr("data-value", button.attr("data-value"));
+  $("#" + currentType + "-type-text").text(
+    button.attr("data-value").toUpperCase()
+  );
   handleDisplay(button.parent().find(".button"), button);
   hideTypeOptions();
 }

@@ -53,47 +53,19 @@ function hideSpacingSettings() {
   $("#spacing-setting-ui").hide();
   $("#spacing-ui-container").hide();
 }
-
-function showSpacingType() {
-  $("#spacing-type-options").show();
-}
-
-function hideSpacingType() {
-  $("#spacing-type-options").hide();
-}
 /**
  * Shows type settings and sets current type ot use
  * @param {string} type Type of the element to change (gap, margin, padding, etc)
  */
 function showTypeOptions(caller) {
-  $("#type-options .button").removeClass("pressed-button");
-  $("#" + caller.attr("data-value")).addClass("pressed-button");
-  currentType = caller.attr("data-type");
-  if (
-    caller.offset()["left"] + $("#type-options").outerWidth() >
-    window.innerWidth
-  ) {
-    $("#type-options").css({
-      top: caller.offset()["top"],
-      left: window.innerWidth - $("#type-options").outerWidth() - 8,
-    });
-  } else if (
-    caller.offset()["top"] + $("#type-options").outerHeight() >
-    window.innerHeight
-  ) {
-    $("#type-options").css({
-      top: window.innerHeight - $("#type-options").outerHeight() - 8,
-      left: caller.offset()["left"],
-    });
-  } else {
-    $("#type-options").css({
-      top: caller.offset()["top"],
-      left: caller.offset()["left"],
-    });
-  }
-
   $("#type-options").show();
   $("#type-ui-container").show();
+  $("#type-options .button").removeClass("pressed-button");
+  let btn =
+    caller.attr("data-value") === "%" ? "percent" : caller.attr("data-value");
+  $("#" + btn).addClass("pressed-button");
+  currentType = caller.attr("data-type");
+  checkPos(caller, $("#type-options"));
 }
 
 function hideTypeOptions() {
@@ -116,17 +88,68 @@ function showGridSettings() {
   $("#more-grid-options-container").show();
 }
 
+function toggleMore(value) {
+  switch (value) {
+    case "grid":
+      if ($("#more-grid-options").css("display") !== "none") {
+        $("#more-grid-options").hide();
+      } else $("#more-grid-options").css("display", "grid");
+      break;
+    case "sizing":
+      if ($("#more-sizing-options").css("display") !== "none") {
+        $("#more-sizing-options").hide();
+      } else $("#more-sizing-options").css("display", "grid");
+      break;
+  }
+}
+
+function showRatioSettings(caller) {
+  $("#ratio-menu").show();
+  $("#ratio-ui-container").show();
+  checkPos(caller, $("#ratio-menu"));
+  /* let a = selectedDomObject.css("aspect-ratio");
+  $("#ratio-" + extractRatio(a, false)).addClass("pressed-button"); */
+}
+
+function hideRatioSettings() {
+  $("#ratio-menu").hide();
+  $("#ratio-ui-container").hide();
+}
+
+function showCustomRatio() {
+  $("#custom-ratio").css("display", "grid");
+}
+
+function hideCustomRatio() {
+  $("#custom-ratio").hide();
+}
+
 function toggleGapOptions() {
   if ($("#gap-unlocked").css("display") !== "none") {
     $("#gap-unlocked").hide();
     $("#gap-default").show();
     $("#gap-lock").html('<span class="material-symbols-outlined">lock</span>');
+    let gap = {
+      value: $("#gap-value").val(),
+      type: $("#gap-type").attr("data-value"),
+    };
+    setGap(gap.value, gap.type);
   } else {
     $("#gap-unlocked").css("display", "flex");
     $("#gap-default").hide();
     $("#gap-lock").html(
       '<span class="material-symbols-outlined">lock_open_right</span>'
     );
+    let row = {
+      value: $("#row-gap-value").val(),
+      type: $("#row-gap-type").attr("data-value"),
+    };
+    let col = {
+      value: $("#column-gap-value").val(),
+      type: $("#column-gap-type").attr("data-value"),
+    };
+    setGap(row.value, row.type, null, "row-gap");
+    setGap(col.value, col.type, null, "column-gap");
   }
 }
 
@@ -317,4 +340,63 @@ function countGridColsRows(value) {
     if (value[index] === " ") count++;
   }
   return count;
+}
+
+function checkPos(tglButton, menu) {
+  let x = tglButton.offset()["left"],
+    y = tglButton.offset()["top"],
+    w = menu.outerWidth(),
+    h = menu.outerHeight(),
+    right = false,
+    bot = false;
+  if (x + w > window.innerWidth) {
+    right = true;
+  }
+  if (y + h > window.innerHeight) {
+    bot = true;
+  }
+
+  menu.css(bot ? { top: "", bottom: ".5rem" } : { top: y, bottom: "" });
+  menu.css(right ? { left: "", right: ".5rem" } : { left: x, right: "" });
+}
+/**
+ *
+ * @param {string} value Value of the aspect-ratio css property (ex.:16 / 9)
+ * @param {boolean} [name=true] Boolean to return name, if false, aspect-ratio in x-y format
+ * @returns If [name] true, the name of the aspect-ratio, otherwise aspect-ratio in x-y format (ex.: 16-9)
+ */
+function extractRatio(value, name = true, separated = false) {
+  let c = false;
+  let a = "";
+  let b = "";
+  for (let i = 0; i < value.length; i++) {
+    if (value[i] === " ") continue;
+    if (value[i] === "/") {
+      if (separated) {
+        c = true;
+        i += 1;
+      } else {
+        a += "-";
+        i += 2;
+      }
+    }
+    if (c) b += value[i];
+    else a += value[i];
+  }
+  if (separated) {
+    return value === "auto" ? { w: "1", h: "1" } : { w: a, h: b };
+  }
+  const ratioMap = {
+    auto: "Auto",
+    "2.39-1": "Anamorphic(2.39:1)",
+    "2-1": "Univisum/Netflix(2:1)",
+    "16-9": "Widescreen",
+    "3-2": "Landscape",
+    "2-3": "Portrait",
+    "1-1": "Square",
+  };
+  if (ratioMap[a]) {
+    return name ? ratioMap[a] : a;
+  }
+  return "Custom";
 }
