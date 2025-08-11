@@ -20,10 +20,10 @@
     <div id="page">
       <div
         id="version"
-        style="position: absolute; bottom: 1rem; right: 1rem; color: white">
+        style="position: absolute; top: 0.5rem; right: 1rem; color: white">
         v0.0.2
       </div>
-      <div id="body" class="editable">
+      <div id="body" class="editable" style="position: relative">
         <div
           id="element1"
           class="editable"
@@ -546,42 +546,69 @@
                 </div>
                 <span class="setting-name">Align</span>
                 <div id="align">
-                  <div id="align-box">
-                    <div id="top-left" data-value="top-left" class="button">
-                      <rect class="rect"></rect>
-                    </div>
-                    <div id="top-center" data-value="top-center" class="button">
-                      <rect class="rect"></rect>
-                    </div>
-                    <div id="top-right" data-value="top-right" class="button">
-                      <rect class="rect"></rect>
-                    </div>
-                    <div id="left" data-value="left" class="button">
-                      <rect class="rect"></rect>
-                    </div>
-                    <div id="center" data-value="center" class="button">
-                      <rect class="rect"></rect>
-                    </div>
-                    <div id="right" data-value="right" class="button">
-                      <rect class="rect"></rect>
+                  <div id="align-box" class="box-settings">
+                    <div
+                      id="align-top-left"
+                      data-value="top-left"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
                     </div>
                     <div
-                      id="bottom-left"
+                      id="align-top-center"
+                      data-value="top-center"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
+                    </div>
+                    <div
+                      id="align-top-right"
+                      data-value="top-right"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
+                    </div>
+                    <div
+                      id="align-left"
+                      data-value="left"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
+                    </div>
+                    <div
+                      id="align-center"
+                      data-value="center"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
+                    </div>
+                    <div
+                      id="align-right"
+                      data-value="right"
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
+                    </div>
+                    <div
+                      id="align-bottom-left"
                       data-value="bottom-left"
-                      class="button">
-                      <rect class="rect"></rect>
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
                     </div>
                     <div
-                      id="bottom-center"
+                      id="align-bottom-center"
                       data-value="bottom-center"
-                      class="button">
-                      <rect class="rect"></rect>
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
                     </div>
                     <div
-                      id="bottom-right"
+                      id="align-bottom-right"
                       data-value="bottom-right"
-                      class="button">
-                      <rect class="rect"></rect>
+                      class="button"
+                      data-type="align">
+                      <div class="rect"></div>
                     </div>
                   </div>
                   <div id="align-axis">
@@ -589,14 +616,14 @@
                     <div
                       id="align-x"
                       data-value="center"
-                      class="align-axis toggle">
+                      class="align-axis toggle toggle-w-bg">
                       Center
                     </div>
                     <span class="setting-name">Y</span>
                     <div
                       id="align-y"
                       data-value="center"
-                      class="align-axis toggle">
+                      class="align-axis toggle toggle-w-bg">
                       Center
                     </div>
                     <div id="align-horizontal" class="menu-container">
@@ -1207,7 +1234,7 @@
               >
             </div>
             <div id="margin-container">
-              <div class="spacing-filling-div"></div>
+              <div class="filling-div"></div>
               <div
                 id="margin-top"
                 class="spacing-setting toggle hoverable"
@@ -1216,7 +1243,7 @@
                 data-value="0px">
                 0
               </div>
-              <div class="spacing-filling-div"></div>
+              <div class="filling-div"></div>
               <div
                 id="margin-left"
                 class="spacing-setting toggle hoverable"
@@ -1225,8 +1252,8 @@
                 data-value="0px">
                 0
               </div>
-              <div id="padding-container" class="spacing-filling-div">
-                <div class="spacing-filling-div"></div>
+              <div id="padding-container" class="filling-div">
+                <div class="filling-div"></div>
                 <div
                   id="padding-top"
                   class="spacing-setting toggle hoverable"
@@ -1235,7 +1262,7 @@
                   data-value="0px">
                   0
                 </div>
-                <div class="spacing-filling-div"></div>
+                <div class="filling-div"></div>
                 <div
                   id="padding-left"
                   class="spacing-setting toggle hoverable"
@@ -1244,9 +1271,7 @@
                   data-value="0px">
                   0
                 </div>
-                <div
-                  class="spacing-filling-div"
-                  style="background-color: #333; border-radius: 0.3rem"></div>
+                <div class="filling-div center-filling"></div>
                 <div
                   id="padding-right"
                   class="spacing-setting toggle hoverable"
@@ -1255,7 +1280,7 @@
                   data-value="0px">
                   0
                 </div>
-                <div class="spacing-filling-div"></div>
+                <div class="filling-div"></div>
                 <div
                   id="padding-bottom"
                   class="spacing-setting toggle hoverable"
@@ -1264,7 +1289,7 @@
                   data-value="0px">
                   0
                 </div>
-                <div class="spacing-filling-div"></div>
+                <div class="filling-div"></div>
               </div>
               <div
                 id="margin-right"
@@ -1274,7 +1299,7 @@
                 data-value="0px">
                 0
               </div>
-              <div class="spacing-filling-div"></div>
+              <div class="filling-div"></div>
               <div
                 id="margin-bottom"
                 class="spacing-setting toggle hoverable"
@@ -1283,116 +1308,126 @@
                 data-value="0px">
                 0
               </div>
-              <div class="spacing-filling-div"></div>
+              <div class="filling-div"></div>
             </div>
-            <div id="spacing-setting-ui" class="menu-container">
-              <div id="spacing-range-container">
-                <svg
-                  data-wf-icon="MarginLeftIcon"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    opacity="0.4"
-                    d="M14 2L14 13L10 13L10 2L14 2Z"
-                    fill="currentColor"
-                    fill-opacity="0.67"></path>
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M7.99995 7L7.99995 1H8.99995L8.99995 14H7.99995L7.99995 8L3.70706 8L5.85351 10.1464L5.1464 10.8536L1.79285 7.5L5.1464 4.14645L5.85351 4.85355L3.70706 7L7.99995 7Z"
-                    fill="currentColor"></path>
-                </svg>
-                <input
-                  type="range"
-                  name="spacing-range"
-                  id="spacing-range"
-                  value="0"
-                  style="width: 6rem" />
-                <input
-                  type="text"
-                  name="spacing-value"
-                  id="spacing-value"
-                  class="number-input"
-                  value="0" />
-                <div
-                  id="spacing-type"
-                  class="toggle type-toggle"
-                  data-value="px"
-                  data-type="spacing">
-                  <span id="spacing-type-text">PX</span>
-                  <div id="spacing-type-options" class="menu-container">
-                    <div id="spacing-type-px" data-value="px" class="button">
-                      PX
-                    </div>
-                    <div id="spacing-type-em" data-value="em" class="button">
-                      EM
-                    </div>
-                    <div id="spacing-type-rem" data-value="rem" class="button">
-                      REM
-                    </div>
-                    <div id="spacing-type-ch" data-value="ch" class="button">
-                      CH
-                    </div>
-                    <div id="spacing-type-vw" data-value="vw" class="button">
-                      VW
-                    </div>
-                    <div id="spacing-type-vh" data-value="vh" class="button">
-                      VH
-                    </div>
-                    <div id="spacing-type-svw" data-value="svw" class="button">
-                      SVW
-                    </div>
-                    <div id="spacing-type-svh" data-value="svh" class="button">
-                      SVH
-                    </div>
-                    <div
-                      id="spacing-type-percent"
-                      data-value="%"
-                      class="button">
-                      %
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="spacing-button-container">
-                <div id="spacing-auto" class="button" data-value="auto">
-                  Auto
-                </div>
-                <div id="spacing-buttons">
-                  <div class="button" data-value="0">0</div>
-                  <div class="button" data-value="10">10</div>
-                  <div class="button" data-value="15">15</div>
-                  <div class="button" data-value="20">20</div>
-                  <div class="button" data-value="25">25</div>
-                  <div class="button" data-value="50">50</div>
-                  <div class="button" data-value="75">75</div>
-                  <div class="button" data-value="100">100</div>
-                </div>
-              </div>
-              <div
-                id="spacing-reset"
-                class="button"
-                style="justify-content: start; gap: 0.5rem">
-                <div>
+            <div id="spacing-ui-container" class="ui-container">
+              <div id="spacing-setting-ui" class="menu-container">
+                <div id="spacing-range-container">
                   <svg
-                    data-wf-icon="UndoIcon"
+                    data-wf-icon="MarginLeftIcon"
                     width="16"
                     height="16"
                     viewBox="0 0 16 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
-                      d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
+                      opacity="0.4"
+                      d="M14 2L14 13L10 13L10 2L14 2Z"
+                      fill="currentColor"
+                      fill-opacity="0.67"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7.99995 7L7.99995 1H8.99995L8.99995 14H7.99995L7.99995 8L3.70706 8L5.85351 10.1464L5.1464 10.8536L1.79285 7.5L5.1464 4.14645L5.85351 4.85355L3.70706 7L7.99995 7Z"
                       fill="currentColor"></path>
                   </svg>
+                  <input
+                    type="range"
+                    name="spacing-range"
+                    id="spacing-range"
+                    value="0"
+                    style="width: 6rem" />
+                  <input
+                    type="text"
+                    name="spacing-value"
+                    id="spacing-value"
+                    class="number-input"
+                    value="0" />
+                  <div
+                    id="spacing-type"
+                    class="toggle type-toggle"
+                    data-value="px"
+                    data-type="spacing">
+                    <span id="spacing-type-text">PX</span>
+                    <div id="spacing-type-options" class="menu-container">
+                      <div id="spacing-type-px" data-value="px" class="button">
+                        PX
+                      </div>
+                      <div id="spacing-type-em" data-value="em" class="button">
+                        EM
+                      </div>
+                      <div
+                        id="spacing-type-rem"
+                        data-value="rem"
+                        class="button">
+                        REM
+                      </div>
+                      <div id="spacing-type-ch" data-value="ch" class="button">
+                        CH
+                      </div>
+                      <div id="spacing-type-vw" data-value="vw" class="button">
+                        VW
+                      </div>
+                      <div id="spacing-type-vh" data-value="vh" class="button">
+                        VH
+                      </div>
+                      <div
+                        id="spacing-type-svw"
+                        data-value="svw"
+                        class="button">
+                        SVW
+                      </div>
+                      <div
+                        id="spacing-type-svh"
+                        data-value="svh"
+                        class="button">
+                        SVH
+                      </div>
+                      <div
+                        id="spacing-type-percent"
+                        data-value="%"
+                        class="button">
+                        %
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                Reset
+                <div id="spacing-button-container">
+                  <div id="spacing-auto" class="button" data-value="auto">
+                    Auto
+                  </div>
+                  <div id="spacing-buttons">
+                    <div class="button" data-value="0">0</div>
+                    <div class="button" data-value="10">10</div>
+                    <div class="button" data-value="15">15</div>
+                    <div class="button" data-value="20">20</div>
+                    <div class="button" data-value="25">25</div>
+                    <div class="button" data-value="50">50</div>
+                    <div class="button" data-value="75">75</div>
+                    <div class="button" data-value="100">100</div>
+                  </div>
+                </div>
+                <div
+                  id="spacing-reset"
+                  class="button"
+                  style="justify-content: start; gap: 0.5rem">
+                  <div>
+                    <svg
+                      data-wf-icon="UndoIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                  Reset
+                </div>
               </div>
             </div>
-            <div id="spacing-ui-container" class="ui-container"></div>
           </div>
           <div id="sizing" class="setting-container">
             <div class="title-container title">Sizing</div>
@@ -1602,7 +1637,7 @@
             >
             <div id="more-sizing-options">
               <span class="setting-name">Ration</span>
-              <div id="ratio" class="toggle">
+              <div id="ratio" class="toggle toggle-w-bg">
                 <span id="ratio-text">Auto</span>
               </div>
               <div id="ratio-ui-container" class="ui-container">
@@ -1611,6 +1646,7 @@
                     id="ratio-auto"
                     class="button"
                     data-name="Auto"
+                    data-desc="Does not constrain dimensions.  Ideal for layouts that need to adjust to varying widths and heights."
                     data-value="auto">
                     Auto
                   </div>
@@ -1618,45 +1654,57 @@
                     id="ratio-2.39-1"
                     class="button"
                     data-name="Anamorphic"
+                    data-desc="Ideal for cinematic, ultra-wide content like film trailers, promotional videos, and dramatic hero sections."
                     data-value="2.39 / 1">
-                    Anamorphic(2.39:1)
+                    Anamorphic (2.39:1)
                   </div>
                   <div
                     id="ratio-2-1"
                     class="button"
                     data-name="Univisum"
+                    data-desc="Ideal for modern TV and streaming content that use a 2:1 aspect ratio. Great for featured video sections."
                     data-value="2 / 1">
-                    Univisum/Netflix(2:1)
+                    Univisum/Netflix (2:1)
                   </div>
                   <div
                     id="ratio-16-9 "
                     class="button"
                     data-name="Widescreen"
+                    data-desc="Ideal for elements that require wider designs, such as banners, videos, and responsive layouts."
                     data-value="16 / 9">
-                    Widescreen(16:9)
+                    Widescreen (16:9)
                   </div>
                   <div
                     id="ratio-3-2"
                     class="button"
                     data-name="Landscape"
+                    data-desc="Ideal for elements needing slightly taller layouts than widescreen, like hero images and galleries."
                     data-value="3 / 2">
-                    Landscape(3:2)
+                    Landscape (3:2)
                   </div>
                   <div
                     id="ratio-2-3"
                     class="button"
                     data-name="Portrait"
+                    data-desc="Ideal for elements that work well in taller designs, like mobile layouts or columnar sections."
                     data-value="2 / 3">
-                    Portrait(2:3)
+                    Portrait (2:3)
                   </div>
                   <div
                     id="ratio-1-1"
                     class="button"
                     data-name="Square"
+                    data-desc="Ideal for elements that need a balanced look, such as profile images, grid layouts, and social media icons."
                     data-value="1 / 1">
                     Square (1:1)
                   </div>
-                  <div id="ratio-custom" class="toggle">Custom</div>
+                  <div
+                    id="ratio-custom"
+                    class="toggle"
+                    data-desc="Specify a custom aspect ratio. Ideal for elements that require a unique aspect ratio for a distinct visual effect.">
+                    Custom
+                  </div>
+                  <div id="ratio-desc">Desc</div>
                 </div>
               </div>
               <div id="custom-ratio">
@@ -1677,7 +1725,11 @@
               </div>
               <span class="setting-name">Box size</span>
               <div id="box-sizing" class="button-container">
-                <div id="border-box" class="button" data-value="border-box">
+                <div
+                  id="border-box"
+                  class="button hoverable"
+                  data-value="border-box"
+                  data-desc="Border-box - makes the width and height of the element include the content, padding and border. The overall dimensions of the box do not increase regardless of padding and border size.">
                   <svg
                     data-wf-icon="BorderBoxIcon"
                     width="16"
@@ -1698,7 +1750,11 @@
                       fill="currentColor"></path>
                   </svg>
                 </div>
-                <div id="content-box" class="button" data-value="content-box">
+                <div
+                  id="content-box"
+                  class="button hoverable"
+                  data-value="content-box"
+                  data-desc="Content-box - makes the width and height of the element include only the content. Padding and border sizes added to the outside of the box's dimensions.">
                   <svg
                     data-wf-icon="ContentBoxIcon"
                     width="16"
@@ -1720,8 +1776,646 @@
                   </svg>
                 </div>
               </div>
-              <span class="setting-name">Fill</span>
-              <select name="fill" id="fill"></select>
+              <div
+                id="fill-settings"
+                style="
+                  grid-column: span 2;
+                  display: grid;
+                  grid-template-columns: 1fr 2fr 0.5fr;
+                ">
+                <span class="setting-name">Fill</span>
+                <div id="fill" class="toggle toggle-w-bg" data-value="">
+                  <span id="fill-text">XxX</span>
+                </div>
+                <div id="object-position" class="toggle">
+                  <svg
+                    data-wf-icon="MoreIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 8C3 7.44772 3.44772 7 4 7C4.55228 7 5 7.44772 5 8C5 8.55228 4.55228 9 4 9C3.44772 9 3 8.55228 3 8Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M7 8C7 7.44772 7.44772 7 8 7C8.55228 7 9 7.44772 9 8C9 8.55228 8.55228 9 8 9C7.44772 9 7 8.55228 7 8Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M11 8C11 7.44772 11.4477 7 12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
+              <div id="fill-ui-container" class="ui-container">
+                <div id="fill-menu" class="menu-container">
+                  <div id="fit-fill" class="button" data-value="fill">Fill</div>
+                  <div id="fit-contain" class="button" data-value="contain">
+                    Contain
+                  </div>
+                  <div id="fit-cover" class="button" data-value="cover">
+                    Cover
+                  </div>
+                  <div id="fit-none" class="button" data-value="none">None</div>
+                  <div
+                    id="fit-scale-down"
+                    class="button"
+                    data-value="scale-down">
+                    Scale down
+                  </div>
+                </div>
+              </div>
+              <div id="object-position-ui-container" class="ui-container">
+                <div id="object-position-menu" class="menu-container">
+                  <div
+                    class="setting-name hoverable"
+                    data-desc="The imagined object-fit from which the transformed element is viewed">
+                    Position
+                  </div>
+                  <div id="object-position-settings">
+                    <div id="object-position-box" class="box-settings">
+                      <div
+                        id="object-position-top-left"
+                        class="button"
+                        data-type="object-position"
+                        data-value="top-left">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-top-center"
+                        class="button"
+                        data-type="object-position"
+                        data-value="top-center">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-top-right"
+                        class="button"
+                        data-type="object-position"
+                        data-value="top-right">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-left"
+                        class="button"
+                        data-type="object-position"
+                        data-value="left">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-center"
+                        class="button"
+                        data-type="object-position"
+                        data-value="center">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-right"
+                        class="button"
+                        data-type="object-position"
+                        data-value="right">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-bottom-left"
+                        class="button"
+                        data-type="object-position"
+                        data-value="bottom-left">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-bottom-center"
+                        class="button"
+                        data-type="object-position"
+                        data-value="bottom-center">
+                        <div class="rect"></div>
+                      </div>
+                      <div
+                        id="object-position-bottom-right"
+                        class="button"
+                        data-type="object-position"
+                        data-value="bottom-right">
+                        <div class="rect"></div>
+                      </div>
+                    </div>
+                    <div id="object-position-axis">
+                      <div class="setting-name">Left</div>
+                      <input
+                        type="text"
+                        name="object-position-left"
+                        id="object-position-left-value"
+                        class="number-input"
+                        value="0%" />
+                      <div class="setting-name">Top</div>
+                      <input
+                        type="text"
+                        name="object-position-top"
+                        id="object-position-top-value"
+                        class="number-input"
+                        value="0%" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="positioning" class="setting-container">
+            <div class="title">Position</div>
+            <div id="position-settings">
+              <div class="setting-name">Position</div>
+              <div id="position" class="toggle toggle-w-bg">xXx</div>
+            </div>
+            <div id="position-ui-container" class="ui-container">
+              <div id="position-menu" class="menu-container">
+                <div
+                  id="static"
+                  data-value="static"
+                  data-desc="Static - is the default position and displays an element based on styles in the Layout section."
+                  class="button hoverable">
+                  <svg
+                    data-wf-icon="CloseDefaultIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8.70711 8.00004L12.3536 4.35359L11.6465 3.64648L8.00001 7.29293L4.35356 3.64648L3.64645 4.35359L7.2929 8.00004L3.64645 11.6465L4.35356 12.3536L8.00001 8.70714L11.6465 12.3536L12.3536 11.6465L8.70711 8.00004Z"
+                      fill="currentColor"></path></svg
+                  >Static
+                </div>
+                <div
+                  id="relative"
+                  data-value="relative"
+                  data-desc="Relative - is similar to Static (defaults to Layout section styles), but offers more positioning options."
+                  class="button hoverable">
+                  <svg
+                    data-wf-icon="PositionRelativeIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M11 2H9V3H11V8H12V3H14V2H11ZM3 9H2V14H3V12H8V11H3V9ZM14 10C14 9.44772 13.5523 9 13 9H10C9.44772 9 9 9.44772 9 10V13C9 13.5523 9.44772 14 10 14H13C13.5523 14 14 13.5523 14 13V10Z"
+                      fill="currentColor"></path></svg
+                  >Relative
+                </div>
+                <div
+                  id="absolute"
+                  data-value="absolute"
+                  data-desc="Absolute - positions an element relative to its closest positioned parent, or defaults to the body element."
+                  class="button hoverable">
+                  <svg
+                    data-wf-icon="PositionAbsoluteIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8 3V2H3C2.44772 2 2 2.44772 2 3V8H3V3H8Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M11 2H9V3H11V8H12V3H14V2H11ZM3 9H2V14H3V12H8V11H3V9ZM14 10C14 9.44772 13.5523 9 13 9H10C9.44772 9 9 9.44772 9 10V13C9 13.5523 9.44772 14 10 14H13C13.5523 14 14 13.5523 14 13V10Z"
+                      fill="currentColor"></path></svg
+                  >Absolute
+                </div>
+                <div
+                  id="fixed"
+                  data-value="fixed"
+                  data-desc="Fixed - positions an element relative to the browser window, so it stays in place as the page is scrolled."
+                  class="button hoverable">
+                  <svg
+                    data-wf-icon="PositionFixedIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M11 2H9V3H11V8H12V3H14V2H11ZM3 9H2V14H3V12H8V11H3V9ZM14 10C14 9.44772 13.5523 9 13 9H10C9.44772 9 9 9.44772 9 10V13C9 13.5523 9.44772 14 10 14H13C13.5523 14 14 13.5523 14 13V10Z"
+                      fill="currentColor"></path>
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8 3V2H3C2.44772 2 2 2.44772 2 3V8H3V3H8ZM5.5 4.75C5.5 5.16421 5.16421 5.5 4.75 5.5C4.33579 5.5 4 5.16421 4 4.75C4 4.33579 4.33579 4 4.75 4C5.16421 4 5.5 4.33579 5.5 4.75ZM7.25 5.5C7.66421 5.5 8 5.16421 8 4.75C8 4.33579 7.66421 4 7.25 4C6.83579 4 6.5 4.33579 6.5 4.75C6.5 5.16421 6.83579 5.5 7.25 5.5Z"
+                      fill="currentColor"></path>
+                  </svg>
+                  Fixed
+                </div>
+                <div
+                  id="sticky"
+                  data-value="sticky"
+                  data-desc="Sticky - fixes an element to the canvas only after a user scrolls past a specific location on the page."
+                  class="button hoverable">
+                  <svg
+                    data-wf-icon="PositionStickyIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8 3H3L3 13H13V8H14V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H8V3ZM8 4.75C8 5.16421 7.66421 5.5 7.25 5.5C6.83579 5.5 6.5 5.16421 6.5 4.75C6.5 4.33579 6.83579 4 7.25 4C7.66421 4 8 4.33579 8 4.75ZM4.75 5.5C5.16421 5.5 5.5 5.16421 5.5 4.75C5.5 4.33579 5.16421 4 4.75 4C4.33579 4 4 4.33579 4 4.75C4 5.16421 4.33579 5.5 4.75 5.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 6.5C13.3807 6.5 14.5 5.38071 14.5 4C14.5 2.61929 13.3807 1.5 12 1.5C10.6193 1.5 9.5 2.61929 9.5 4C9.5 4.50954 9.65244 4.98348 9.9142 5.3787L6.14645 9.14645C5.95118 9.34171 5.95118 9.65829 6.14645 9.85355C6.34171 10.0488 6.65829 10.0488 6.85355 9.85355L10.6213 6.0858C11.0165 6.34756 11.4905 6.5 12 6.5Z"
+                      fill="currentColor"></path></svg
+                  >Sticky
+                </div>
+              </div>
+            </div>
+            <div id="quick-positioning" style="display: none">
+              <div
+                id="top-left"
+                class="button"
+                data-value='{"left": "0%", "top": "0%", "right": "auto", "bottom": "auto"}'>
+                <svg
+                  data-wf-icon="PositionTopLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M3 8V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3H8V4H12V12H4V8H3Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M3 3.5C3 3.22386 3.22386 3 3.5 3H6.5C6.77614 3 7 3.22386 7 3.5V6.5C7 6.77614 6.77614 7 6.5 7H3.5C3.22386 7 3 6.77614 3 6.5V3.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "auto", "top": "0%", "right": "0%", "bottom": "auto"}'>
+                <svg
+                  data-wf-icon="PositionTopRightIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13 8V12C13 12.5523 12.5523 13 12 13H4C3.44771 13 3 12.5523 3 12V4C3 3.44772 3.44772 3 4 3H8V4H4V12H12V8H13Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M13 3.5C13 3.22386 12.7761 3 12.5 3H9.5C9.22386 3 9 3.22386 9 3.5V6.5C9 6.77614 9.22386 7 9.5 7H12.5C12.7761 7 13 6.77614 13 6.5V3.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "0%", "top": "auto", "right": "auto", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionBottomLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M3 8V4C3 3.44771 3.44772 3 4 3H12C12.5523 3 13 3.44772 13 4V12C13 12.5523 12.5523 13 12 13H8V12H12V4H4V8H3Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M3 12.5C3 12.7761 3.22386 13 3.5 13H6.5C6.77614 13 7 12.7761 7 12.5V9.5C7 9.22386 6.77614 9 6.5 9H3.5C3.22386 9 3 9.22386 3 9.5V12.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "auto", "top": "auto", "right": "0%", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionBottomRightIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13 8V4C13 3.44771 12.5523 3 12 3H4C3.44771 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H8V12H4V4H12V8H13Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M13 12.5C13 12.7761 12.7761 13 12.5 13H9.5C9.22386 13 9 12.7761 9 12.5V9.5C9 9.22386 9.22386 9 9.5 9H12.5C12.7761 9 13 9.22386 13 9.5V12.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "0%", "top": "0%", "right": "auto", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7 3L12 3C12.5523 3 13 3.44772 13 4L13 12C13 12.5523 12.5523 13 12 13L7 13L7 12L12 12L12 4L7 4L7 3Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M6 3.5C6 3.22386 5.77614 3 5.5 3L3.5 3C3.22386 3 3 3.22386 3 3.5L3 12.5C3 12.7761 3.22386 13 3.5 13L5.5 13C5.77614 13 6 12.7761 6 12.5L6 3.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "auto", "top": "0%", "right": "0%", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionRightIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M9 3L4 3C3.44772 3 3 3.44772 3 4L3 12C3 12.5523 3.44772 13 4 13L9 13L9 12L4 12L4 4L9 4L9 3Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M10 3.5C10 3.22386 10.2239 3 10.5 3L12.5 3C12.7761 3 13 3.22386 13 3.5L13 12.5C13 12.7761 12.7761 13 12.5 13L10.5 13C10.2239 13 10 12.7761 10 12.5L10 3.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "0%", "top": "auto", "right": "0%", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionBottomIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M3 9L3 4C3 3.44772 3.44772 3 4 3L12 3C12.5523 3 13 3.44772 13 4L13 9L12 9L12 4L4 4L4 9L3 9Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M3.5 10C3.22386 10 3 10.2239 3 10.5L3 12.5C3 12.7761 3.22386 13 3.5 13L12.5 13C12.7761 13 13 12.7761 13 12.5V10.5C13 10.2239 12.7761 10 12.5 10L3.5 10Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "0%", "top": "0%", "right": "0%", "bottom": "auto"}'>
+                <svg
+                  data-wf-icon="PositionTopIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13 7L13 12C13 12.5523 12.5523 13 12 13L4 13C3.44771 13 3 12.5523 3 12L3 7L4 7L4 12L12 12L12 7L13 7Z"
+                    fill="currentColor"></path>
+                  <path
+                    d="M12.5 6C12.7761 6 13 5.77614 13 5.5L13 3.5C13 3.22386 12.7761 3 12.5 3L3.5 3C3.22386 3 3 3.22386 3 3.5L3 5.5C3 5.77614 3.22386 6 3.5 6L12.5 6Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div
+                id=""
+                class="button"
+                data-value='{"left": "0%", "top": "0%", "right": "0%", "bottom": "0%"}'>
+                <svg
+                  data-wf-icon="PositionAllIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    opacity="0.4"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2 3C2 2.44772 2.44772 2 3 2H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V3ZM3 3H13V13H3L3 3Z"
+                    fill="currentColor"></path>
+                  <path d="M12 4H4V12H12V4Z" fill="currentColor"></path>
+                </svg>
+              </div>
+            </div>
+            <div id="position-container" style="display: none">
+              <div class="filling-div"></div>
+              <div
+                id="position-top"
+                class="toggle"
+                data-value="0px"
+                data-type="top">
+                0
+              </div>
+              <div class="filling-div"></div>
+              <div
+                id="position-left"
+                class="toggle"
+                data-value="0px"
+                data-type="left">
+                0
+              </div>
+              <div id class="filling-div center-filling"></div>
+              <div
+                id="position-right"
+                class="toggle"
+                data-value="0px"
+                data-type="right">
+                0
+              </div>
+              <div class="filling-div"></div>
+              <div
+                id="position-bottom"
+                class="toggle"
+                data-value="0px"
+                data-type="bottom">
+                0
+              </div>
+              <div class="filling-div"></div>
+            </div>
+            <span id="float-clear-toggle" class="toggle" style="font-size: medium;">Float and clear</span>
+            <div id="float-clear">
+              <span class="setting-name">Float</span>
+              <div id="float-container" class="button-container">
+                <div id="float-none" class="button" data-value="none">
+                  <svg
+                    data-wf-icon="CloseDefaultIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8.70711 8.00004L12.3536 4.35359L11.6465 3.64648L8.00001 7.29293L4.35356 3.64648L3.64645 4.35359L7.2929 8.00004L3.64645 11.6465L4.35356 12.3536L8.00001 8.70714L11.6465 12.3536L12.3536 11.6465L8.70711 8.00004Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="float-left" class="button" data-value="left">
+                  <svg
+                    data-wf-icon="FloatLeftIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M0.5 4C0.223858 4 0 4.22386 0 4.5V10.5C0 10.7761 0.223858 11 0.5 11H6.5C6.77614 11 7 10.7761 7 10.5V4.5C7 4.22386 6.77614 4 6.5 4H0.5Z"
+                      fill="currentColor"></path>
+                    <path d="M9 5H16V4H9V5Z" fill="currentColor"></path>
+                    <path d="M16 8H9V7H16V8Z" fill="currentColor"></path>
+                    <path d="M9 11H12.5V10H9V11Z" fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="float-right" class="button" data-value="right">
+                  <svg
+                    data-wf-icon="FloatRightIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 5H7V4H0V5Z" fill="currentColor"></path>
+                    <path
+                      d="M9.5 4C9.22386 4 9 4.22386 9 4.5V10.5C9 10.7761 9.22386 11 9.5 11H15.5C15.7761 11 16 10.7761 16 10.5V4.5C16 4.22386 15.7761 4 15.5 4H9.5Z"
+                      fill="currentColor"></path>
+                    <path d="M7 8H0V7H7V8Z" fill="currentColor"></path>
+                    <path d="M0 11H3.5V10H0V11Z" fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
+              <span class="setting-name">Clear</span>
+              <div id="clear-container" class="button-container">
+                <div id="clear-none" class="button" data-value="none">
+                  <svg
+                    data-wf-icon="CloseDefaultIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8.70711 8.00004L12.3536 4.35359L11.6465 3.64648L8.00001 7.29293L4.35356 3.64648L3.64645 4.35359L7.2929 8.00004L3.64645 11.6465L4.35356 12.3536L8.00001 8.70714L11.6465 12.3536L12.3536 11.6465L8.70711 8.00004Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="clear-left" class="button" data-value="left">
+                  <svg
+                    data-wf-icon="ClearLeftIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M7 2.5C7 2.22386 7.22386 2 7.5 2H13.5C13.7761 2 14 2.22386 14 2.5V4.5C14 4.77614 13.7761 5 13.5 5H7.5C7.22386 5 7 4.77614 7 4.5V2.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      opacity="0.4"
+                      d="M2 2.5C2 2.22386 2.22386 2 2.5 2H5.5C5.77614 2 6 2.22386 6 2.5V4.5C6 4.77614 5.77614 5 5.5 5H2.5C2.22386 5 2 4.77614 2 4.5V2.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5.20707 10.5L7.35352 8.35359L6.64641 7.64648L3.79286 10.5L6.64641 13.3536L7.35352 12.6465L5.20707 10.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 6V8.5C10 9.32843 9.32843 10 8.5 10H4.5V11H8.5C9.88071 11 11 9.88071 11 8.5V6H10Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="clear-right" class="button" data-value="right">
+                  <svg
+                    data-wf-icon="ClearRightIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M2 2.5C2 2.22386 2.22386 2 2.5 2H8.5C8.77614 2 9 2.22386 9 2.5V4.5C9 4.77614 8.77614 5 8.5 5H2.5C2.22386 5 2 4.77614 2 4.5V2.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      opacity="0.4"
+                      d="M10 2.5C10 2.22386 10.2239 2 10.5 2H13.5C13.7761 2 14 2.22386 14 2.5V4.5C14 4.77614 13.7761 5 13.5 5H10.5C10.2239 5 10 4.77614 10 4.5V2.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10.7929 10.5L8.64648 8.35359L9.35359 7.64648L12.2071 10.5L9.35359 13.3536L8.64648 12.6465L10.7929 10.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6 6V8.5C6 9.32843 6.67157 10 7.5 10H11.5V11H7.5C6.11929 11 5 9.88071 5 8.5V6H6Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="clear-both" class="button" data-value="both">
+                  <svg
+                    data-wf-icon="ClearBothIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3.00011 2.5C3.00011 2.22386 3.22397 2 3.50011 2H13.5001C13.7763 2 14.0001 2.22386 14.0001 2.5V4.5C14.0001 4.77614 13.7763 5 13.5001 5H3.50011C3.22397 5 3.00011 4.77614 3.00011 4.5V2.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M3.70716 10L5.35363 8.35353L4.64652 7.64642L1.79297 10.5L4.64652 13.3535L5.35363 12.6464L3.70721 11H6.50011C7.31791 11 8.044 10.6073 8.50011 10.0002C8.95623 10.6073 9.68231 11 10.5001 11H13.293L11.6466 12.6464L12.3537 13.3535L15.2073 10.5L12.3537 7.64642L11.6466 8.35353L13.2931 10H10.5001C9.67169 10 9.00011 9.32843 9.00011 8.5V6H8.00011V8.5C8.00011 9.32843 7.32854 10 6.50011 10H3.70716Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>

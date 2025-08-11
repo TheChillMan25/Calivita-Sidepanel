@@ -299,5 +299,65 @@ function setRatio(button = null, custom = null) {
   else if (custom !== null) value = custom.w + " / " + custom.h;
   selectedDomObject.css("aspect-ratio", value);
   saveStyle([{ type: "aspect-ratio", value: value }]);
+}
+
+function setBoxSizing(button) {
+  let value = button.attr("data-value");
+  selectedDomObject.css("box-sizing", value);
+  saveStyle([{ type: "box-sizing", value: value }]);
+  refreshStylePanel();
+}
+
+function setObjectFit(button) {
+  let value = button.attr("data-value");
+  selectedDomObject.css("object-fit", value);
+  saveStyle([{ type: "object-fit", value: value }]);
+  refreshStylePanel();
+}
+
+function setObjectPosition(button) {
+  let value = button.attr("data-value"),
+    l,
+    t;
+  if (value.includes("left")) l = "0%";
+  else if (value.includes("center")) l = "50%";
+  else l = "100%";
+  if (value.includes("top")) t = "0%";
+  else if (value.includes("bottom")) t = "100%";
+  else t = "50%";
+  selectedDomObject.css("object-position", l + " " + t);
+  saveStyle([{ type: "object-position", value: l + " " + t }]);
+  refreshStylePanel();
+}
+
+function setMainPosition(value) {
+  selectedDomObject.css("position", value);
+  saveStyle([{ type: "position", value: value }]);
+  refreshStylePanel();
+}
+/**
+ *
+ * @param {string} type Type of the css property (left, right, top, bottom)
+ * @param {*} value Value of the css poperty (10px)
+ */
+function setPositionDetails(currentPosProp, value, type = null) {
+  console.log(value);
+  if (value !== "auto" && type !== null) {
+    value = value + type;
+  }
+  $("#position-" + currentPosProp).attr("data-value", value);
+  selectedDomObject.css(currentPosProp, value);
+  saveStyle([{ type: currentPosProp, value: value }]);
+  refreshStylePanel();
+}
+
+function setFloat(value) {
+  selectedDomObject.css("float", value);
+  saveStyle([{ type: "float", value: value }]);
+  refreshStylePanel();
+}
+function setClear(value) {
+  selectedDomObject.css("clear", value);
+  saveStyle([{ type: "clear", value: value }]);
   refreshStylePanel();
 }

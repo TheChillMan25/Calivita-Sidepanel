@@ -38,12 +38,35 @@ hr {
 }
 
 #sidepanel {
+  padding: 0.2rem;
   height: 100%;
   box-sizing: border-box;
   /* width: 15rem; */
   background-color: #333;
-  color: #999;
+  color: #bbb;
   font-size: small;
+}
+
+#settings {
+  overflow-x: clip;
+  overflow-y: auto;
+  height: calc(100% - 2rem);
+  scrollbar-width: thin;
+  scrollbar-color: #aaa transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 3px;
 }
 
 #tooltip {
@@ -65,8 +88,9 @@ hr {
 #panel-header {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  padding-left: 0.5rem;
   border-bottom: 0.1rem solid #777;
+  height: 2rem;
 }
 
 #layout-display-options {
@@ -104,6 +128,10 @@ hr {
 .type-toggle {
   font-size: smaller;
   padding: 0.1rem;
+}
+
+.toggle-w-bg {
+  background-color: #555;
 }
 
 #other-display {
@@ -171,7 +199,7 @@ hr {
   gap: 0.3rem;
 }
 
-#align-box {
+.box-settings {
   display: grid;
   gap: 0.1rem;
   grid-template-columns: auto auto auto;
@@ -196,6 +224,9 @@ hr {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  .setting-name {
+    justify-content: center;
+  }
 }
 
 .align-axis {
@@ -204,7 +235,6 @@ hr {
   justify-content: center;
   flex-grow: 1;
   width: 5rem;
-  background-color: #555;
   border-radius: 0.2rem;
 }
 
@@ -228,9 +258,12 @@ hr {
   right: 1rem;
   padding: 0.5rem;
   border-radius: 0.2rem;
-  background-color: #444;
+  background-color: #222;
   color: #999;
   z-index: 10;
+}
+.menu-container > :not(.button):not(.toggle) > svg {
+  color: whitesmoke;
 }
 
 #wrap-options {
@@ -309,7 +342,7 @@ input[type="range"] {
   height: 0.2rem;
   border-radius: 0%;
   appearance: none;
-  background-color: #222;
+  background-color: #555;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -366,7 +399,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 #margin-container,
-#padding-container {
+#padding-container,
+#position-container {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: auto 3fr auto;
@@ -375,7 +409,12 @@ input[type="range"]::-moz-range-thumb {
   overflow: hidden;
 }
 
-.spacing-filling-div,
+.center-filling {
+  background-color: #333;
+  border-radius: 0.3rem;
+}
+
+.filling-div,
 .spacing-setting {
   padding: 0.5rem;
 }
@@ -387,15 +426,16 @@ input[type="range"]::-moz-range-thumb {
 }
 
 #spacing-setting-ui {
+  display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  position: relative;
+  position: absolute;
   top: 0.5rem;
   right: 0;
   padding: 0.3rem;
 }
 
-#spacing-range-container {
+#spa-pos-range-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -407,6 +447,13 @@ input[type="range"]::-moz-range-thumb {
 
 #spacing-value {
   width: 4rem;
+}
+
+#spacing-range-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 #spacing-button-container {
@@ -453,9 +500,14 @@ input[type="range"]::-moz-range-thumb {
   gap: 0.3rem;
 }
 
-#ratio {
+#ratio,
+#fill {
   text-align: center;
   background-color: #555;
+}
+
+#ratio-menu {
+  width: 10rem;
 }
 
 #custom-ratio {
@@ -466,7 +518,56 @@ input[type="range"]::-moz-range-thumb {
   grid-column: span 2;
   text-align: center;
 
-  .number-input{
+  .number-input {
     width: 3rem;
   }
+}
+
+#object-position-menu {
+  width: fit-content;
+  padding: 0.3rem;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+#object-position-settings {
+  display: flex;
+  gap: 0.5rem;
+}
+#object-position-box {
+  grid-template-columns: 1.5rem 1.5rem 1.5rem;
+  grid-template-rows: 1.5rem 1.5rem 1.5rem;
+}
+#object-position-box .button {
+  padding: 0.2rem;
+}
+
+#object-position-axis {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+
+  .number-input {
+    width: 3rem;
+    cursor: default;
+  }
+}
+
+#position-settings {
+  display: flex;
+  gap: 1rem;
+}
+
+#position-menu {
+  width: 10rem;
+
+  .button {
+    justify-content: space-between;
+  }
+}
+
+#float-clear {
+  display: none;
+  grid-template-columns: auto auto;
+  row-gap: 0.5rem;
 }

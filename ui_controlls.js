@@ -30,15 +30,16 @@ function hideAlignmentOptions() {
   $("#align-vertical").hide();
 }
 
-function showSpacingSettings(value) {
-  if (currentSpacing.includes("padding")) {
+function showSpacingSettings(value, button) {
+  console.log(value);
+  if (currentSpacing && currentSpacing.includes("padding")) {
     $("#spacing-auto").hide();
   } else {
     $("#spacing-auto").show();
   }
   $("#spacing-range").val(extractValue(value));
   $("#spacing-value").val(extractValue(value));
-  if (value !== "auto") {
+  if (value !== "auto" && value !== $("#spacing-type").attr("data-value")) {
     $("#spacing-type").attr("data-value", extractType(value));
     $("#spacing-type-text").text(extractType(value).toUpperCase());
   } else {
@@ -47,11 +48,14 @@ function showSpacingSettings(value) {
   }
   $("#spacing-setting-ui").css("display", "flex");
   $("#spacing-ui-container").show();
+  checkPos(button, $("#spacing-setting-ui"));
 }
 
 function hideSpacingSettings() {
   $("#spacing-setting-ui").hide();
   $("#spacing-ui-container").hide();
+  currentSpacing = null;
+  currentPosProp = null;
 }
 /**
  * Shows type settings and sets current type ot use
@@ -122,6 +126,17 @@ function showCustomRatio() {
 
 function hideCustomRatio() {
   $("#custom-ratio").hide();
+}
+
+function showFillSettings(caller) {
+  $("#fill-menu").show();
+  $("#fill-ui-container").show();
+  checkPos(caller, $("#fill-menu"));
+}
+
+function hideFillSettings() {
+  $("#fill-menu").hide();
+  $("#fill-ui-container").hide();
 }
 
 function toggleGapOptions() {
@@ -195,6 +210,35 @@ function getDisplayName(display) {
 function getElementName(element) {
   return element.attr("id")[0].toUpperCase() + element.attr("id").slice(1);
 }
+
+function showObjectPosSettings(caller) {
+  $("#object-position-ui-container").show();
+  $("#object-position-menu").show();
+  checkPos(caller, $("#object-position-menu"));
+}
+function hideObjectPosSettings() {
+  $("#object-position-ui-container").hide();
+  $("#object-position-menu").hide();
+}
+
+function showPositionOptions(caller) {
+  console.log("show");
+  $("#position-ui-container").show();
+  $("#position-menu").show();
+  checkPos(caller, $("#position-menu"));
+}
+
+function hidePositionOptions() {
+  $("#position-ui-container").hide();
+  $("#position-menu").hide();
+}
+
+function toggleFloatClear() {
+  if ($("#float-clear").css("display") !== "none") $("#float-clear").hide();
+  else $("#float-clear").css("display", "grid");
+}
+
+//////////////////////////////////////////////
 /**
  *
  * @param {object} objects Dom elements to reset
@@ -275,9 +319,9 @@ function displaySelectedWrapOption(button) {
   }
 }
 
-function resetAlingmentBox() {
-  $("#align-box .button").each(function () {
-    $(this).html('<rect class="rect"></rect>');
+function resetBox(value) {
+  $("#" + value + "-box .button").each(function () {
+    $(this).html('<div class="rect"></div>');
   });
 }
 
@@ -343,8 +387,11 @@ function countGridColsRows(value) {
 }
 
 function checkPos(tglButton, menu) {
-  let x = tglButton.offset()["left"],
-    y = tglButton.offset()["top"],
+  let x;
+  if (menu.attr("id") !== "type-options")
+    x = tglButton.parent().offset()["left"];
+  else x = tglButton.offset()["left"];
+  let y = tglButton.offset()["top"],
     w = menu.outerWidth(),
     h = menu.outerHeight(),
     right = false,
@@ -355,9 +402,10 @@ function checkPos(tglButton, menu) {
   if (y + h > window.innerHeight) {
     bot = true;
   }
-
-  menu.css(bot ? { top: "", bottom: ".5rem" } : { top: y, bottom: "" });
-  menu.css(right ? { left: "", right: ".5rem" } : { left: x, right: "" });
+  menu.css(bot ? { top: "unset", bottom: ".5rem" } : { top: y, bottom: "" });
+  menu.css(
+    right ? { left: "unset", right: ".5rem" } : { left: x, right: ".5rem" }
+  );
 }
 /**
  *
@@ -399,4 +447,66 @@ function extractRatio(value, name = true, separated = false) {
     return name ? ratioMap[a] : a;
   }
   return "Custom";
+}
+
+function changeSVG(type, value) {
+  switch (type) {
+    case "align":
+      break;
+    case "object-position":
+      changeObjectPosSVG(value);
+      break;
+    default:
+      console.error("Can't change svg for '", type, "'");
+  }
+}
+
+function changeObjectPosSVG(value) {
+  switch (value) {
+    case "top-left":
+      $("#object-position-top-left").html(
+        '<svg data-wf-icon="TransformOriginTopLeftIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.0001 7.50004C10.0001 8.32846 9.32853 9.00004 8.5001 9.00004C7.67167 9.00004 7.0001 8.32846 7.0001 7.50004C7.0001 6.67161 7.67167 6.00004 8.5001 6.00004C9.32853 6.00004 10.0001 6.67161 10.0001 7.50004Z" fill="currentColor"></path><path d="M8.5001 14.2071L11.3537 11.3536L10.6465 10.6465L8.5001 12.7929L6.35365 10.6465L5.64655 11.3536L8.5001 14.2071Z" fill="currentColor"></path><path d="M15.2072 7.50004L12.3537 4.64648L11.6465 5.35359L13.793 7.50004L11.6465 9.64648L12.3537 10.3536L15.2072 7.50004Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "top-center":
+      $("#object-position-top-center").html(
+        '<svg data-wf-icon="TransformOriginTopIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.79297 7.50004L4.64652 4.64648L5.35363 5.35359L3.20718 7.50004L5.35363 9.64648L4.64652 10.3536L1.79297 7.50004Z" fill="currentColor"></path><path d="M10.0001 7.50004C10.0001 8.32846 9.3285 9.00004 8.50008 9.00004C7.67165 9.00004 7.00008 8.32846 7.00008 7.50004C7.00008 6.67161 7.67165 6.00004 8.50008 6.00004C9.3285 6.00004 10.0001 6.67161 10.0001 7.50004Z" fill="currentColor"></path><path d="M8.50008 14.2071L11.3536 11.3536L10.6465 10.6465L8.50008 12.7929L6.35363 10.6465L5.64652 11.3536L8.50008 14.2071Z" fill="currentColor"></path><path d="M15.2072 7.50004L12.3536 4.64648L11.6465 5.35359L13.793 7.50004L11.6465 9.64648L12.3536 10.3536L15.2072 7.50004Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "top-right":
+      $("#object-position-top-right").html(
+        '<svg data-wf-icon="TransformOriginTopRightIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.79297 7.50004L4.64652 4.64648L5.35363 5.35359L3.20718 7.50004L5.35363 9.64648L4.64652 10.3536L1.79297 7.50004Z" fill="currentColor"></path><path d="M10.0001 7.50004C10.0001 8.32846 9.3285 9.00004 8.50008 9.00004C7.67165 9.00004 7.00008 8.32846 7.00008 7.50004C7.00008 6.67161 7.67165 6.00004 8.50008 6.00004C9.3285 6.00004 10.0001 6.67161 10.0001 7.50004Z" fill="currentColor"></path><path d="M8.50008 14.2071L11.3536 11.3536L10.6465 10.6465L8.50008 12.7929L6.35363 10.6465L5.64652 11.3536L8.50008 14.2071Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "left":
+      $("#object-position-left").html(
+        '<svg data-wf-icon="TransformOriginTopRightIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.79297 7.50004L4.64652 4.64648L5.35363 5.35359L3.20718 7.50004L5.35363 9.64648L4.64652 10.3536L1.79297 7.50004Z" fill="currentColor"></path><path d="M10.0001 7.50004C10.0001 8.32846 9.3285 9.00004 8.50008 9.00004C7.67165 9.00004 7.00008 8.32846 7.00008 7.50004C7.00008 6.67161 7.67165 6.00004 8.50008 6.00004C9.3285 6.00004 10.0001 6.67161 10.0001 7.50004Z" fill="currentColor"></path><path d="M8.50008 14.2071L11.3536 11.3536L10.6465 10.6465L8.50008 12.7929L6.35363 10.6465L5.64652 11.3536L8.50008 14.2071Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "center":
+      $("#object-position-center").html(
+        '<svg data-wf-icon="TransformOriginCenterIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50008 0.792969L11.3536 3.64652L10.6465 4.35363L8.50008 2.20718L6.35363 4.35363L5.64652 3.64652L8.50008 0.792969Z" fill="currentColor"></path><path d="M1.79297 7.50008L4.64652 4.64652L5.35363 5.35363L3.20718 7.50008L5.35363 9.64652L4.64652 10.3536L1.79297 7.50008Z" fill="currentColor"></path><path d="M10.0001 7.50008C10.0001 8.3285 9.3285 9.00008 8.50008 9.00008C7.67165 9.00008 7.00008 8.3285 7.00008 7.50008C7.00008 6.67165 7.67165 6.00008 8.50008 6.00008C9.3285 6.00008 10.0001 6.67165 10.0001 7.50008Z" fill="currentColor"></path><path d="M8.50008 14.2072L11.3536 11.3536L10.6465 10.6465L8.50008 12.793L6.35363 10.6465L5.64652 11.3536L8.50008 14.2072Z" fill="currentColor"></path><path d="M15.2072 7.50008L12.3536 4.64652L11.6465 5.35363L13.793 7.50008L11.6465 9.64652L12.3536 10.3536L15.2072 7.50008Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "right":
+      $("#object-position-right").html(
+        '<svg data-wf-icon="TransformOriginRightIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50008 0.792969L5.64652 3.64652L6.35363 4.35363L8.50008 2.20718L10.6465 4.35363L11.3536 3.64652L8.50008 0.792969Z" fill="currentColor"></path><path d="M1.79297 7.50008L4.64652 4.64652L5.35363 5.35363L3.20718 7.50008L5.35363 9.64652L4.64652 10.3536L1.79297 7.50008Z" fill="currentColor"></path><path d="M8.50008 9.00008C7.67165 9.00008 7.00008 8.3285 7.00008 7.50008C7.00008 6.67165 7.67165 6.00008 8.50008 6.00008C9.3285 6.00008 10.0001 6.67165 10.0001 7.50008C10.0001 8.3285 9.3285 9.00008 8.50008 9.00008Z" fill="currentColor"></path><path d="M8.50008 14.2072L5.64652 11.3536L6.35363 10.6465L8.50008 12.793L10.6465 10.6465L11.3536 11.3536L8.50008 14.2072Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "bottom-left":
+      $("#object-position-bottom-left").html(
+        '<svg data-wf-icon="TransformOriginBottomLeftIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50004 0.792969L11.3536 3.64652L10.6465 4.35363L8.50004 2.20718L6.35359 4.35363L5.64648 3.64652L8.50004 0.792969Z" fill="currentColor"></path><path d="M15.2071 7.50008L12.3536 4.64652L11.6465 5.35363L13.7929 7.50008L11.6465 9.64652L12.3536 10.3536L15.2071 7.50008Z" fill="currentColor"></path><path d="M10 7.50008C10 8.3285 9.32846 9.00008 8.50004 9.00008C7.67161 9.00008 7.00004 8.3285 7.00004 7.50008C7.00004 6.67165 7.67161 6.00008 8.50004 6.00008C9.32846 6.00008 10 6.67165 10 7.50008Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "bottom-center":
+      $("#object-position-bottom-center").html(
+        '<svg data-wf-icon="TransformOriginBottomIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50008 0.792969L11.3536 3.64652L10.6465 4.35363L8.50008 2.20718L6.35363 4.35363L5.64652 3.64652L8.50008 0.792969Z" fill="currentColor"></path><path d="M1.79297 7.50008L4.64652 4.64652L5.35363 5.35363L3.20718 7.50008L5.35363 9.64652L4.64652 10.3536L1.79297 7.50008Z" fill="currentColor"></path><path d="M10.0001 7.50008C10.0001 8.3285 9.3285 9.00008 8.50008 9.00008C7.67165 9.00008 7.00008 8.3285 7.00008 7.50008C7.00008 6.67165 7.67165 6.00008 8.50008 6.00008C9.3285 6.00008 10.0001 6.67165 10.0001 7.50008Z" fill="currentColor"></path><path d="M15.2072 7.50008L12.3536 4.64652L11.6465 5.35363L13.793 7.50008L11.6465 9.64652L12.3536 10.3536L15.2072 7.50008Z" fill="currentColor"></path></svg>'
+      );
+      break;
+    case "bottom-right":
+      $("#object-position-bottom-right").html(
+        '<svg data-wf-icon="TransformOriginBottomRightIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50008 0.792969L11.3536 3.64652L10.6465 4.35363L8.50008 2.20718L6.35363 4.35363L5.64652 3.64652L8.50008 0.792969Z" fill="currentColor"></path><path d="M1.79297 7.50008L4.64652 4.64652L5.35363 5.35363L3.20718 7.50008L5.35363 9.64652L4.64652 10.3536L1.79297 7.50008Z" fill="currentColor"></path><path d="M10.0001 7.50008C10.0001 8.3285 9.3285 9.00008 8.50008 9.00008C7.67165 9.00008 7.00008 8.3285 7.00008 7.50008C7.00008 6.67165 7.67165 6.00008 8.50008 6.00008C9.3285 6.00008 10.0001 6.67165 10.0001 7.50008Z" fill="currentColor"></path></svg>'
+      );
+      break;
+  }
 }
