@@ -1,94 +1,10 @@
 let selectedDomObject = null;
-let currentSpacing = null,
-  currentSizing = null;
+let currentSpacing = null;
+let currentSizing = null;
 let currentType = null;
 let currentPosProp = null;
-let spaPosUI = `
-  <div id="spacing-setting-ui" class="menu-container">
-    <div id="spacing-range-container">
-      <svg
-        data-wf-icon="MarginLeftIcon"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          opacity="0.4"
-          d="M14 2L14 13L10 13L10 2L14 2Z"
-          fill="currentColor"
-          fill-opacity="0.67"></path>
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M7.99995 7L7.99995 1H8.99995L8.99995 14H7.99995L7.99995 8L3.70706 8L5.85351 10.1464L5.1464 10.8536L1.79285 7.5L5.1464 4.14645L5.85351 4.85355L3.70706 7L7.99995 7Z"
-          fill="currentColor"></path>
-      </svg>
-      <input
-        type="range"
-        name="spacing-range"
-        id="spacing-range"
-        value="0"
-        style="width: 6rem" />
-      <input
-        type="text"
-        name="spacing-value"
-        id="spacing-value"
-        class="number-input"
-        value="0" />
-      <div
-        id="spacing-type"
-        class="toggle type-toggle"
-        data-value=""
-        data-type="">
-        <span id="spacing-type-text">PX</span>
-        <div id="spacing-type-options" class="menu-container">
-          <div id="spacing-type-px" data-value="px" class="button">PX</div>
-          <div id="spacing-type-em" data-value="em" class="button">EM</div>
-          <div id="spacing-type-rem" data-value="rem" class="button">REM</div>
-          <div id="spacing-type-ch" data-value="ch" class="button">CH</div>
-          <div id="spacing-type-vw" data-value="vw" class="button">VW</div>
-          <div id="spacing-type-vh" data-value="vh" class="button">VH</div>
-          <div id="spacing-type-svw" data-value="svw" class="button">SVW</div>
-          <div id="spacing-type-svh" data-value="svh" class="button">SVH</div>
-          <div id="spacing-type-percent" data-value="%" class="button">%</div>
-        </div>
-      </div>
-    </div>
-    <div id="spacing-button-container">
-      <div id="spacing-auto" class="button" data-value="auto">Auto</div>
-      <div id="spacing-buttons">
-        <div class="button" data-value="0">0</div>
-        <div class="button" data-value="10">10</div>
-        <div class="button" data-value="15">15</div>
-        <div class="button" data-value="20">20</div>
-        <div class="button" data-value="25">25</div>
-        <div class="button" data-value="50">50</div>
-        <div class="button" data-value="75">75</div>
-        <div class="button" data-value="100">100</div>
-      </div>
-    </div>
-    <div
-      id="spacing-reset"
-      class="button"
-      style="justify-content: start; gap: 0.5rem">
-      <div>
-        <svg
-          data-wf-icon="UndoIcon"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M3.70712 5.00004L6.35357 2.35359L5.64646 1.64648L1.79291 5.50004L5.64646 9.35359L6.35357 8.64648L3.70712 6.00004H10C11.6569 6.00004 13 7.34318 13 9.00004C13 10.6569 11.6569 12 10 12H8.00001V13H10C12.2092 13 14 11.2092 14 9.00004C14 6.7909 12.2092 5.00004 10 5.00004H3.70712Z"
-            fill="currentColor"></path>
-        </svg>
-      </div>
-      Reset
-    </div>
-  </div>
-`;
+let textShadow = null;
+let editingTextShadow = false;
 
 let alignBoxMarkerCenter =
   '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
@@ -123,6 +39,7 @@ $(document).ready(function () {
   });
 
   $(".hoverable").on("mouseenter", function () {
+    $("#tooltip").show();
     if ($(this).attr("data-desc") && !$(this).hasClass("menu-button")) {
       $("#tooltip").text($(this).attr("data-desc"));
       let dif = ($("#tooltip").width() - $(this).width()) / 2;
@@ -138,7 +55,6 @@ $(document).ready(function () {
       let posTop = window.innerHeight - $(this).offset()["top"] + 10;
       $("#tooltip").css("bottom", posTop);
       $("#tooltip").css("left", posLeft);
-      $("#tooltip").show();
     }
   });
   $(".hoverable").on("mouseleave", function () {
@@ -233,15 +149,10 @@ function saveStyle(dataObjects) {
 function pageRefreshLoad() {
   $(".editable").each(function () {
     try {
-      let cG = false;
       const styleData = JSON.parse(localStorage.getItem($(this).attr("id")));
       if (styleData) {
-        if ("custom-gap" in styleData)
-          cG = styleData["custom-gap"] === "true" ? true : false;
         for (const [key, value] of Object.entries(styleData)) {
-          if (cG && key === "gap") continue;
-          else if (!cG && (key === "column-gap" || key === "row-gap")) continue;
-          else $(this).css(key, value);
+          $(this).css(key, value);
         }
       } else {
         selectedDomObject = $(this);
@@ -286,6 +197,8 @@ function refreshStylePanel() {
             $("#other-display").removeClass("pressed-button");
           }
           checkForShowDisplaySettings(styleData.display);
+          restrictFloat(value);
+          restrictTextColumn(value);
           break;
         case "flex-direction":
           $("#" + value).addClass("pressed-button");
@@ -302,7 +215,7 @@ function refreshStylePanel() {
               styleData["flex-wrap"]
             )
           );
-          hideWrapOptions();
+          hideMenu($("#wrap-ui-container"), $("#wrap-options"));
           break;
         case "align-items":
           resetBox("align");
@@ -337,14 +250,24 @@ function refreshStylePanel() {
           $("#row-gap-type").attr("data-value", extractType(value));
           break;
         case "column-gap":
-          if (extractType(value) !== "%") {
-            $("#column-gap-" + extractType(value)).addClass("pressed-button");
-          } else {
-            $("#column-percent").addClass("pressed-button");
+          if (
+            styleData.display.includes("flex") ||
+            styleData.display.includes("grid")
+          ) {
+            if (extractType(value) !== "%") {
+              $("#column-gap-" + extractType(value)).addClass("pressed-button");
+            } else {
+              $("#column-percent").addClass("pressed-button");
+            }
+            $("#column-gap-value").val(parseInt(value));
+            $("#column-gap-type-text").text(extractType(value).toUpperCase());
+            $("#column-gap-type").attr("data-value", extractType(value));
+          } else if (styleData["column-count"] > 0) {
+            $("#text-column-gap-type").attr("data-value", extractType(value));
+            $("#text-column-gap-type").text(extractType(value).toUpperCase());
+            $("#text-column-gap-range").val(extractValue(value));
+            $("#text-column-gap-value").val(extractValue(value));
           }
-          $("#column-gap-value").val(parseInt(value));
-          $("#column-gap-type-text").text(extractType(value).toUpperCase());
-          $("#column-gap-type").attr("data-value", extractType(value));
           break;
         case "grid-template-rows":
           $("#grid-rows").attr("value", countGridColsRows(value));
@@ -376,59 +299,24 @@ function refreshStylePanel() {
           else
             $("#grid-col-" + c["justify-content"]).addClass("pressed-button");
           break;
-        case "margin-top":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "margin-right":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "margin-bottom":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "margin-left":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "padding-top":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "padding-right":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "padding-bottom":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "padding-left":
-          $("#" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
         case "overflow":
           $("#overflow-" + value).addClass("pressed-button");
           break;
         case "aspect-ratio":
           $("#ratio").text(extractRatio(value));
+          $("#ratio-desc").text(
+            $("#ratio-" + extractRatio(value, false)).attr("data-desc")
+          );
           if ($("#ratio").text() !== "Custom") $("#custom-ratio").hide();
           $("#ratio-width").val(extractRatio(value, false, true)["w"]);
           $("#ratio-height").val(extractRatio(value, false, true)["h"]);
+          $("#ratio-" + extractRatio(value, false)).addClass("pressed-button");
           break;
         case "box-sizing":
           $("#" + value).addClass("pressed-button");
           break;
         case "object-fit":
+          $("#fit-" + value).addClass("pressed-button");
           $("#fill-text").text($("#fit-" + value).text());
           break;
         case "object-position":
@@ -440,6 +328,7 @@ function refreshStylePanel() {
           $("#object-position-top-value").val(vN["t"] + "%");
           break;
         case "position":
+          $("#" + value).addClass("pressed-button");
           $("#position").text(value[0].toUpperCase() + value.slice(1));
           $("#position-desc").html($("#" + value).attr("data-desc"));
           if (value !== "static") $("#position-container").show();
@@ -448,31 +337,165 @@ function refreshStylePanel() {
             $("#quick-positioning").css("display", "flex");
           else $("#quick-positioning").hide();
           break;
-        case "left":
-          $("#position-" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "top":
-          $("#position-" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "right":
-          $("#position-" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
-        case "bottom":
-          $("#position-" + key)
-            .text(extractValue(value))
-            .attr("data-value", value);
-          break;
         case "float":
           $("#float-" + value).addClass("pressed-button");
           break;
         case "clear":
           $("#clear-" + value).addClass("pressed-button");
+          break;
+        case "font-family":
+          $("#font").val(value);
+          break;
+        case "font-weight":
+          $("#weight").val(value);
+          break;
+        case "text-align":
+          $("#text-align-" + value).addClass("pressed-button");
+          break;
+        case "text-decoration":
+          $("#decor-" + getDecor(value)["type"]).addClass("pressed-button");
+          break;
+        case "font-size":
+          $("#font-size").val(extractValue(value));
+          $("#font-size-type").attr("data-value", extractType(value));
+          $("#font-size-type-text").text(extractType(value).toUpperCase());
+          break;
+        case "line-height":
+          $("#line-height").val(extractValue(value));
+          $("#line-height-type").attr("data-value", extractType(value));
+          $("#line-height-type-text").text(extractType(value).toUpperCase());
+          break;
+        case "color":
+          $("#color").val(rgbaToHex(value)["hex"]);
+          $("#color-value").val(rgbaToHex(value)["hex"]);
+          $("#color-alpha-range").val(rgbaToHex(value)["alpha"]);
+          $("#color-alpha-value").val(rgbaToHex(value)["alpha"]);
+          break;
+        case "text-decoration-line":
+          $("#decor-" + getDecor(value)["type"]).addClass("pressed-button");
+          $("#more-line-menu").text(getTextDecor(value)["text"]);
+          $("#more-line-" + getTextDecor(value)["id"]).addClass(
+            "pressed-button"
+          );
+          break;
+        case "text-decoration-style":
+          $("#line-style").text(getTextDecor(value)["text"]);
+          $("#line-" + getTextDecor(value)["id"]).addClass("pressed-button");
+          break;
+        case "text-decoration-thickness":
+          $("#line-thickness-value").val(extractValue(value));
+          if (value !== "auto") {
+            $("#line-thickness-type").attr("data-value", extractType(value));
+            $("#line-thickness-type-text").text(
+              extractType(value).toUpperCase()
+            );
+          }
+          break;
+        case "text-decoration-color":
+          $("#line-color").val(rgbaToHex(value)["hex"]);
+          $("#line-color-value").val(rgbaToHex(value)["hex"]);
+          $("#line-color-alpha-value").val(rgbaToHex(value)["alpha"]);
+          $("#line-color-alpha-range").val(rgbaToHex(value)["alpha"]);
+          break;
+        case "text-decoration-skip-ink":
+          $("#line-skip-ink").attr("data-value", value);
+          $("#line-skip-ink").text(value[0].toUpperCase() + value.slice(1));
+          break;
+        case "letter-spacing":
+          $("#letter-spacing").val(extractValue(value));
+          if (value !== "normal") {
+            $("#letter-spacing-type")
+              .attr("data-value", extractType(value))
+              .text(extractType(value).toUpperCase());
+          }
+          break;
+        case "text-indent":
+          $("#text-indent").val(extractValue(value));
+          if (value !== "normal") {
+            $("#text-indent-type")
+              .attr("data-value", extractType(value))
+              .text(extractType(value).toUpperCase());
+          }
+          break;
+        case "column-count":
+          if (value > 0) {
+            $("#text-column-toggle")
+              .css({
+                opacity: "1",
+              })
+              .attr("data-desc", "");
+          } else {
+            $("#text-column-toggle")
+              .css({
+                opacity: "0.7",
+              })
+              .attr(
+                "data-desc",
+                "Set column count before adjusting the columns layout settings."
+              )
+              .addClass("hoverable");
+          }
+          $("#text-column").val(value === "auto" ? "" : value);
+          break;
+        case "column-rule-style":
+          $("#column-rule-" + value).addClass("pressed-button");
+          break;
+        case "column-rule-width":
+          $("#column-width-type")
+            .attr("data-value", extractType(value))
+            .text(extractType(value).toUpperCase());
+          $("#column-width-range").val(extractValue(value));
+          $("#column-width-value").val(extractValue(value));
+          break;
+        case "column-rule-color":
+          $("#column-rule-color").val(rgbaToHex(value)["hex"]);
+          $("#column-rule-color-value").val(rgbaToHex(value)["hex"]);
+          $("#column-alpha-range").val(rgbaToHex(value)["alpha"]);
+          $("#column-alpha-value").val(rgbaToHex(value)["alpha"]);
+          break;
+        case "column-span":
+          $("#column-span-" + value).addClass("pressed-button");
+          break;
+        case "font-style":
+          $("#italicize-" + value).addClass("pressed-button");
+          break;
+        case "text-transform":
+          $("#capitalize-" + value).addClass("pressed-button");
+          break;
+        case "column-span":
+          $("#column-span-" + value).addClass("pressed-button");
+          break;
+        case "direction":
+          $("#text-direction-" + value).addClass("pressed-button");
+          break;
+        case "word-break":
+          $("#word-break").text($("#word-break-" + value).text());
+          $("#word-break-" + value).addClass("pressed-button");
+          break;
+        case "white-space":
+          $("#white-space").text($("#white-space-" + value).text());
+          $("#white-space-" + value).addClass("pressed-button");
+          break;
+        case "text-overflow":
+          $("#text-overflow-" + value).addClass("pressed-button");
+          break;
+        case "stroke-width":
+          $("#stroke-width").val(extractValue(value));
+          $("#stroke-width-type").attr("data-value", extractType(value));
+          $("#stroke-width-type").text(extractType(value).toUpperCase());
+          break;
+        case "stroke":
+          $("#stroke-color").val(rgbaToHex(value)["hex"]);
+          $("#stroke-color-value").val(rgbaToHex(value)["hex"]);
+          $("#stroke-color-alpha").val(rgbaToHex(value)["alpha"]);
+          $("#stroke-color-alpha-value").val(rgbaToHex(value)["alpha"]);
+          break;
+        case "text-shadow":
+          $("#text-shadows").html("");
+          let shadows = extractTextShadows(value);
+          for (let i = 0; i < shadows.length; i++) {
+            displayTextShadow(extractShadow(shadows[i]), i);
+          }
           break;
         default:
           if (key.includes("width") || key.includes("height")) {
@@ -480,6 +503,14 @@ function refreshStylePanel() {
             $("#" + key).val(extractValue(value));
             $("#" + key + "-type").attr("data-value", extractType(value));
             $("#" + key + "-type-text").text(extractType(value).toUpperCase());
+          } else if (key.includes("margin") || key.includes("padding")) {
+            $("#" + key)
+              .text(extractValue(value))
+              .attr("data-value", value);
+          } else if (["top", "left", "right", "bottom"].includes(key)) {
+            $("#position-" + key)
+              .text(extractValue(value))
+              .attr("data-value", value);
           } else console.warn("Unknown style key: " + key);
       }
     }
@@ -642,17 +673,14 @@ function selectAlignmentObject(alignItems, justifyContent) {
 function setUpControlls() {
   $("#displays-toggle").on("click", function (event) {
     event.stopPropagation();
-    showDisplayOptions();
+    showMenu($("#display-options"), $("#display-ui-container"), $(this));
   });
   $("#display-ui-container").on("click", function () {
-    hideDisplayOptions();
+    hideMenu($("#display-options"), $("#display-ui-container"));
   });
   $("#displays").on("click", ".button", function (event) {
     event.stopPropagation();
-    setDisplay($(this).attr("data-value"), {
-      type: "display",
-      object: $(this),
-    });
+    setStyle("display", $(this).attr("data-value"));
   });
   $("#flex-direction-container").on("click", ".button", function () {
     setDirection($(this).attr("data-value"), {
@@ -661,10 +689,10 @@ function setUpControlls() {
     });
   });
   $("#wrap-toggle").on("click", function () {
-    showWrapOptions();
+    showMenu($("#wrap-ui-container"), $("#wrap-options"), $(this));
   });
   $("#wrap-ui-container").on("click", function () {
-    hideWrapOptions();
+    hideMenu($("#wrap-ui-container"), $("#wrap-options"));
   });
   $("#wrap-options").on("click", ".button", function (event) {
     event.stopPropagation();
@@ -686,11 +714,11 @@ function setUpControlls() {
   $("#align-axis").on("click", ".toggle", function () {
     switch ($(this).attr("id")) {
       case "align-x":
-        showAlignmentOptions("align-horizontal");
+        showAlignmentOptions("align-horizontal", $(this));
         break;
 
       case "align-y":
-        showAlignmentOptions("align-vertical");
+        showAlignmentOptions("align-vertical", $(this));
         break;
     }
   });
@@ -717,7 +745,7 @@ function setUpControlls() {
     showTypeOptions($(this));
   });
   $("#type-ui-container").on("click", function () {
-    hideTypeOptions();
+    hideMenu($("#type-options"), $("#type-ui-container"));
   });
   $("#type-options").on("click", ".button", function (event) {
     event.stopPropagation();
@@ -787,7 +815,7 @@ function setUpControlls() {
     }
   });
   $("#grid-direction-container").on("click", ".button", function () {
-    setGridDirection($(this).attr("data-value"), $(this));
+    setStyle("grid-auto-flow", $(this).attr("data-value"));
   });
   $("#more-grid-toggle").on("click", function () {
     toggleMore("grid");
@@ -814,7 +842,7 @@ function setUpControlls() {
       return;
     }
     if ($("#spacing-type-options").css("display") !== "none") {
-      hideTypeOptions();
+      hideMenu($("#type-options"), $("#type-ui-container"));
       return;
     }
     hideSpacingSettings($("#spacing-setting-ui").parent());
@@ -834,15 +862,12 @@ function setUpControlls() {
     $("#spacing-range").val($(this).attr("data-value"));
     let val = $(this).attr("data-value");
     let type = "";
-    console.log(val);
     if (val !== "auto") {
       type = $("#spacing-type").attr("data-value");
     }
     if (currentSpacing !== null) {
-      console.log(currentSpacing);
       setSpacing(currentSpacing, val, type);
     } else if (currentPosProp !== null) {
-      console.log(currentPosProp);
       setPositionDetails(currentPosProp, val, type);
     }
   });
@@ -857,29 +882,30 @@ function setUpControlls() {
     hideSpacingSettings();
   });
   $("#sizing-container").on("input", ".number-input", function () {
-    let value =
-      $(this).val() + $("#" + $(this).attr("id") + "-type").attr("data-value");
+    let value = $(this).val();
+    let type = $("#" + $(this).attr("id") + "-type").attr("data-value");
     if ($(this).val() === "") {
       if ($(this).attr("id").includes("max")) {
         value = "none";
+        type = "";
       } else if ($(this).attr("id").includes("min")) {
         value = "0";
       } else value = "auto";
     }
-    setSizing($(this).attr("id"), value);
+    setStyle($(this).attr("id"), value, type);
   });
   $("#overflow-container").on("click", ".button", function () {
     let value = $(this).attr("data-value");
-    setOverflow(value, $(this));
+    setStyle("overflow", value);
   });
   $("#more-sizing-toggle").on("click", function () {
     toggleMore("sizing");
   });
   $("#ratio").on("click", function () {
-    showRatioSettings($(this));
+    showMenu($("#ratio-ui-container"), $("#ratio-menu"), $(this));
   });
   $("#ratio-ui-container").on("click", function () {
-    hideRatioSettings();
+    hideMenu($("#ratio-ui-container"), $("#ratio-menu"));
   });
   $("#ratio-menu").on("click", ".button", function () {
     setRatio($(this));
@@ -902,35 +928,38 @@ function setUpControlls() {
     $("#ratio-desc").text($(this).attr("data-desc"));
   });
   $("#box-sizing").on("click", ".button", function () {
-    setBoxSizing($(this));
+    setStyle("box-sizing", $(this).attr("data-value"));
   });
   $("#fill").on("click", function () {
-    showFillSettings($(this));
+    showFillSettings($("#fill-ui-container"), $("#fill-menu"), $(this));
   });
   $("#fill-ui-container").on("click", function () {
-    hideFillSettings();
+    hideMenu($("#fill-ui-container"), $("#fill-menu"));
   });
   $("#fill-menu").on("click", ".button", function () {
-    setObjectFit($(this));
+    setStyle("object-fit", $(this).attr("data-value"));
   });
   $("#object-position").on("click", function () {
-    showObjectPosSettings($(this));
+    showMenu(
+      $("#object-position-ui-container"),
+      $("#object-position-menu"),
+      $(this)
+    );
   });
   $("#object-position-ui-container").on("click", function () {
-    hideObjectPosSettings();
+    hideMenu($("#object-position-ui-container"), $("#object-position-menu"));
   });
   $("#object-position-box").on("click", ".button", function (event) {
     event.stopPropagation();
-    console.log($(this).attr("data-value"));
     resetBox("object-position");
     changeSVG("object-position", $(this).attr("data-value"));
     setObjectPosition($(this));
   });
   $("#position").on("click", function () {
-    showPositionOptions($(this));
+    showMenu($("#position-ui-container"), $("#position-menu"), $(this));
   });
   $("#position-ui-container").on("click", function () {
-    hidePositionOptions();
+    hideMenu($("#position-ui-container"), $("#position-menu"));
   });
   $("#position-menu").on("click", ".button", function () {
     let attr = $(this).attr("data-value");
@@ -939,7 +968,7 @@ function setUpControlls() {
     if (attr === "absolute" || attr === "fixed")
       $("#quick-positioning").css("display", "flex");
     else $("#quick-positioning").hide();
-    setMainPosition($(this).attr("data-value"));
+    setStyle("position", $(this).attr("data-value"));
   });
   $("#position-container").on("click", ".toggle", function () {
     currentPosProp = $(this).attr("data-type");
@@ -948,21 +977,352 @@ function setUpControlls() {
   });
   $("#quick-positioning").on("click", ".button", function () {
     let pos = JSON.parse($(this).attr("data-value"));
-    console.log(pos);
     setPositionDetails("left", pos["left"]);
     setPositionDetails("top", pos["top"]);
     setPositionDetails("right", pos["right"]);
     setPositionDetails("bottom", pos["bottom"]);
   });
-  $("#float-clear-toggle").on("click", function(){
-    toggleFloatClear()
-  })
+  $("#float-clear-toggle").on("click", function () {
+    toggleFloatClear();
+  });
   $("#float-container").on("click", ".button", function () {
-    setFloat($(this).attr("data-value"));
+    setStyle("float", $(this).attr("data-value"));
   });
   $("#clear-container").on("click", ".button", function () {
-    setClear($(this).attr("data-value"));
+    setStyle("clear", $(this).attr("data-value"));
   });
+  $("#font").on("change", function () {
+    setStyle("font-family", $(this).val());
+  });
+  $("#weight").on("change", function () {
+    setStyle("font-weight", $(this).val());
+  });
+  $("#align-text").on("click", ".button", function () {
+    setStyle("text-align", $(this).attr("data-value"));
+  });
+  $("#decor").on("click", ".button", function () {
+    setStyle("text-decoration-line", $(this).attr("data-value"));
+  });
+  $("#font-size").on("input", function () {
+    let type = $("#font-size-type").attr("data-value");
+    setStyle("font-size", $(this).val(), type);
+  });
+  $("#line-height").on("input", function () {
+    let type = $("#line-height-type").attr("data-value");
+    setStyle("line-height", $(this).val(), type);
+  });
+  $("#color").on("change", function () {
+    let value = $(this).val();
+    let alpha = $("#color-alpha-range").val();
+    $("#color-value").val(value);
+    setStyle("color", hexToRgba(value, alpha));
+  });
+  $("#color-value").on("input", function () {
+    let value = $(this).val();
+    let alpha = $("#color-alpha-range").val();
+    if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+      $("#color").val(value);
+      setStyle("color", hexToRgba(value, alpha));
+    }
+  });
+  $("#color-alpha-range").on("input", function () {
+    let color = $("#color").val();
+    let value = $(this).val();
+    $("#color-alpha-value").val(value);
+    setStyle("color", hexToRgba(color, value));
+  });
+  $("#color-alpha-value").on("input", function () {
+    let color = $("#color").val();
+    let value = $(this).val();
+    $("#color-alpha-range").val(value);
+    setStyle("color", hexToRgba(color, value));
+  });
+  $("#more-decor").on("click", function () {
+    showMenu($("#decor-ui-container"), $("#decor-menu"), $(this), "grid");
+  });
+  $("#decor-ui-container").on("click", function (event) {
+    event.stopPropagation();
+    if (event.target === $(this).get(0))
+      hideMenu($("#decor-ui-container"), $("#decor-menu"));
+  });
+  $("#inner-decor-ui-container").on("click", function () {
+    hideMenu($("#inner-decor-ui-container"), $("#decor-line-style"));
+    hideMenu($("#inner-decor-ui-container"), $("#more-line"));
+  });
+  $("#more-line-menu").on("click", function (event) {
+    event.stopPropagation();
+    showMoreLine($(this));
+  });
+  $("#more-line").on("click", ".button", function (event) {
+    event.stopPropagation();
+    $("#more-line-menu").attr("data-value", $(this).attr("data-value"));
+    setStyle("text-decoration-line", $(this).attr("data-value"));
+    hideMenu($("#inner-decor-ui-container"), $("#more-line"));
+  });
+  $("#line-style").on("click", function (event) {
+    event.stopPropagation();
+    showLineStyle($(this));
+  });
+  $("#decor-line-style").on("click", ".button", function (event) {
+    event.stopPropagation();
+    $("#line-style").attr("data-value", $(this).attr("data-value"));
+    setStyle("text-decoration-style", $(this).attr("data-value"));
+    hideMenu($("#inner-decor-ui-container"), $("#decor-line-style"));
+  });
+  $("#line-color").on("change", function () {
+    let value = $(this).val();
+    let alpha = $("#line-color-alpha-value").val();
+    $("#line-color-value").val(value);
+    setStyle("text-decoration-color", hexToRgba(value, alpha));
+  });
+  $("#line-color-value").on("input", function () {
+    let value = $(this).val();
+    let alpha = $("#line-color-alpha-value").val();
+    if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+      $("#line-color").val(value);
+      setStyle("text-decoration-color", hexToRgba(value, alpha));
+    }
+  });
+  $("#line-color-alpha-range").on("input", function () {
+    let value = $(this).val();
+    $("#line-color-alpha-value").val(value);
+    setStyle("text-decoration-color", hexToRgba($("#line-color").val(), value));
+  });
+  $("#line-color-alpha-value").on("input", function () {
+    let value = $(this).val();
+    $("#line-color-alpha-range").val(value);
+    setStyle("text-decoration-color", hexToRgba($("#line-color").val(), value));
+  });
+  $("#line-thickness-value").on("input", function () {
+    setStyle(
+      "text-decoration-thickness",
+      $(this).val() + $("#line-thickness-type").attr("data-value")
+    );
+  });
+  $("#line-skip-ink").on("click", function () {
+    toggleSkipInk($(this));
+  });
+  $("#auto-thickness").on("click", function () {
+    $("#line-thickness-value").val("Auto");
+    setStyle("text-decoration-thickness", "auto");
+  });
+  $("#letter-spacing").on("input", function () {
+    setLetterSpacing(
+      $(this).val(),
+      $("#letter-spacing-type").attr("data-value")
+    );
+  });
+  $("#text-indent").on("input", function () {
+    setTextIndent($(this).val(), $("#text-indent-type").attr("data-value"));
+  });
+  $("#text-column").on("input", function () {
+    setTextColumn($(this).val());
+  });
+  $("#text-column-toggle").on("click", function () {
+    if (
+      selectedDomObject.css("display") !== "flex" &&
+      parseFloat($("#text-column").val()) > 0
+    ) {
+      showTextColumnSettings($(this));
+    }
+  });
+  $("#column-ui-container").on("click", function (event) {
+    if (event.target === $(this).get(0))
+      hideMenu($("#column-ui-container"), $("#column-menu"));
+  });
+  $("#text-column-gap-range").on("input", function () {
+    $("#text-column-gap-value").val($(this).val());
+    setStyle(
+      "column-gap",
+      $(this).val(),
+      $("#text-column-gap-type").attr("data-value")
+    );
+  });
+  $("#text-column-gap-value").on("input", function () {
+    $("#text-column-gap-range").val($(this).val());
+    setStyle(
+      "column-gap",
+      $(this).val(),
+      $("#text-column-gap-type").attr("data-value")
+    );
+  });
+  $("#column-rule").on("click", ".button", function () {
+    setStyle("column-rule-style", $(this).attr("data-value"));
+  });
+  $("#column-width-range").on("input", function () {
+    $("#column-width-value").val($(this).val());
+    setStyle(
+      "column-rule-width",
+      $(this).val(),
+      $("#column-width-type").attr("data-value")
+    );
+  });
+  $("#column-width-value").on("input", function () {
+    $("#column-width-range").val($(this).val());
+    setStyle(
+      "column-rule-width",
+      $(this).val(),
+      $("#column-width-type").attr("data-value")
+    );
+  });
+  $("#column-rule-color").on("change", function () {
+    let value = $(this).val();
+    let alpha = $("#column-alpha-range").val();
+    $("#column-rule-color-value").val(value);
+    setStyle("column-rule-color", hexToRgba(value, alpha));
+  });
+  $("#column-rule-color-value").on("input", function () {
+    let value = $(this).val();
+    let alpha = $("#column-rule-color").val();
+    if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+      $("#column-rule-color").val(value);
+      setStyle("column-rule-color", hexToRgba(value, alpha));
+    }
+  });
+  $("#column-alpha-range").on("input", function () {
+    let value = $("#column-rule-color").val();
+    let alpha = $(this).val();
+    $("#column-alpha-value").val(alpha);
+    setStyle("column-rule-color", hexToRgba(value, alpha));
+  });
+  $("#column-alpha-value").on("input", function () {
+    let value = $("#column-rule-color").val();
+    let alpha = $(this).val();
+    $("#column-alpha-range").val(alpha);
+    setStyle("column-rule-color", hexToRgba(value, alpha));
+  });
+  $("#column-child-span").on("click", ".button", function () {
+    if (
+      selectedDomObject.parent().css("column-count") !== "auto" ||
+      selectedDomObject.parent().css("column-count") > 0
+    )
+      setStyle("column-span", $(this).attr("data-value"));
+  });
+  $("#italicize").on("click", ".button", function () {
+    setStyle("font-style", $(this).attr("data-value"));
+  });
+  $("#capitalize").on("click", ".button", function () {
+    setStyle("text-transform", $(this).attr("data-value"));
+  });
+  $("#text-direction").on("click", ".button", function () {
+    setStyle("direction", $(this).attr("data-value"));
+  });
+  $("#word-break").on("click", function () {
+    showMenu($("#word-break-ui-container"), $("#word-break-menu"), $(this));
+  });
+  $("#word-break-ui-container").on("click", function (event) {
+    if (event.target === $(this).get(0)) {
+      hideMenu($("#word-break-ui-container"), $("#word-break-menu"));
+    }
+  });
+  $("#word-break-menu").on("click", ".button", function () {
+    setStyle("word-break", $(this).attr("data-value"));
+    hideMenu($("#word-break-ui-container"), $("#word-break-menu"));
+  });
+  $("#word-break-menu").on("mouseenter", ".button", function () {
+    $("#word-break-desc").text($(this).attr("data-desc"));
+  });
+
+  $("#white-space").on("click", function () {
+    showMenu($("#white-space-ui-container"), $("#white-space-menu"), $(this));
+  });
+  $("#white-space-ui-container").on("click", function (event) {
+    if (event.target === $(this).get(0)) {
+      hideMenu($("#white-space-ui-container"), $("#white-space-menu"));
+    }
+  });
+  $("#white-space-menu").on("click", ".button", function () {
+    setStyle("white-space", $(this).attr("data-value"));
+    hideMenu($("#white-space-ui-container"), $("#white-space-menu"));
+  });
+  $("#white-space-menu").on("mouseenter", ".button", function () {
+    $("#white-space-desc").text($(this).attr("data-desc"));
+  });
+  $("#text-overflow").on("click", ".button", function () {
+    setStyle("text-overflow", $(this).attr("data-value"));
+  });
+  $("#stroke-width").on("input", function () {
+    let value = $(this).val();
+    if (!isNaN(parseFloat(value))) {
+      setStyle(
+        "stroke-width",
+        value,
+        $("#stroke-width-type").attr("data-value")
+      );
+    }
+  });
+  $("#stroke-color").on("change", function () {
+    $("#stroke-color-value").val($(this).val());
+    let value = $(this).val();
+    let alpha = $("#stroke-color-alpha").val();
+    setStyle("stroke", hexToRgba(value, alpha));
+  });
+  $("#stroke-color-value").on("input", function () {
+    let value = $(this).val();
+    let alpha = $("#stroke-color-alpha").val();
+    if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+      $("#stroke-color").val(value);
+      setStyle("stroke", hexToRgba(value, alpha));
+    }
+  });
+  $("#stroke-color-alpha").on("input", function () {
+    $("#stroke-color-alpha-value").val($(this).val());
+    let value = $("#stroke-color").val();
+    let alpha = $("#stroke-color-alpha").val();
+    setStyle("stroke", hexToRgba(value, alpha));
+  });
+  $("#stroke-color-alpha-value").on("input", function () {
+    $("#stroke-color-alpha").val($(this).val());
+    let value = $("#stroke-color").val();
+    let alpha = $("#stroke-color-alpha").val();
+    setStyle("stroke", hexToRgba(value, alpha));
+  });
+  $("#more-type-toggle").on("click", function () {
+    toggleMore("type");
+  });
+  $("#text-shadow-toggle").on("click", function () {
+    textShadow = selectedDomObject.css("text-shadow");
+    showMenu(
+      $("#text-shadow-ui-container"),
+      $("#text-shadow-menu"),
+      $(this),
+      "grid"
+    );
+  });
+  $("#text-shadow-ui-container").on("click", function (event) {
+    if (event.target === $(this).get(0))
+      hideMenu($(this), $("#text-shadow-menu"));
+  });
+  $("#text-shadow-menu").on(
+    "input",
+    'input[type="range"], #text-shadow-color, #text-shadow-color-value',
+    function () {
+      $("#" + $(this).attr("id") + "-value").val($(this).val());
+      if (!editingTextShadow) setTextShadow();
+    }
+  );
+  $("#text-shadows").on("click", ".button.remove", function () {
+    let shadow = $("#text-shadow-" + $(this).attr("data-value")).attr(
+      "data-value"
+    );
+    removeTextShadow(shadow);
+  });
+  $("#text-shadows").on("click", ".button.hide", function () {
+    let shadow = $("#text-shadow-" + $(this).attr("data-value")).attr(
+      "data-value"
+    );
+    let newShadow = toggleTextShadow(shadow);
+    $("#text-shadow-" + $(this).attr("data-value")).attr(
+      "data-value",
+      newShadow
+    );
+  });
+  /* $("#text-shadows").on("click", ".button.edit", function () {
+    editTextShadow(
+      $(this).parent().attr("data-value"),
+      $(this).parent().attr("id")
+    );
+  }); */
 }
 
 function checkChild() {
@@ -1022,13 +1382,54 @@ function handleTypeSelection(button) {
       break;
     case "sizing":
       value = $("#" + currentSizing).val();
-      setSizing(currentSizing, value + type);
+      setStyle(currentSizing, value, type);
       break;
     case "position":
       value = $("#spacing-range").val();
       setPositionDetails(currentPosProp, value, type, button);
       break;
+    case "font-size":
+      value = parseFloat($("#font-size").val());
+      setStyle("font-size", value, type);
+      break;
+    case "line-height":
+      value = $("#line-height").val();
+      setStyle("line-height", value, type);
+      break;
+    case "line-thickness":
+      value = $("#line-thickness-value").val();
+      setStyle("text-decoration-thickness", value + type);
+      break;
+    case "letter-spacing":
+      value = $("#letter-spacing").val();
+      if (value === "") value = 0;
+      setLetterSpacing(value, type);
+      break;
+    case "text-indent":
+      value = $("#text-indent").val();
+      if (value === "") value = 0;
+      setTextIndent(value, type);
+      break;
+    case "text-column-gap":
+      value = $("#text-column-gap-range").val();
+      setStyle("column-gap", value, type);
+      break;
+    case "column-width":
+      value = $("#column-width-range").val();
+      setStyle("column-rule-width", value, type);
+      break;
+    case "stroke-width":
+      value = $("#stroke-width").val();
+      setStyle("stroke-width", value, type);
+      break;
     default:
+      if (currentType.includes("text-shadow")) {
+        $("#" + currentType + "-type").text(
+          button.attr("data-value").toUpperCase()
+        );
+        setTextShadow();
+        break;
+      }
       console.error("Can't handle unknown type: ", currentType);
   }
   if (currentType === "sizing") currentType = currentSizing;
@@ -1037,7 +1438,7 @@ function handleTypeSelection(button) {
     button.attr("data-value").toUpperCase()
   );
   handleDisplay(button.parent().find(".button"), button);
-  hideTypeOptions();
+  hideMenu($("#type-options"), $("#type-ui-container"));
 }
 
 /**
@@ -1062,4 +1463,80 @@ function getObjectPosition(value, text = true) {
   else if (parseFloat(t) === 100) t = "bottom-";
   else t = "";
   return t + l;
+}
+
+function restrictFloat(value) {
+  if (value === "flex") {
+    $("#float-container").attr(
+      "data-desc",
+      "Elements with display set to flex cannot be floated"
+    );
+    $("#float-container .button")
+      .css("opacity", ".3")
+      .css("pointer-events", "none");
+  } else {
+    $("#float-container").removeAttr("data-desc");
+    $("#float-container .button")
+      .css("opacity", "1")
+      .css("pointer-events", "auto");
+  }
+}
+
+function restrictTextColumn(value) {
+  if (value === "flex") {
+    $("#text-column-container").attr(
+      "data-desc",
+      "Elements with display set to flex cannot be floated"
+    );
+    $("#text-column-container input,#text-column-container .toggle")
+      .css("opacity", ".3")
+      .css("pointer-events", "none");
+  } else {
+    $("#text-column-container").removeAttr("data-desc");
+    $("#text-column-container input,#text-column-container .toggle")
+      .css("opacity", "1")
+      .css("pointer-events", "auto");
+  }
+}
+
+function hexToRgba(hex, alpha = 1) {
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+  return parseFloat(alpha) === 100
+    ? `rgb(${r}, ${g}, ${b})`
+    : `rgba(${r}, ${g}, ${b}, ${alpha / 100})`;
+}
+
+function rgbaToHex(rgbaString) {
+  const toHex = (value) => Math.round(value).toString(16).padStart(2, "0");
+  if (!rgbaString.includes("rgba")) {
+    const match = rgbaString.match(/rgb?\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+    if (!match) {
+      throw new Error("Érvénytelen RGBA formátum");
+    }
+
+    const [, r, g, b] = match.map((v, i) => (i === 0 ? v : parseFloat(v)));
+
+    return {
+      hex: `#${toHex(r)}${toHex(g)}${toHex(b)}`,
+      alpha: 100,
+    };
+  } else {
+    const match = rgbaString.match(
+      /rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([0-9.]+)\)/
+    );
+
+    if (!match) {
+      throw new Error("Érvénytelen RGBA formátum");
+    }
+
+    const [, r, g, b, a] = match.map((v, i) => (i === 0 ? v : parseFloat(v)));
+
+    return {
+      hex: `#${toHex(r)}${toHex(g)}${toHex(b)}`,
+      alpha: Math.round(a * 100),
+    };
+  }
 }

@@ -3,6 +3,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  border: none;
 }
 
 .material-symbols-outlined {
@@ -27,6 +28,7 @@ h4 {
   overflow-y: auto;
 }
 hr {
+  height: 0.1rem;
   margin: 0.5rem 0;
   width: 100%;
   background-color: #999;
@@ -41,7 +43,7 @@ hr {
   padding: 0.2rem;
   height: 100%;
   box-sizing: border-box;
-  /* width: 15rem; */
+  width: 20rem;
   background-color: #333;
   color: #bbb;
   font-size: small;
@@ -255,12 +257,12 @@ hr {
 .menu-container {
   display: none;
   position: absolute;
-  right: 1rem;
   padding: 0.5rem;
   border-radius: 0.2rem;
   background-color: #222;
   color: #999;
   z-index: 10;
+  width: 15rem;
 }
 .menu-container > :not(.button):not(.toggle) > svg {
   color: whitesmoke;
@@ -343,6 +345,7 @@ input[type="range"] {
   border-radius: 0%;
   appearance: none;
   background-color: #555;
+  align-self: center;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -400,7 +403,8 @@ input[type="range"]::-moz-range-thumb {
 
 #margin-container,
 #padding-container,
-#position-container {
+#position-container,
+#typography-container {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: auto 3fr auto;
@@ -500,8 +504,7 @@ input[type="range"]::-moz-range-thumb {
   gap: 0.3rem;
 }
 
-#ratio,
-#fill {
+.single-toggle {
   text-align: center;
   background-color: #555;
 }
@@ -570,4 +573,172 @@ input[type="range"]::-moz-range-thumb {
   display: none;
   grid-template-columns: auto auto;
   row-gap: 0.5rem;
+}
+
+#typography-container {
+  grid-template-columns: auto auto;
+  row-gap: 0.5rem;
+  background-color: transparent;
+}
+
+select {
+  justify-self: right;
+  text-align: center;
+  width: fit-content;
+  background-color: #444;
+  color: #bbb;
+  border: none;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+}
+
+#font-settings {
+  display: flex;
+  grid-column: span 2;
+  gap: 0.1rem;
+
+  .number-input {
+    width: 3rem;
+  }
+}
+
+#color-settings,
+#color-alpha-settings,
+#line-color-settings,
+#line-color-alpha-settings,
+#stroke-color-container,
+#text-shadow-color-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-items: center;
+}
+
+#decor-menu {
+  grid-template-columns: auto auto;
+  row-gap: 0.5rem;
+  column-gap: 0.2rem;
+  width: 15rem;
+}
+
+#more-line .button {
+  justify-content: start;
+}
+
+#decor-line-style .button {
+  justify-content: space-between;
+}
+
+#decor-line-thickness {
+  display: flex;
+  .number-input {
+    width: 4rem;
+  }
+}
+
+#more-type-options {
+  display: grid;
+  row-gap: 0.5rem;
+}
+
+#more-type-options > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  row-gap: 0.2rem;
+}
+
+#text-primary div,
+#text-secondary div,
+#breaking-container div {
+  display: grid;
+  grid-template-columns: auto auto;
+  .setting-name {
+    grid-column: span 2;
+    white-space: nowrap;
+    justify-content: center;
+  }
+  .number-input {
+    width: 3.2rem;
+  }
+}
+
+.text-column-setting-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 0.3rem;
+}
+
+.color-input {
+  background-color: #444;
+  border-radius: 0.3rem 0 0 0.3rem;
+}
+.color-input-value {
+  width: 100%;
+  background-color: #444;
+  color: whitesmoke;
+  border-radius: 0 0.3rem 0.3rem 0;
+  text-align: center;
+}
+
+#capitalize {
+  grid-template-columns: auto auto auto auto !important;
+}
+
+#breaking-container div {
+  flex-direction: column;
+  min-width: 4rem;
+}
+
+#text-shadow-container {
+  display: grid !important;
+  grid-template-columns: 3fr 1fr !important;
+}
+
+#text-shadow-menu {
+  grid-template-columns: auto auto auto auto;
+  column-gap: 0.3rem;
+  row-gap: 0.5rem;
+  .number-input {
+    width: 3rem;
+  }
+
+  #text-shadow-color-container {
+    grid-column: span 3;
+  }
+
+  #text-shadow-color-alpha-value {
+    grid-column: span 2;
+    justify-self: center;
+  }
+
+  input[type="range"] {
+    width: 100%;
+  }
+}
+
+.text-shadow {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  background-color: #444;
+  border-radius: 0.2rem;
+  span {
+    width: 100%;
+    text-overflow: ellipsis;
+  }
+  .text-shadow-color {
+    padding: 0.1rem;
+    width: 1.5rem;
+    svg,
+    div {
+      width: 1rem;
+      height: 1rem;
+      border: 0.1rem solid #999;
+      border-radius: 0.2rem;
+    }
+  }
+  .tsh-actions {
+    display: flex;
+    justify-self: right;
+  }
 }
