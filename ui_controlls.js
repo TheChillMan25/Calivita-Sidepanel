@@ -1,27 +1,31 @@
-function showWrapOptions() {
-  $("#wrap-ui-container").show();
-  $("#wrap-options").show();
+/**
+ *Show MENU
+ * @param {string} ui The container of the menu
+ * @param {string} menu The menu to be shown
+ * @param {string} caller The button that called the function
+ * @param {string} special CSS display value to be set if needed
+ */
+function showMenu(ui, menu, caller, special = "") {
+  ui.show();
+  if (special !== "") menu.css("display", special);
+  else menu.show();
+  checkPos(caller, menu);
+}
+/**
+ * Hide MENU
+ * @param {string} ui The container of the menu
+ * @param {string} menu The menu to hid
+ */
+function hideMenu(ui, menu) {
+  ui.hide();
+  menu.hide();
 }
 
-function hideWrapOptions() {
-  $("#wrap-ui-container").hide();
-  $("#wrap-options").hide();
-}
-
-function showDisplayOptions() {
-  $("#display-options").show();
-  $("#display-ui-container").show();
-}
-
-function hideDisplayOptions() {
-  $("#display-options").hide();
-  $("#display-ui-container").hide();
-}
-
-function showAlignmentOptions(axis) {
+function showAlignmentOptions(axis, button) {
   $("#alignment-ui-container").show();
   $("#alignment-options").css("display", "flex");
   $("#" + axis).show();
+  checkPos(button, $("#" + axis));
 }
 
 function hideAlignmentOptions() {
@@ -31,7 +35,6 @@ function hideAlignmentOptions() {
 }
 
 function showSpacingSettings(value, button) {
-  console.log(value);
   if (currentSpacing && currentSpacing.includes("padding")) {
     $("#spacing-auto").hide();
   } else {
@@ -72,11 +75,6 @@ function showTypeOptions(caller) {
   checkPos(caller, $("#type-options"));
 }
 
-function hideTypeOptions() {
-  $("#type-options").hide();
-  $("#type-ui-container").hide();
-}
-
 function hideGridSettings() {
   $("#grid-text").hide();
   $("#grid-layout").hide();
@@ -104,39 +102,12 @@ function toggleMore(value) {
         $("#more-sizing-options").hide();
       } else $("#more-sizing-options").css("display", "grid");
       break;
+    case "type":
+      if ($("#more-type-options").css("display") !== "none") {
+        $("#more-type-options").hide();
+      } else $("#more-type-options").css("display", "grid");
+      break;
   }
-}
-
-function showRatioSettings(caller) {
-  $("#ratio-menu").show();
-  $("#ratio-ui-container").show();
-  checkPos(caller, $("#ratio-menu"));
-  /* let a = selectedDomObject.css("aspect-ratio");
-  $("#ratio-" + extractRatio(a, false)).addClass("pressed-button"); */
-}
-
-function hideRatioSettings() {
-  $("#ratio-menu").hide();
-  $("#ratio-ui-container").hide();
-}
-
-function showCustomRatio() {
-  $("#custom-ratio").css("display", "grid");
-}
-
-function hideCustomRatio() {
-  $("#custom-ratio").hide();
-}
-
-function showFillSettings(caller) {
-  $("#fill-menu").show();
-  $("#fill-ui-container").show();
-  checkPos(caller, $("#fill-menu"));
-}
-
-function hideFillSettings() {
-  $("#fill-menu").hide();
-  $("#fill-ui-container").hide();
 }
 
 function toggleGapOptions() {
@@ -211,31 +182,43 @@ function getElementName(element) {
   return element.attr("id")[0].toUpperCase() + element.attr("id").slice(1);
 }
 
-function showObjectPosSettings(caller) {
-  $("#object-position-ui-container").show();
-  $("#object-position-menu").show();
-  checkPos(caller, $("#object-position-menu"));
-}
-function hideObjectPosSettings() {
-  $("#object-position-ui-container").hide();
-  $("#object-position-menu").hide();
-}
-
-function showPositionOptions(caller) {
-  console.log("show");
-  $("#position-ui-container").show();
-  $("#position-menu").show();
-  checkPos(caller, $("#position-menu"));
-}
-
-function hidePositionOptions() {
-  $("#position-ui-container").hide();
-  $("#position-menu").hide();
-}
-
 function toggleFloatClear() {
   if ($("#float-clear").css("display") !== "none") $("#float-clear").hide();
   else $("#float-clear").css("display", "grid");
+}
+
+function showMoreLine(button) {
+  $("#more-line").show();
+  $("#inner-decor-ui-container").show();
+  $("#more-line").css("background-color", "#444");
+  checkPos(button, $("#more-line"));
+}
+
+function showLineStyle(button) {
+  $("#inner-decor-ui-container").show();
+  $("#decor-line-style").show();
+  $("#decor-line-style").css("background-color", "#444");
+  checkPos(button, $("#decor-line-style"));
+}
+
+function showTextColumnSettings(button) {
+  $("#column-ui-container").show();
+  $("#column-menu").css("display", "grid");
+  console.log(selectedDomObject.parent().css("column-count"));
+  if (
+    selectedDomObject.parent().css("column-count") === "auto" ||
+    selectedDomObject.parent().css("column-count") < 1
+  ) {
+    $("#column-child-container")
+      .css("opacity", "0.7")
+      .attr(
+        "data-desc",
+        "This element needs to be in a multy-column parent to span across columns."
+      );
+  } else {
+    $("#column-child-container").css("opacity", "1").removeAttr("data-desc");
+  }
+  checkPos(button, $("#column-menu"));
 }
 
 //////////////////////////////////////////////
@@ -259,7 +242,7 @@ function handleDisplay(objects, button) {
         $("#wrap-text").text(button.text());
         $("#wrap").addClass("pressed-button");
         $("#wrap").attr("data-desc", button.attr("data-desc"));
-        hideWrapOptions();
+        hideMenu$($("#wrap-ui-container"), $("#wrap-options"));
         break;
       default:
         console.error("Unkown button type: " + button.attr("data-type"));
@@ -331,6 +314,7 @@ function resetBox(value) {
  * @returns {string} The unit of measure
  */
 function extractType(string) {
+  if (string === "auto") return "";
   let type = "";
   for (let i = 0; i < string.length; i++) {
     if (isNaN(parseInt(string[i], 10))) {
@@ -402,10 +386,8 @@ function checkPos(tglButton, menu) {
   if (y + h > window.innerHeight) {
     bot = true;
   }
-  menu.css(bot ? { top: "unset", bottom: ".5rem" } : { top: y, bottom: "" });
-  menu.css(
-    right ? { left: "unset", right: ".5rem" } : { left: x, right: ".5rem" }
-  );
+  menu.css(bot ? { top: "", bottom: ".5rem" } : { top: y, bottom: "" });
+  menu.css(right ? { left: "", right: ".5rem" } : { left: x, right: "" });
 }
 /**
  *
@@ -414,11 +396,16 @@ function checkPos(tglButton, menu) {
  * @returns If [name] true, the name of the aspect-ratio, otherwise aspect-ratio in x-y format (ex.: 16-9)
  */
 function extractRatio(value, name = true, separated = false) {
+  if (value === "auto" && !name) return "auto";
   let c = false;
   let a = "";
   let b = "";
   for (let i = 0; i < value.length; i++) {
-    if (value[i] === " ") continue;
+    if (value[i] === " ") i += 1;
+    if (value[i] === ".") {
+      a += "-";
+      i += 1;
+    }
     if (value[i] === "/") {
       if (separated) {
         c = true;
@@ -436,7 +423,7 @@ function extractRatio(value, name = true, separated = false) {
   }
   const ratioMap = {
     auto: "Auto",
-    "2.39-1": "Anamorphic(2.39:1)",
+    "2-39-1": "Anamorphic(2.39:1)",
     "2-1": "Univisum/Netflix(2:1)",
     "16-9": "Widescreen",
     "3-2": "Landscape",
@@ -444,7 +431,7 @@ function extractRatio(value, name = true, separated = false) {
     "1-1": "Square",
   };
   if (ratioMap[a]) {
-    return name ? ratioMap[a] : a;
+    return name ? ratioMap[a].trim() : a.trim();
   }
   return "Custom";
 }
@@ -510,3 +497,241 @@ function changeObjectPosSVG(value) {
       break;
   }
 }
+
+function getTextDecor(string) {
+  switch (string) {
+    case "underline overline":
+      return { text: "Underline + overline", id: "uo" };
+    case "underline line-through":
+      return { text: "Underline + strikethrough", id: "ul" };
+    case "overline line-through":
+      return { text: "Overline + strikethrough", id: "ol" };
+    case "underline overline line-through":
+      return { text: "All", id: "all" };
+    default:
+      if (string === "line-through")
+        return { text: "Strikethrough", id: string };
+      return { text: string[0].toUpperCase() + string.slice(1), id: string };
+  }
+}
+
+function getDecor(string) {
+  let type = true,
+    style = false,
+    color = false;
+  let lineType = "",
+    lineStyle = "",
+    lineColor = "";
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] === " ") {
+      if (
+        string[i + 1] === "s" ||
+        string[i + 1] === "d" ||
+        string[i + 1] === "w"
+      ) {
+        style = true;
+        type = false;
+        color = false;
+      } else if (string[i + 1] === "r") {
+        color = true;
+        type = false;
+        style = false;
+      }
+      if (!type) continue;
+    }
+    if (type) lineType += string[i];
+    else if (style) lineStyle += string[i];
+    else lineColor += string[i];
+  }
+  return { type: lineType, style: lineStyle, color: lineColor };
+}
+/**
+ *
+ * @param {string} value
+ * @returns The shadows in an array
+ */
+function extractTextShadows(value) {
+  let shadows = [];
+  let rgba = true;
+  for (let i = 0, j = 0; i < value.length; i++) {
+    if (value[i] === "r") rgba = true;
+    if (value[i] === ")") rgba = false;
+    if (value[i] === "," && !rgba) {
+      j++;
+      i++;
+      if (value[i] === " ") continue;
+    }
+    if (shadows[j] === undefined) shadows[j] = "";
+    shadows[j] += value[i];
+  }
+  return shadows;
+}
+
+function extractShadow(value) {
+  let color = "";
+  let pos = { x: "", y: "", blur: "" };
+  let x = false,
+    y = false,
+    b = false;
+  let c = true;
+  for (let i = 0; i < value.length; i++) {
+    if (c) color += value[i];
+    if (!c) {
+      if (x) {
+        if (value[i] === " ") {
+          x = false;
+          y = true;
+          continue;
+        }
+        pos["x"] += value[i];
+      }
+      if (y) {
+        if (value[i] === " ") {
+          y = false;
+          b = true;
+          continue;
+        }
+        pos["y"] += value[i];
+      }
+      if (b) {
+        pos["blur"] += value[i];
+      }
+    }
+    if (value[i] === ")" && c) {
+      c = false;
+      x = true;
+      i++;
+      continue;
+    }
+  }
+  return { color: color, pos: pos };
+}
+
+function displayTextShadow(shadow, n) {
+  let show = `<svg
+            data-wf-icon="ShowIcon"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M8 9.5C8.82843 9.5 9.5 8.82843 9.5 8C9.5 7.17157 8.82843 6.5 8 6.5C7.17157 6.5 6.5 7.17157 6.5 8C6.5 8.82843 7.17157 9.5 8 9.5Z"
+              fill="currentColor"></path>
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M8.00004 4C5.37598 4 3.11613 5.55492 2.08964 7.79148C2.02887 7.92388 2.02888 8.07621 2.08965 8.20861C3.11615 10.4451 5.37597 12 8.00001 12C10.6241 12 12.8839 10.4451 13.9104 8.20852C13.9712 8.07612 13.9712 7.92379 13.9104 7.79139C12.8839 5.55488 10.6241 4 8.00004 4ZM8.00001 11C5.86346 11 4.01048 9.78173 3.09961 8.00004C4.01047 6.21831 5.86347 5 8.00004 5C10.1366 5 11.9896 6.21827 12.9004 7.99996C11.9896 9.78169 10.1366 11 8.00001 11Z"
+              fill="currentColor">
+            </path>
+          </svg>`;
+  let hide = `<svg data-wf-icon="HideIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.705 11.4122L13.6464 14.3536L14.3535 13.6465L2.35353 1.64648L1.64642 2.35359L4.38807 5.09524C3.39352 5.76124 2.59317 6.69436 2.08962 7.79152C2.02885 7.92392 2.02885 8.07624 2.08962 8.20865C3.11613 10.4452 5.37595 12 7.99998 12C8.96537 12 9.88147 11.7896 10.705 11.4122ZM9.9407 10.6479L5.11149 5.81865C4.25762 6.3466 3.55885 7.10172 3.09959 8.00007C4.01046 9.78177 5.86344 11 7.99998 11C8.68305 11 9.33713 10.8755 9.9407 10.6479Z" fill="currentColor"></path><path d="M13.9104 8.20856C13.5777 8.93353 13.1153 9.58688 12.553 10.1389L11.846 9.43184C12.2702 9.01685 12.6276 8.5337 12.9004 8C11.9895 6.21831 10.1366 5.00004 8.00002 5.00004C7.81171 5.00004 7.62559 5.0095 7.44213 5.02798L6.57164 4.15749C7.03124 4.05443 7.50926 4.00004 8.00002 4.00004C10.6241 4.00004 12.8839 5.55491 13.9104 7.79143C13.9712 7.92383 13.9712 8.07616 13.9104 8.20856Z" fill="currentColor"></path></svg>`;
+  let icon;
+  try {
+    const colorInfo = rgbaToHex(shadow.color);
+    icon = colorInfo.alpha === 0 ? hide : show;
+  } catch (e) {
+    console.error("Hiba a szín elemzésekor:", e);
+    icon = hide;
+  }
+
+  $("#text-shadows").append(
+    `<div id="text-shadow-${n}" class="text-shadow" data-value="${shadow.color} ${shadow.pos.x} ${shadow.pos.y} ${shadow.pos.blur}">
+      <div id="edit-text-shadow-${n}" class="text-shadow-color toggle">
+        <div style="background-color: ${shadow.color};"></div>
+      </div>
+      <span>Shadow:
+        <span class="text-shadow-value-text"
+          >${shadow.pos.x} ${shadow.pos.y} ${shadow.pos.blur}</span>
+        </span>
+      <div class="tsh-actions">
+        <span class="button hide" data-value="${n}">
+          ${icon}
+        </span>
+        <span class="button remove" data-value="${n}">
+          <svg
+            data-wf-icon="DeleteIcon"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M7 2C6.44772 2 6 2.44772 6 3V4H3V5H4V11.5C4 12.3284 4.67157 13 5.5 13H11.5C12.3284 13 13 12.3284 13 11.5V5H14V4H11V3C11 2.44772 10.5523 2 10 2H7ZM10 4V3H7V4H10ZM5 11.5V5H12V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5Z"
+              fill="currentColor">
+            </path>
+          </svg>
+        </span>
+      </div>
+    </div>`
+  );
+}
+function removeTextShadow(value) {
+  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
+  if (current.includes(value)) {
+    let filtered = [];
+    for (let i = 0; i < current.length; i++) {
+      if (current[i] !== value) {
+        filtered.push(current[i]);
+      }
+    }
+    setStyle("text-shadow", filtered.join(", "));
+  }
+}
+
+function toggleTextShadow(value) {
+  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
+  if (current.includes(value)) {
+    for (let i = 0; i < current.length; i++) {
+      if (current[i] === value) {
+        let shadow = extractShadow(value);
+        let newColor = rgbaToHex(shadow.color);
+        newColor.alpha = newColor.alpha === 0 ? 100 : 0;
+        shadow.color = hexToRgba(newColor.hex, newColor.alpha);
+        current[i] =
+          shadow.color +
+          " " +
+          shadow.pos.x +
+          " " +
+          shadow.pos.y +
+          " " +
+          shadow.pos.blur;
+        value = current[i];
+      }
+    }
+    setStyle("text-shadow", current.join(", "));
+    return value;
+  }
+}
+
+/* function editTextShadow(value, id) {
+  editingTextShadow = true;
+  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
+  if (current.includes(value)) {
+    for (let i = 0; i < current.length; i++) {
+      if (current[i] === value) {
+        showMenu(
+          $("#text-shadow-ui-container"),
+          $("#text-shadow-menu"),
+          $(`#${id}`),
+          "grid"
+        );
+        let shadow = extractShadow(value);
+        let color = rgbaToHex(shadow.color);
+        $("#text-shadow-x").val(extractValue(shadow.pos.x));
+        $("#text-shadow-y").val(extractValue(shadow.pos.y));
+        $("#text-shadow-blur").val(extractValue(shadow.pos.blur));
+        $("#text-shadow-x-value").val(extractValue(shadow.pos.x));
+        $("#text-shadow-y-value").val(extractValue(shadow.pos.y));
+        $("#text-shadow-blur-value").val(extractValue(shadow.pos.blur));
+        $("#text-shadow-color").val(color.hex);
+        $("#text-shadow-color-value").val(color.hex);
+        $("#text-shadow-color-alpha").val(color.alpha);
+        $("#text-shadow-color-alpha-value").val(color.alpha);
+      }
+    }
+  }
+  editingTextShadow = false;
+} */

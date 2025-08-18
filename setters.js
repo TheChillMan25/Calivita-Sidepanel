@@ -1,16 +1,13 @@
 /**
- *
- * @param {string} value
- * @param {*} button
+ * Sets given css property (name) with given value (value) and type (type)
+ * @param {string} name Name of the css property
+ * @param {string} value Value of the css property
+ * @param {string} type Type of the css property, if it has one (ex: "px")
  */
-function setDisplay(value, button) {
-  if (selectedDomObject) {
-    selectedDomObject.css("display", value);
-    saveStyle([{ type: "display", value: value }]);
-    checkForShowDisplaySettings(value);
-    handleDisplay($("#displays .button"), button.object);
-    refreshStylePanel();
-  }
+function setStyle(name, value, type = "") {
+  selectedDomObject.css(name, value + type);
+  saveStyle([{ type: name, value: value + type }]);
+  refreshStylePanel();
 }
 /**
  *
@@ -35,7 +32,6 @@ function setDirection(value, button) {
       { type: "flex-direction", value: value },
       { type: "flex-wrap", value: "nowrap" },
     ]);
-    //handleDisplay($("#directions .button"), button, "direction");
     refreshStylePanel();
   }
 }
@@ -246,11 +242,6 @@ function setGridColsRowsCount(value, type) {
   refreshStylePanel();
 }
 
-function setGridDirection(value, button) {
-  selectedDomObject.css("grid-auto-flow", value);
-  saveStyle([{ type: "grid-auto-flow", value: value }]);
-  refreshStylePanel();
-}
 /**
  *
  * @param {string} justifyContent Value of the justify-content attribute (start, center, end, stretch, space-between, space-around)
@@ -282,37 +273,12 @@ function setSpacing(currentSpacing, value, type, button = null) {
   refreshStylePanel();
 }
 
-function setSizing(type, value) {
-  selectedDomObject.css(type, value);
-  saveStyle([{ type: type, value: value }]);
-}
-
-function setOverflow(value, button) {
-  selectedDomObject.css("overflow", value);
-  saveStyle([{ type: "overflow", value: value }]);
-  handleDisplay($("#overflow-container .button"), button);
-}
-
 function setRatio(button = null, custom = null) {
   let value;
   if (button !== null) value = button.attr("data-value");
   else if (custom !== null) value = custom.w + " / " + custom.h;
   selectedDomObject.css("aspect-ratio", value);
   saveStyle([{ type: "aspect-ratio", value: value }]);
-}
-
-function setBoxSizing(button) {
-  let value = button.attr("data-value");
-  selectedDomObject.css("box-sizing", value);
-  saveStyle([{ type: "box-sizing", value: value }]);
-  refreshStylePanel();
-}
-
-function setObjectFit(button) {
-  let value = button.attr("data-value");
-  selectedDomObject.css("object-fit", value);
-  saveStyle([{ type: "object-fit", value: value }]);
-  refreshStylePanel();
 }
 
 function setObjectPosition(button) {
@@ -341,7 +307,6 @@ function setMainPosition(value) {
  * @param {*} value Value of the css poperty (10px)
  */
 function setPositionDetails(currentPosProp, value, type = null) {
-  console.log(value);
   if (value !== "auto" && type !== null) {
     value = value + type;
   }
@@ -351,13 +316,66 @@ function setPositionDetails(currentPosProp, value, type = null) {
   refreshStylePanel();
 }
 
-function setFloat(value) {
-  selectedDomObject.css("float", value);
-  saveStyle([{ type: "float", value: value }]);
+function toggleSkipInk(button) {
+  if (button.attr("data-value") === "auto") {
+    button.attr("data-value", "none");
+  } else button.attr("data-value", "auto");
+  selectedDomObject.css("text-decoration-skip-ink", button.attr("data-value"));
+  saveStyle([
+    { type: "text-decoration-skip-ink", value: button.attr("data-value") },
+  ]);
   refreshStylePanel();
 }
-function setClear(value) {
-  selectedDomObject.css("clear", value);
-  saveStyle([{ type: "clear", value: value }]);
+
+function setLetterSpacing(value, type) {
+  if (value === "") {
+    value = "normal";
+    selectedDomObject.css("letter-spacing", value);
+    saveStyle([{ type: "letter-spacing", value: value }]);
+  } else if (!isNaN(parseFloat(value))) {
+    selectedDomObject.css("letter-spacing", value + type);
+    saveStyle([{ type: "letter-spacing", value: value + type }]);
+  }
   refreshStylePanel();
+}
+
+function setTextIndent(value, type) {
+  if (value === "") {
+    value = "0";
+  }
+  if (!isNaN(parseFloat(value))) {
+    selectedDomObject.css("text-indent", value + type);
+    saveStyle([{ type: "text-indent", value: value + type }]);
+  }
+  refreshStylePanel();
+}
+
+function setTextColumn(value) {
+  if (value === "") {
+    value = "auto";
+  }
+  if (value === "auto" || !isNaN(parseFloat(value))) {
+    selectedDomObject.css("column-count", value);
+    saveStyle([{ type: "column-count", value: value }]);
+  }
+  refreshStylePanel();
+}
+
+function setTextShadow() {
+  let x = $("#text-shadow-x").val(),
+    xType = $("#text-shadow-x-type").attr("data-value");
+  let y = $("#text-shadow-y").val(),
+    yType = $("#text-shadow-y-type").attr("data-value");
+  let blur = $("#text-shadow-blur").val(),
+    blurType = $("#text-shadow-blur-type").attr("data-value");
+  let color = hexToRgba(
+    $("#text-shadow-color").val(),
+    $("#text-shadow-color-alpha").val()
+  );
+
+  let newShadow =
+    color + " " + x + xType + " " + y + yType + " " + blur + blurType;
+  let shadow =
+    textShadow === "none" ? newShadow : textShadow + ", " + newShadow;
+  if (!editingTextShadow) setStyle("text-shadow", shadow);
 }
