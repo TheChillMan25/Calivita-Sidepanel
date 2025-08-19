@@ -192,7 +192,7 @@ function refreshStylePanel() {
           ) {
             $("#od-text").text(getDisplayName(styleData.display));
             $("#other-display").addClass("pressed-button");
-            hideDisplayOptions();
+            hideMenu($("#display-ui-container"), $("#display-options"));
           } else {
             $("#other-display").removeClass("pressed-button");
           }
@@ -496,6 +496,17 @@ function refreshStylePanel() {
           for (let i = 0; i < shadows.length; i++) {
             displayTextShadow(extractShadow(shadows[i]), i);
           }
+          break;
+        case "background-clip":
+          $("#bg-clip").text($(`#bg-clip-${value}`).text());
+          $(`#bg-clip-${value}`).addClass("pressed-button");
+          $("#bg-clip-desc").text($(`#bg-clip-${value}`).attr("data-desc"));
+          break;
+        case "background-color":
+          $("#bg-color").val(rgbaToHex(value)["hex"]);
+          $("#bg-color-value").val(rgbaToHex(value)["hex"]);
+          $("#bg-color-alpha").val(rgbaToHex(value)["alpha"]);
+          $("#bg-color-alpha-value").val(rgbaToHex(value)["alpha"]);
           break;
         default:
           if (key.includes("width") || key.includes("height")) {
@@ -910,7 +921,7 @@ function setUpControlls() {
   $("#ratio-menu").on("click", ".button", function () {
     setRatio($(this));
     refreshStylePanel();
-    hideCustomRatio();
+    hideMenu($("#ratio-ui-container"), $("#ratio-menu"));
   });
   $("#ratio-custom").on("click", function () {
     $("#ratio").text("Custom");
@@ -931,7 +942,7 @@ function setUpControlls() {
     setStyle("box-sizing", $(this).attr("data-value"));
   });
   $("#fill").on("click", function () {
-    showFillSettings($("#fill-ui-container"), $("#fill-menu"), $(this));
+    showMenu($("#fill-ui-container"), $("#fill-menu"), $(this));
   });
   $("#fill-ui-container").on("click", function () {
     hideMenu($("#fill-ui-container"), $("#fill-menu"));
@@ -1011,7 +1022,7 @@ function setUpControlls() {
     let type = $("#line-height-type").attr("data-value");
     setStyle("line-height", $(this).val(), type);
   });
-  $("#color").on("change", function () {
+  $("#color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#color-alpha-range").val();
     $("#color-value").val(value);
@@ -1069,7 +1080,7 @@ function setUpControlls() {
     setStyle("text-decoration-style", $(this).attr("data-value"));
     hideMenu($("#inner-decor-ui-container"), $("#decor-line-style"));
   });
-  $("#line-color").on("change", function () {
+  $("#line-color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#line-color-alpha-value").val();
     $("#line-color-value").val(value);
@@ -1165,7 +1176,7 @@ function setUpControlls() {
       $("#column-width-type").attr("data-value")
     );
   });
-  $("#column-rule-color").on("change", function () {
+  $("#column-rule-color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#column-alpha-range").val();
     $("#column-rule-color-value").val(value);
@@ -1222,7 +1233,6 @@ function setUpControlls() {
   $("#word-break-menu").on("mouseenter", ".button", function () {
     $("#word-break-desc").text($(this).attr("data-desc"));
   });
-
   $("#white-space").on("click", function () {
     showMenu($("#white-space-ui-container"), $("#white-space-menu"), $(this));
   });
@@ -1251,7 +1261,7 @@ function setUpControlls() {
       );
     }
   });
-  $("#stroke-color").on("change", function () {
+  $("#stroke-color").on("input", function () {
     $("#stroke-color-value").val($(this).val());
     let value = $(this).val();
     let alpha = $("#stroke-color-alpha").val();
@@ -1323,6 +1333,49 @@ function setUpControlls() {
       $(this).parent().attr("id")
     );
   }); */
+  $("#bg-clip").on("click", function () {
+    showMenu($("#bg-clip-ui-container"), $("#bg-clip-menu"), $(this));
+  });
+  $("#bg-clip-ui-container").on("click", function (event) {
+    if (event.target === $(this).get(0)) {
+      hideMenu($(this), $("#bg-clip-menu"));
+    }
+  });
+  $("#bg-clip-menu").on("mouseenter", ".button", function () {
+    $("#bg-clip-desc").text($(this).attr("data-desc"));
+  });
+  $("#bg-clip-menu").on("click", ".button", function () {
+    setStyle("background-clip", $(this).attr("data-value"));
+    hideMenu($("#bg-clip-ui-container"), $("#bg-clip-menu"));
+  });
+  $("#bg-color").on("input", function () {
+    $("#bg-color-value").val($(this).val());
+    setStyle(
+      "background-color",
+      hexToRgba($(this).val(), $("#bg-color-alpha").val())
+    );
+  });
+  $("#bg-color-value").on("input", function () {
+    $("#bg-color").val($(this).val());
+    setStyle(
+      "background-color",
+      hexToRgba($(this).val(), $("#bg-color-alpha").val())
+    );
+  });
+  $("#bg-color-alpha").on("input", function () {
+    $("#bg-color-alpha-value").val($(this).val());
+    setStyle(
+      "background-color",
+      hexToRgba($("#bg-color").val(), $(this).val())
+    );
+  });
+  $("#bg-color-alpha-value").on("input", function () {
+    $("#bg-color-alpha").val($(this).val());
+    setStyle(
+      "background-color",
+      hexToRgba($("#bg-color").val(), $(this).val())
+    );
+  });
 }
 
 function checkChild() {

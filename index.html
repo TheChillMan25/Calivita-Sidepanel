@@ -2711,6 +2711,60 @@
               </div>
             </div>
           </div>
+          <div id="background" class="setting-container">
+            <span class="title">Backgrounds</span>
+            <div id="img-gradient-container">
+              <span class="setting-name">Image & gradient</span>
+              <div id="img-gradient-toggle" class="toggle">
+                <svg
+                  data-wf-icon="AddIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M7.5 8.5V13.5H8.5V8.5H13.5V7.5H8.5V2.5H7.5V7.5H2.5V8.5H7.5Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <div id="bg-container" style="grid-column: span 2"></div>
+            </div>
+            <div id="bg-color-main-container" style="display: grid; grid-template-columns: 1fr 2fr;">
+              <span class="setting-name">Color</span>
+              <div id="bg-color-container" class="color-container">
+                <input
+                  type="color"
+                  name="bg-color"
+                  id="bg-color"
+                  class="color-input" />
+                <input
+                  type="text"
+                  name="bg-color-value"
+                  id="bg-color-value"
+                  class="color-input-value" />
+              </div>
+              <span class="setting-name">Alpha</span>
+              <div id="bg-color-alpha-container" class="color-container" style="gap: .3rem;">
+                <input
+                  type="range"
+                  name="bg-color-alpha"
+                  id="bg-color-alpha"
+                  class="color-input"
+                  value="100" />
+                <input
+                  type="text"
+                  name="bg-color-alpha-value"
+                  id="bg-color-alpha-value"
+                  class="number-input"
+                  value="100" />
+              </div>
+            </div>
+            <div id="bg-clipping" style="display: flex; gap: 0.3rem">
+              <span class="setting-name">Clipping</span>
+              <div id="bg-clip" class="toggle single-toggle">None</div>
+            </div>
+          </div>
         </div>
         <div id="ui-containers">
           <div id="spacing-ui-container" class="ui-container">
@@ -3720,6 +3774,40 @@
                 id="text-shadow-color-alpha-value"
                 class="number-input"
                 value="100" />
+            </div>
+          </div>
+          <div id="bg-clip-ui-container" class="ui-container">
+            <div id="bg-clip-menu" class="menu-container" style="width: 12rem">
+              <div
+                id="bg-clip-none"
+                class="button"
+                data-value="none"
+                data-desc="None won't clip the background, meaning any backgrounds added will extend all the way to the element's boundary.">
+                None
+              </div>
+              <div
+                id="bg-clip-padding-box"
+                class="button"
+                data-value="padding-box"
+                data-desc="Clip background to padding clips the background to the inside of the element's border, including any padding added to the element.">
+                Clip background to padding
+              </div>
+              <div
+                id="bg-clip-content-box"
+                class="button"
+                data-value="content-box"
+                data-desc="Clip background to content clips the background to the edges of the content, excluding any padding added to the element.">
+                Clip background to content
+              </div>
+              <div
+                id="bg-clip-text"
+                class="button"
+                data-value="text"
+                data-desc="Clip background to text will override the font color, filling text with background color, image, gradient, and overlay transparency.">
+                Clip background to text
+              </div>
+              <hr />
+              <div id="bg-clip-desc"></div>
             </div>
           </div>
         </div>

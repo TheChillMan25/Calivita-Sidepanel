@@ -242,7 +242,7 @@ hr {
 
 .button:hover,
 .toggle:hover {
-  color: whitesmoke;
+  color: #73bbff;
 }
 .ui-container {
   display: none;
@@ -262,7 +262,7 @@ hr {
   background-color: #222;
   color: #999;
   z-index: 10;
-  width: 15rem;
+  width: fit-content;
 }
 .menu-container > :not(.button):not(.toggle) > svg {
   color: whitesmoke;
@@ -607,7 +607,9 @@ select {
 #line-color-settings,
 #line-color-alpha-settings,
 #stroke-color-container,
-#text-shadow-color-container {
+#text-shadow-color-container,
+#bg-color-container,
+#bg-color-alpha-container {
   display: grid;
   grid-template-columns: auto auto;
   justify-items: center;
@@ -689,7 +691,8 @@ select {
   min-width: 4rem;
 }
 
-#text-shadow-container {
+#text-shadow-container,
+#img-gradient-container {
   display: grid !important;
   grid-template-columns: 3fr 1fr !important;
 }

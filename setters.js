@@ -379,3 +379,8 @@ function setTextShadow() {
     textShadow === "none" ? newShadow : textShadow + ", " + newShadow;
   if (!editingTextShadow) setStyle("text-shadow", shadow);
 }
+
+function setBgColor(){
+  let color = hexToRgba($("#bg-color").val(), $("#bg-color-alpha").val())
+  console.log(color)
+}
