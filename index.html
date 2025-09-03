@@ -51,20 +51,6 @@
         </div>
         <span id="select-smt">Select something</span>
         <div id="settings">
-          <div id="flex-child" class="setting-container">
-            <div class="title-container">
-              <span class="title">Flex child</span>
-            </div>
-            <div id="sizing-settings">
-              <span class="setting-name">Sizing</span>
-              <div id="sizing-options"></div>
-            </div>
-          </div>
-          <div id="grid-child">
-            <div class="title-container">
-              <span class="title">Grid child</span>
-            </div>
-          </div>
           <div id="layout" class="setting-container">
             <div class="title-container">
               <span class="title">Layout</span>
@@ -152,7 +138,7 @@
                 <div id="grid-layout-container" class="button-container">
                   <div id="columns" class="grid-setting-container">
                     <input
-                      type="text"
+                      type="number"
                       name="grid-columns"
                       id="grid-columns"
                       class="number-input"
@@ -160,7 +146,7 @@
                   </div>
                   <div id="rows" class="grid-setting-container">
                     <input
-                      type="text"
+                      type="number"
                       name="grid-rows"
                       id="grid-rows"
                       class="number-input"
@@ -862,6 +848,7 @@
                       name="gap-value"
                       id="gap-value"
                       value="0"
+                      step="any"
                       class="number-input" />
                     <div
                       id="gap-type"
@@ -874,9 +861,10 @@
                   <div id="gap-unlocked" class="gap-container">
                     <div id="row-gap-setting" class="gap-setting-container">
                       <input
-                        type="text"
+                      type="text"
                         name="row-gap-value"
                         id="row-gap-value"
+                      step="any"
                         value="0"
                         class="number-input" />
                       <span>Row</span>
@@ -890,9 +878,10 @@
                     </div>
                     <div id="column-gap-setting" class="gap-setting-container">
                       <input
-                        type="text"
+                      type="text"
                         name="column-gap-value"
                         id="column-gap-value"
+                      step="any"
                         value="0"
                         class="number-input" />
                       <span>Column</span>
@@ -1513,13 +1502,13 @@
               </div>
               <div id="custom-ratio">
                 <input
-                  type="text"
+                  type="number"
                   name="ratio-width"
                   value="1"
                   id="ratio-width"
                   class="number-input" />
                 <input
-                  type="text"
+                  type="number"
                   name="ratio-height"
                   value="1"
                   id="ratio-height"
@@ -2117,7 +2106,7 @@
                 </div>
                 <span class="setting-name">Height</span>
                 <input
-                  type="text"
+                  type="number"
                   name="line-height"
                   id="line-height"
                   class="number-input"
@@ -2136,10 +2125,11 @@
                   type="color"
                   name="color"
                   id="color"
-                  class="color-input" /><input
+                  class="color-input text-color-input" />
+                <input
                   type="text"
                   id="color-value"
-                  class="color-input-value" />
+                  class="color-input-value text-color-input" />
               </div>
               <span class="setting-name">Alpha</span>
               <div id="color-alpha-settings">
@@ -2147,12 +2137,13 @@
                   type="range"
                   name="color-alpha-range"
                   id="color-alpha-range"
+                  class="text-color-input"
                   value="100" />
                 <input
-                  type="text"
+                  type="number"
                   name="color-alpha-value"
                   id="color-alpha-value"
-                  class="number-input"
+                  class="number-input text-color-input"
                   value="100" />
               </div>
               <span class="setting-name">Align</span>
@@ -2371,7 +2362,7 @@
                   </div>
                   <div id="text-column-container" class="hoverable">
                     <input
-                      type="text"
+                      type="number"
                       name="text-column"
                       id="text-column"
                       class="number-input"
@@ -2683,7 +2674,7 @@
                       id="stroke-color-alpha"
                       value="100" />
                     <input
-                      type="text"
+                      type="number"
                       name="stroke-color-alpha-value"
                       id="stroke-color-alpha-value"
                       class="number-input"
@@ -2693,7 +2684,7 @@
                 </div>
                 <div id="text-shadow-container">
                   <span class="setting-name">Text shadows</span>
-                  <div id="text-shadow-toggle" class="toggle">
+                  <div id="text-shadow-toggle" class="toggle add-toggle">
                     <svg
                       data-wf-icon="AddIcon"
                       width="16"
@@ -2712,57 +2703,478 @@
             </div>
           </div>
           <div id="background" class="setting-container">
-            <span class="title">Backgrounds</span>
-            <div id="img-gradient-container">
-              <span class="setting-name">Image & gradient</span>
-              <div id="img-gradient-toggle" class="toggle">
-                <svg
-                  data-wf-icon="AddIcon"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M7.5 8.5V13.5H8.5V8.5H13.5V7.5H8.5V2.5H7.5V7.5H2.5V8.5H7.5Z"
-                    fill="currentColor"></path>
-                </svg>
-              </div>
-              <div id="bg-container" style="grid-column: span 2"></div>
-            </div>
-            <div id="bg-color-main-container" style="display: grid; grid-template-columns: 1fr 2fr;">
+            <span class="title">Background</span>
+            <div
+              id="bg-color-main-container"
+              style="display: grid; grid-template-columns: 1fr 2fr">
               <span class="setting-name">Color</span>
               <div id="bg-color-container" class="color-container">
                 <input
                   type="color"
                   name="bg-color"
                   id="bg-color"
-                  class="color-input" />
+                  class="color-input bg-input" />
                 <input
                   type="text"
                   name="bg-color-value"
                   id="bg-color-value"
-                  class="color-input-value" />
+                  class="color-input-value bg-input" />
               </div>
               <span class="setting-name">Alpha</span>
-              <div id="bg-color-alpha-container" class="color-container" style="gap: .3rem;">
+              <div
+                id="bg-color-alpha-container"
+                class="color-container"
+                style="gap: 0.3rem">
                 <input
                   type="range"
                   name="bg-color-alpha"
                   id="bg-color-alpha"
-                  class="color-input"
+                  class="color-input bg-input"
                   value="100" />
                 <input
-                  type="text"
+                  type="number"
                   name="bg-color-alpha-value"
                   id="bg-color-alpha-value"
-                  class="number-input"
+                  class="number-input bg-input"
                   value="100" />
               </div>
             </div>
             <div id="bg-clipping" style="display: flex; gap: 0.3rem">
               <span class="setting-name">Clipping</span>
               <div id="bg-clip" class="toggle single-toggle">None</div>
+            </div>
+          </div>
+          <div id="border" class="setting-container">
+            <span class="title">Borders</span>
+            <div id="border-radius-container" style="display: flex">
+              <div class="span setting-name">Radius</div>
+              <div id="border-radius-buttons" class="button-container">
+                <div id="border-radius-all" class="button" data-value="all">
+                  <svg
+                    data-wf-icon="BorderRadiusSingleIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M2.5 5.5C2.5 3.84315 3.84315 2.5 5.5 2.5H10.5C12.1569 2.5 13.5 3.84315 13.5 5.5V10.5C13.5 12.1569 12.1569 13.5 10.5 13.5H5.5C3.84315 13.5 2.5 12.1569 2.5 10.5V5.5Z"
+                      stroke="currentColor"></path>
+                  </svg>
+                </div>
+                <div
+                  id="border-radius-custom"
+                  class="button"
+                  data-value="custom">
+                  <svg
+                    data-wf-icon="BorderRadiusAllIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M4.5 2C3.11929 2 2 3.11929 2 4.5V7H3V4.5C3 3.67157 3.67157 3 4.5 3H7V2H4.5Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M9 2V3H11.5C12.3284 3 13 3.67157 13 4.5V7H14V4.5C14 3.11929 12.8807 2 11.5 2H9Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M14 9H13V11.5C13 12.3284 12.3284 13 11.5 13H9V14H11.5C12.8807 14 14 12.8807 14 11.5V9Z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M7 14V13H4.5C3.67157 13 3 12.3284 3 11.5V9H2V11.5C2 12.8807 3.11929 14 4.5 14H7Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
+              <input
+                type="range"
+                name="border-radius-range"
+                id="border-radius-range"
+                value="0" />
+              <input
+                type="text"
+                name="border-radius-values"
+                id="border-radius-value"
+                class="number-input"
+                value="0" />
+              <div
+                id="border-radius-type"
+                class="toggle type-toggle"
+                data-value="px"
+                data-type="border-radius-all">
+                <span id="border-radius-type-text">PX</span>
+              </div>
+            </div>
+            <div id="custom-border-radius">
+              <div id="border-radius-tl">
+                <svg
+                  data-wf-icon="BorderRadiusTopLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="hoverable"
+                  data-desc="Top left corner">
+                  <g opacity="0.4">
+                    <path
+                      d="M14 14V9H13V13H9V14H14Z"
+                      fill="currentColor"></path>
+                    <path d="M7 14V13H3V9H2V14H7Z" fill="currentColor"></path>
+                    <path
+                      d="M2 7H3V6.5C3 4.567 4.567 3 6.5 3H7V2H6.5C4.01472 2 2 4.01472 2 6.5V7Z"
+                      fill="currentColor"></path>
+                    <path d="M9 2V3H13V7H14V2H9Z" fill="currentColor"></path>
+                  </g>
+                  <path
+                    d="M2.5 7V6.5C2.5 4.29086 4.29086 2.5 6.5 2.5H7"
+                    stroke="currentColor"></path>
+                </svg>
+                <input
+                  type="text"
+                  name="border-radius-tl-value"
+                  id="border-radius-tl-value"
+                  class="number-input"
+                  value="0" />
+                <div
+                  id="border-radius-tl-type"
+                  class="toggle type-toggle"
+                  data-value="px"
+                  data-type="border-radius-tl">
+                  <span id="border-radius-tl-type-text">PX</span>
+                </div>
+              </div>
+              <div id="border-radius-tr">
+                <svg
+                  data-wf-icon="BorderRadiusTopRightIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="hoverable"
+                  data-desc="Top right corner">
+                  <g opacity="0.4">
+                    <path d="M2 14V9H3V13H7V14H2Z" fill="currentColor"></path>
+                    <path d="M9 14V13H13V9H14V14H9Z" fill="currentColor"></path>
+                    <path
+                      d="M14 7H13V6.5C13 4.567 11.433 3 9.5 3H9V2H9.5C11.9853 2 14 4.01472 14 6.5V7Z"
+                      fill="currentColor"></path>
+                    <path d="M7 2V3H3V7H2V2H7Z" fill="currentColor"></path>
+                  </g>
+                  <path
+                    d="M13.5 7V6.5C13.5 4.29086 11.7091 2.5 9.5 2.5H9"
+                    stroke="currentColor"></path>
+                </svg>
+                <input
+                  type="text"
+                  name="border-radius-tr-value"
+                  id="border-radius-tr-value"
+                  class="number-input"
+                  value="0" />
+                <div
+                  id="border-radius-tr-type"
+                  class="toggle type-toggle"
+                  data-value="px"
+                  data-type="border-radius-tr">
+                  <span id="border-radius-tr-type-text">PX</span>
+                </div>
+              </div>
+              <div id="border-radius-bl">
+                <svg
+                  data-wf-icon="BorderRadiusBottomLeftIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="hoverable"
+                  data-desc="Bottom left corner">
+                  <g opacity="0.4">
+                    <path d="M2 2V7H3V3H7V2H2Z" fill="currentColor"></path>
+                    <path d="M9 2V3H13V7H14V2H9Z" fill="currentColor"></path>
+                    <path d="M14 9H13V13H9V14H14V9Z" fill="currentColor"></path>
+                    <path
+                      d="M7 14V13H6.5C4.567 13 3 11.433 3 9.5V9H2V9.5C2 11.9853 4.01472 14 6.5 14H7Z"
+                      fill="currentColor"></path>
+                  </g>
+                  <path
+                    d="M2.5 9V9.5C2.5 11.7091 4.29086 13.5 6.5 13.5H7"
+                    stroke="currentColor"></path>
+                </svg>
+                <input
+                  type="text"
+                  name="border-radius-bl-value"
+                  id="border-radius-bl-value"
+                  class="number-input"
+                  value="0" />
+                <div
+                  id="border-radius-bl-type"
+                  class="toggle type-toggle"
+                  data-value="px"
+                  data-type="border-radius-bl">
+                  <span id="border-radius-bl-type-text">PX</span>
+                </div>
+              </div>
+              <div id="border-radius-br">
+                <svg
+                  data-wf-icon="BorderRadiusBottomRightIcon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="hoverable"
+                  data-desc="Bottom right corner">
+                  <g opacity="0.4">
+                    <path d="M2 2V7H3V3H7V2H2Z" fill="currentColor"></path>
+                    <path d="M9 2V3H13V7H14V2H9Z" fill="currentColor"></path>
+                    <path
+                      d="M14 9H13V11.5C13 12.3284 12.3284 13 11.5 13H9V14H11.5C12.8807 14 14 12.8807 14 11.5V9Z"
+                      fill="currentColor"></path>
+                    <path d="M7 14V13H3V9H2V14H7Z" fill="currentColor"></path>
+                  </g>
+                  <path
+                    d="M13.5 9V9.5C13.5 11.7091 11.7091 13.5 9.5 13.5H9"
+                    stroke="currentColor"></path>
+                </svg>
+                <input
+                  type="text"
+                  name="border-radius-br-value"
+                  id="border-radius-br-value"
+                  class="number-input"
+                  value="0" />
+                <div
+                  id="border-radius-br-type"
+                  class="toggle type-toggle"
+                  data-value="px"
+                  data-type="border-radius-br">
+                  <span id="border-radius-br-type-text">PX</span>
+                </div>
+              </div>
+            </div>
+            <div id="border-container">
+              <span class="setting-name">Borders</span>
+              <div id="border-buttons">
+                <div class="filling-div"></div>
+                <div id="border-top" class="button" data-value="border-top">
+                  <svg
+                    data-wf-icon="BorderTopIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V5H13V13H3V5H2V13Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 3H14V2H2V3Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div class="filling-div"></div>
+                <div id="border-left" class="button" data-value="border-left">
+                  <svg
+                    data-wf-icon="BorderLeftIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M13 2C13.5523 2 14 2.44772 14 3L14 13C14 13.5523 13.5523 14 13 14L5 14L5 13L13 13L13 3L5 3L5 2L13 2Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M3 2L3 14L2 14L2 2L3 2Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="border-all" class="button" data-value="all">
+                  <svg
+                    data-wf-icon="BorderAllIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 3C2 2.44772 2.44772 2 3 2H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V3ZM13 3L3 3V13H13V3Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div id="border-right" class="button" data-value="border-right">
+                  <svg
+                    data-wf-icon="BorderRightIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M3 2C2.44772 2 2 2.44772 2 3L2 13C2 13.5523 2.44772 14 3 14L11 14L11 13L3 13L3 3L11 3L11 2L3 2Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M13 2L13 14L14 14L14 2L13 2Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div class="filling-div"></div>
+                <div
+                  id="border-bottom"
+                  class="button"
+                  data-value="border-bottom">
+                  <svg
+                    data-wf-icon="BorderBottomIcon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      opacity="0.4"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 3C2 2.44772 2.44772 2 3 2H13C13.5523 2 14 2.44772 14 3V11H13V3H3V11H2V3Z"
+                      fill="currentColor"></path>
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 13H14V14H2V13Z"
+                      fill="currentColor"></path>
+                  </svg>
+                </div>
+                <div class="filling-div"></div>
+              </div>
+              <div id="border-settings">
+                <span class="setting-name">Style</span>
+                <div id="border-style" class="button-container">
+                  <div
+                    id="border-none"
+                    class="button pressed-button"
+                    data-value="none">
+                    <svg
+                      data-wf-icon="CloseDefaultIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M8.70711 8.00004L12.3536 4.35359L11.6465 3.64648L8.00001 7.29293L4.35356 3.64648L3.64645 4.35359L7.2929 8.00004L3.64645 11.6465L4.35356 12.3536L8.00001 8.70714L11.6465 12.3536L12.3536 11.6465L8.70711 8.00004Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                  <div id="border-solid" class="button" data-value="solid">
+                    <svg
+                      data-wf-icon="BorderStyleSolidIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 7.5H14" stroke="currentColor"></path>
+                    </svg>
+                  </div>
+                  <div id="border-dashed" class="button" data-value="dashed">
+                    <svg
+                      data-wf-icon="BorderStyleDashedIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M5 7H2V8H5V7ZM11 8H12H14V7H12H11V8ZM9.5 7H6.5V8H9.5V7Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                  <div id="border-dotted" class="button" data-value="dotted">
+                    <svg
+                      data-wf-icon="BorderStyleDottedIcon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4 7H3V8H4V7ZM6 7H5V8H6V7ZM7 7H8V8H7V7ZM10 7H9V8H10V7ZM11 7H12V8H11V7ZM14 7H13V8H14V7Z"
+                        fill="currentColor"></path>
+                    </svg>
+                  </div>
+                </div>
+                <span class="setting-name">Width</span>
+                <div id="border-width-settings">
+                  <input
+                    type="text"
+                    name="border-width"
+                    id="border-width"
+                    class="number-input"
+                    style="width: 3rem"
+                    value="1" />
+                  <div
+                    id="border-width-type"
+                    class="toggle type-toggle"
+                    data-type="border-width"
+                    data-value="px"
+                    style="justify-self: start">
+                    <span id="border-width-type-text">PX</span>
+                  </div>
+                </div>
+                <span class="setting-name">Color</span>
+                <div id="border-color-container" class="color-container">
+                  <input
+                    type="color"
+                    name="border-color"
+                    id="border-color"
+                    class="color-input" />
+                  <input
+                    type="text"
+                    name="border-color-value"
+                    id="border-color-value"
+                    class="color-input-value" />
+                </div>
+                <span class="setting-name">Alpha</span>
+                <div id="border-color-alpha-container" class="color-container">
+                  <input
+                    type="range"
+                    name="border-color-alpha"
+                    id="border-color-alpha"
+                    style="width: 100%"
+                    value="100" />
+                  <input
+                    type="number"
+                    name="border-color-alpha-value"
+                    id="border-color-alpha-value"
+                    class="number-input"
+                    value="100" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -3235,7 +3647,7 @@
                   id="line-color-alpha-range"
                   value="100" />
                 <input
-                  type="text"
+                  type="number"
                   name="line-color-alpha-value"
                   id="line-color-alpha-value"
                   class="number-input"
@@ -3449,9 +3861,10 @@
                   name="text-column-gap-range"
                   id="text-column-gap-range" />
                 <input
-                  type="text"
+                      type="text"
                   name="text-column-gap-value"
                   id="text-column-gap-value"
+                      step="any"
                   class="number-input" />
                 <div
                   id="text-column-gap-type"
@@ -3578,7 +3991,7 @@
                     id="column-alpha-range"
                     value="100" />
                   <input
-                    type="text"
+                    type="number"
                     name="column-alpha-value"
                     id="column-alpha-value"
                     class="number-input"
@@ -3769,45 +4182,11 @@
                 id="text-shadow-color-alpha"
                 value="100" />
               <input
-                type="text"
+                type="number"
                 name="text-shadow-color-alpha-value"
                 id="text-shadow-color-alpha-value"
                 class="number-input"
                 value="100" />
-            </div>
-          </div>
-          <div id="bg-clip-ui-container" class="ui-container">
-            <div id="bg-clip-menu" class="menu-container" style="width: 12rem">
-              <div
-                id="bg-clip-none"
-                class="button"
-                data-value="none"
-                data-desc="None won't clip the background, meaning any backgrounds added will extend all the way to the element's boundary.">
-                None
-              </div>
-              <div
-                id="bg-clip-padding-box"
-                class="button"
-                data-value="padding-box"
-                data-desc="Clip background to padding clips the background to the inside of the element's border, including any padding added to the element.">
-                Clip background to padding
-              </div>
-              <div
-                id="bg-clip-content-box"
-                class="button"
-                data-value="content-box"
-                data-desc="Clip background to content clips the background to the edges of the content, excluding any padding added to the element.">
-                Clip background to content
-              </div>
-              <div
-                id="bg-clip-text"
-                class="button"
-                data-value="text"
-                data-desc="Clip background to text will override the font color, filling text with background color, image, gradient, and overlay transparency.">
-                Clip background to text
-              </div>
-              <hr />
-              <div id="bg-clip-desc"></div>
             </div>
           </div>
         </div>

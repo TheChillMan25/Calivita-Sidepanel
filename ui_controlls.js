@@ -1,7 +1,7 @@
 /**
  *Show MENU
- * @param {string} ui The container of the menu
- * @param {string} menu The menu to be shown
+ * @param {*} ui The container of the menu
+ * @param {*} menu The menu to be shown
  * @param {string} caller The button that called the function
  * @param {string} special CSS display value to be set if needed
  */
@@ -119,7 +119,8 @@ function toggleGapOptions() {
       value: $("#gap-value").val(),
       type: $("#gap-type").attr("data-value"),
     };
-    setGap(gap.value, gap.type);
+    setGap(gap.value, gap.type, null, "row-gap");
+    setGap(gap.value, gap.type, null, "column-gap");
   } else {
     $("#gap-unlocked").css("display", "flex");
     $("#gap-default").hide();
@@ -204,7 +205,6 @@ function showLineStyle(button) {
 function showTextColumnSettings(button) {
   $("#column-ui-container").show();
   $("#column-menu").css("display", "grid");
-  console.log(selectedDomObject.parent().css("column-count"));
   if (
     selectedDomObject.parent().css("column-count") === "auto" ||
     selectedDomObject.parent().css("column-count") < 1
@@ -317,23 +317,29 @@ function extractType(string) {
   if (string === "auto") return "";
   let type = "";
   for (let i = 0; i < string.length; i++) {
-    if (isNaN(parseInt(string[i], 10))) {
+    if (string[i] === ".") continue;
+    if (isNaN(parseInt(string[i], 10)) && string[i] !== ".") {
       type += string[i];
     }
   }
   return type;
 }
-/**
- * Extract the numbers from a string
- * @param {string} string The string to extract from
- * @returns The extracted numbers in a string
- */
+
 function extractValue(string) {
   if (string === "auto") return "Auto";
   let value = "";
+  let decimalFound = false;
+
   for (let i = 0; i < string.length; i++) {
-    if (!isNaN(parseInt(string[i], 10))) {
-      value += string[i];
+    if (!isNaN(parseInt(string[i], 10)) || string[i] === ".") {
+      if (string[i] === ".") {
+        if (!decimalFound) {
+          value += string[i];
+          decimalFound = true;
+        }
+      } else {
+        value += string[i];
+      }
     }
   }
   return value;
@@ -467,7 +473,7 @@ function changeObjectPosSVG(value) {
       break;
     case "left":
       $("#object-position-left").html(
-        '<svg data-wf-icon="TransformOriginTopRightIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.79297 7.50004L4.64652 4.64648L5.35363 5.35359L3.20718 7.50004L5.35363 9.64648L4.64652 10.3536L1.79297 7.50004Z" fill="currentColor"></path><path d="M10.0001 7.50004C10.0001 8.32846 9.3285 9.00004 8.50008 9.00004C7.67165 9.00004 7.00008 8.32846 7.00008 7.50004C7.00008 6.67161 7.67165 6.00004 8.50008 6.00004C9.3285 6.00004 10.0001 6.67161 10.0001 7.50004Z" fill="currentColor"></path><path d="M8.50008 14.2071L11.3536 11.3536L10.6465 10.6465L8.50008 12.7929L6.35363 10.6465L5.64652 11.3536L8.50008 14.2071Z" fill="currentColor"></path></svg>'
+        '<svg data-wf-icon="TransformOriginLeftIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.50004 0.792969L11.3536 3.64652L10.6465 4.35363L8.50004 2.20718L6.35359 4.35363L5.64648 3.64652L8.50004 0.792969Z" fill="currentColor"></path><path d="M15.2071 7.50008L12.3536 4.64652L11.6465 5.35363L13.7929 7.50008L11.6465 9.64652L12.3536 10.3536L15.2071 7.50008Z" fill="currentColor"></path><path d="M8.50004 9.00008C9.32846 9.00008 10 8.3285 10 7.50008C10 6.67165 9.32846 6.00008 8.50004 6.00008C7.67161 6.00008 7.00004 6.67165 7.00004 7.50008C7.00004 8.3285 7.67161 9.00008 8.50004 9.00008Z" fill="currentColor"></path><path d="M8.50004 14.2072L11.3536 11.3536L10.6465 10.6465L8.50004 12.793L6.35359 10.6465L5.64648 11.3536L8.50004 14.2072Z" fill="currentColor"></path></svg>'
       );
       break;
     case "center":
@@ -550,61 +556,32 @@ function getDecor(string) {
  * @param {string} value
  * @returns The shadows in an array
  */
-function extractTextShadows(value) {
-  let shadows = [];
-  let rgba = true;
-  for (let i = 0, j = 0; i < value.length; i++) {
-    if (value[i] === "r") rgba = true;
-    if (value[i] === ")") rgba = false;
-    if (value[i] === "," && !rgba) {
-      j++;
-      i++;
-      if (value[i] === " ") continue;
-    }
-    if (shadows[j] === undefined) shadows[j] = "";
-    shadows[j] += value[i];
-  }
-  return shadows;
-}
+function extractTextShadows(input, asObjects = true) {
+  const shadowParts = input
+    .match(/(?:rgba?\([^)]+\)|[^,])+/g)
+    .map((s) => s.trim());
 
-function extractShadow(value) {
-  let color = "";
-  let pos = { x: "", y: "", blur: "" };
-  let x = false,
-    y = false,
-    b = false;
-  let c = true;
-  for (let i = 0; i < value.length; i++) {
-    if (c) color += value[i];
-    if (!c) {
-      if (x) {
-        if (value[i] === " ") {
-          x = false;
-          y = true;
-          continue;
-        }
-        pos["x"] += value[i];
-      }
-      if (y) {
-        if (value[i] === " ") {
-          y = false;
-          b = true;
-          continue;
-        }
-        pos["y"] += value[i];
-      }
-      if (b) {
-        pos["blur"] += value[i];
-      }
-    }
-    if (value[i] === ")" && c) {
-      c = false;
-      x = true;
-      i++;
-      continue;
-    }
+  if (!asObjects) {
+    return shadowParts;
   }
-  return { color: color, pos: pos };
+  const regex =
+    /^(rgba?\([^)]+\))\s+(-?\d+px)\s+(-?\d+px)\s+(-?\d+px)(?:\s+(-?\d+px))?$/;
+
+  return shadowParts
+    .map((part) => {
+      const match = part.match(regex);
+      if (!match) return null;
+      return {
+        color: match[1],
+        pos: {
+          x: match[2],
+          y: match[3],
+          blur: match[4],
+          ...(match[5] ? { spread: match[5] } : {}),
+        },
+      };
+    })
+    .filter(Boolean);
 }
 
 function displayTextShadow(shadow, n) {
@@ -669,7 +646,7 @@ function displayTextShadow(shadow, n) {
   );
 }
 function removeTextShadow(value) {
-  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
+  let current = extractTextShadows(selectedDomObject.css("text-shadow"), false);
   if (current.includes(value)) {
     let filtered = [];
     for (let i = 0; i < current.length; i++) {
@@ -682,11 +659,11 @@ function removeTextShadow(value) {
 }
 
 function toggleTextShadow(value) {
-  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
+  let current = extractTextShadows(selectedDomObject.css("text-shadow"), false);
   if (current.includes(value)) {
     for (let i = 0; i < current.length; i++) {
       if (current[i] === value) {
-        let shadow = extractShadow(value);
+        let shadow = extractTextShadows(value)[0];
         let newColor = rgbaToHex(shadow.color);
         newColor.alpha = newColor.alpha === 0 ? 100 : 0;
         shadow.color = hexToRgba(newColor.hex, newColor.alpha);
@@ -705,33 +682,3 @@ function toggleTextShadow(value) {
     return value;
   }
 }
-
-/* function editTextShadow(value, id) {
-  editingTextShadow = true;
-  let current = extractTextShadows(selectedDomObject.css("text-shadow"));
-  if (current.includes(value)) {
-    for (let i = 0; i < current.length; i++) {
-      if (current[i] === value) {
-        showMenu(
-          $("#text-shadow-ui-container"),
-          $("#text-shadow-menu"),
-          $(`#${id}`),
-          "grid"
-        );
-        let shadow = extractShadow(value);
-        let color = rgbaToHex(shadow.color);
-        $("#text-shadow-x").val(extractValue(shadow.pos.x));
-        $("#text-shadow-y").val(extractValue(shadow.pos.y));
-        $("#text-shadow-blur").val(extractValue(shadow.pos.blur));
-        $("#text-shadow-x-value").val(extractValue(shadow.pos.x));
-        $("#text-shadow-y-value").val(extractValue(shadow.pos.y));
-        $("#text-shadow-blur-value").val(extractValue(shadow.pos.blur));
-        $("#text-shadow-color").val(color.hex);
-        $("#text-shadow-color-value").val(color.hex);
-        $("#text-shadow-color-alpha").val(color.alpha);
-        $("#text-shadow-color-alpha-value").val(color.alpha);
-      }
-    }
-  }
-  editingTextShadow = false;
-} */

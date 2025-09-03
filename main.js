@@ -5,14 +5,11 @@ let currentType = null;
 let currentPosProp = null;
 let textShadow = null;
 let editingTextShadow = false;
+let currentBorderRadius = null;
+let currentBorder = "all";
 
 let alignBoxMarkerCenter =
   '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="transparent" d="M0 0h100v100H0z"/><path fill="#fff" d="M3 4h2v8H3zm4-2h2v12H7zm4 2h2v8h-2z"/></svg>';
-/* let alignBoxMarkerLeft =
-  '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M2 3h8v2H2zm0 4h12v2H2zm0 4h8v2H2z"/></svg>';
-let alignBoxMarkerRight =
-  '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M6 3h8v2H6zM2 7h12v2H2zm4 4h8v2H6z"/></svg>'; */
-
 $(document).ready(function () {
   pageRefreshLoad();
   if (selectedDomObject === null) {
@@ -172,7 +169,6 @@ function pageRefreshLoad() {
   refreshStylePanel();
 }
 function refreshStylePanel() {
-  checkChild();
   if (selectedDomObject.attr("id") === "body") {
     $("#flex-child").hide();
     $("#grid-child").hide();
@@ -226,40 +222,71 @@ function refreshStylePanel() {
           break;
         case "justify-content":
           break;
-        case "gap":
-          if (extractType(styleData["gap"]) !== "%") {
-            $("#gap-" + extractType(styleData["gap"])).addClass(
-              "pressed-button"
-            );
-          } else {
-            $("#percent").addClass("pressed-button");
-          }
-          $("#gap-range").val(parseInt(value));
-          $("#gap-value").val(parseInt(value));
-          $("#gap-type-text").text(extractType(value).toUpperCase());
-          $("#gap-type").attr("data-value", extractType(value));
-          break;
         case "row-gap":
-          if (extractType(value) !== "%") {
+          let type = extractType(value);
+          if (type !== "%") {
             $("#row-gap-" + extractType(value)).addClass("pressed-button");
+            switch (type) {
+              case "em":
+                $("#gap-range").attr({
+                  min: 0,
+                  max: 20,
+                  step: 0.05,
+                });
+                $("#gap-value").attr({
+                  min: 0,
+                  max: 20,
+                });
+                break;
+              case "rem":
+                $("#gap-range").attr({
+                  min: 0,
+                  max: 20,
+                  step: 0.05,
+                });
+                $("#gap-value").attr({
+                  min: 0,
+                  max: 20,
+                });
+                break;
+              default:
+                $("#gap-range").attr({
+                  min: 0,
+                  max: 100,
+                  step: 0.5,
+                });
+                $("#gap-value").attr({
+                  min: 0,
+                  max: 100,
+                });
+                break;
+            }
           } else {
             $("#row-percent").addClass("pressed-button");
           }
-          $("#row-gap-value").val(parseInt(value));
-          $("#row-gap-type-text").text(extractType(value).toUpperCase());
-          $("#row-gap-type").attr("data-value", extractType(value));
+          $("#row-gap-value").val(parseFloat(extractValue(value)));
+          $("#row-gap-type-text").text(type.toUpperCase());
+          $("#row-gap-type").attr("data-value", type);
           break;
         case "column-gap":
           if (
             styleData.display.includes("flex") ||
             styleData.display.includes("grid")
           ) {
-            if (extractType(value) !== "%") {
+            let numericValue = extractValue(value);
+            if (styleData["row-gap"] === styleData["column-gap"]) {
+              $("#gap-range").val(numericValue);
+              $("#gap-value").val(numericValue);
+              $("#gap-type-text").text(extractType(value).toUpperCase());
+              $("#gap-type").attr("data-value", extractType(value));
+              if (extractType(value) !== "%") {
+              }
+
               $("#column-gap-" + extractType(value)).addClass("pressed-button");
             } else {
               $("#column-percent").addClass("pressed-button");
             }
-            $("#column-gap-value").val(parseInt(value));
+            $("#column-gap-value").val(numericValue);
             $("#column-gap-type-text").text(extractType(value).toUpperCase());
             $("#column-gap-type").attr("data-value", extractType(value));
           } else if (styleData["column-count"] > 0) {
@@ -492,9 +519,11 @@ function refreshStylePanel() {
           break;
         case "text-shadow":
           $("#text-shadows").html("");
-          let shadows = extractTextShadows(value);
-          for (let i = 0; i < shadows.length; i++) {
-            displayTextShadow(extractShadow(shadows[i]), i);
+          if (value && value !== "") {
+            let shadows = extractTextShadows(value);
+            for (let i = 0; i < shadows.length; i++) {
+              displayTextShadow(shadows[i], i);
+            }
           }
           break;
         case "background-clip":
@@ -502,11 +531,58 @@ function refreshStylePanel() {
           $(`#bg-clip-${value}`).addClass("pressed-button");
           $("#bg-clip-desc").text($(`#bg-clip-${value}`).attr("data-desc"));
           break;
-        case "background-color":
+        case "background":
           $("#bg-color").val(rgbaToHex(value)["hex"]);
           $("#bg-color-value").val(rgbaToHex(value)["hex"]);
           $("#bg-color-alpha").val(rgbaToHex(value)["alpha"]);
           $("#bg-color-alpha-value").val(rgbaToHex(value)["alpha"]);
+          break;
+        case "border-radius":
+          let b = checkBorderRadius(value) || "all";
+          $("#border-radius-" + b).addClass("pressed-button");
+          if (b === "all") {
+            let val = extractValue(value) || 0;
+            let type = extractType(value) || "px";
+            $("#border-radius-range").val(val);
+            $("#border-radius-value").val(val);
+            $("#border-radius-type").attr("data-value", type);
+            $("#border-radius-type-text").text(type.toUpperCase());
+            $("#border-radius-tl-value").val(val);
+            $("#border-radius-tl-type").attr("data-value", type);
+            $("#border-radius-tl-type-text").text(type.toUpperCase());
+            $("#border-radius-tr-value").val(val);
+            $("#border-radius-tr-type").attr("data-value", type);
+            $("#border-radius-tr-type-text").text(type.toUpperCase());
+            $("#border-radius-bl-value").val(val);
+            $("#border-radius-bl-type").attr("data-value", type);
+            $("#border-radius-bl-type-text").text(type.toUpperCase());
+            $("#border-radius-br-value").val(val);
+            $("#border-radius-br-type").attr("data-value", type);
+            $("#border-radius-br-type-text").text(type.toUpperCase());
+          } else {
+            $("#custom-border-radius").css("display", "grid");
+            let cB = value.split(" ");
+            $("#border-radius-tl-value").val(extractValue(cB[0]));
+            $("#border-radius-tl-type").attr("data-value", extractType(cB[0]));
+            $("#border-radius-tl-type-text").text(
+              extractType(cB[0].toUpperCase())
+            );
+            $("#border-radius-tr-value").val(extractValue(cB[1]));
+            $("#border-radius-tr-type").attr("data-value", extractType(cB[1]));
+            $("#border-radius-tr-type-text").text(
+              extractType(cB[1].toUpperCase())
+            );
+            $("#border-radius-br-value").val(extractValue(cB[2]));
+            $("#border-radius-br-type").attr("data-value", extractType(cB[2]));
+            $("#border-radius-br-type-text").text(
+              extractType(cB[2].toUpperCase())
+            );
+            $("#border-radius-bl-value").val(extractValue(cB[3]));
+            $("#border-radius-bl-type").attr("data-value", extractType(cB[3]));
+            $("#border-radius-bl-type-text").text(
+              extractType(cB[3].toUpperCase())
+            );
+          }
           break;
         default:
           if (key.includes("width") || key.includes("height")) {
@@ -522,6 +598,51 @@ function refreshStylePanel() {
             $("#position-" + key)
               .text(extractValue(value))
               .attr("data-value", value);
+          } else if (key.includes("border") && !key.includes("radius")) {
+            let whichBorders = checkBorders(
+              styleData["border-top"],
+              styleData["border-right"],
+              styleData["border-bottom"],
+              styleData["border-left"]
+            );
+            if (whichBorders === "all") {
+              currentBorder = "all";
+              $("#border-all").addClass("pressed-button");
+              let border = value.split(/(?<!\d,)\s+(?!\))/);
+              if (border[0] === "none")
+                border = ["1px", "none", "rgb(0, 0, 0)"];
+              if (border[1] === "none") {
+                $("#border-width").css({
+                  "pointer-events": "none",
+                  opacity: 0.7,
+                });
+              } else {
+                $("#border-width").css({
+                  "pointer-events": "all",
+                  opacity: 1,
+                });
+                $("#border-width").val(extractValue(border[0]));
+                $("#border-width-type").attr(
+                  "data-value",
+                  extractType(border[0])
+                );
+                $("#border-width-type-text").text(
+                  extractType(border[0]).toUpperCase()
+                );
+              }
+              $("#border-" + border[1]).addClass("pressed-button");
+              $("#border-style").attr("data-value", border[1]);
+              $("#border-color").val(rgbaToHex(border[2])["hex"]);
+              $("#border-color-value").val(rgbaToHex(border[2])["hex"]);
+              $("#border-color-alpha").val(rgbaToHex(border[2])["alpha"]);
+              $("#border-color-alpha-value").val(rgbaToHex(border[2])["alpha"]);
+            } else {
+              for (const [key, value] of Object.entries(whichBorders)) {
+                if (value) {
+                  $("#border-" + key).addClass("pressed-button");
+                }
+              }
+            }
           } else console.warn("Unknown style key: " + key);
       }
     }
@@ -740,12 +861,20 @@ function setUpControlls() {
     setAlignmentWithMenu($(this).attr("data-value"), $(this));
   });
   $("#gap-range").on("input", function () {
-    setGap($(this).val(), $("#gap-type").attr("data-value"));
+    setGap($(this).val(), $("#gap-type").attr("data-value"), null, "row-gap");
+    setGap(
+      $(this).val(),
+      $("#gap-type").attr("data-value"),
+      null,
+      "column-gap"
+    );
   });
   $("#gap-value").on("input", function () {
-    let gapValue = parseInt($(this).val());
-    if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
-      setGap(gapValue, $("#gap-type").attr("data-value"), $(this), "gap");
+    let value = $(this).val();
+    let type = $("#gap-type").attr("data-value");
+    if (!isNaN(value) && value >= 0 && value <= 100) {
+      setGap(value, type, null, "row-gap");
+      setGap(value, type, null, "column-gap");
     }
   });
   $(".toggle.type-toggle").on("click", function (event) {
@@ -766,8 +895,8 @@ function setUpControlls() {
     toggleGapOptions();
   });
   $("#row-gap-value").on("input", function () {
-    let gapValue = parseInt($(this).val());
-    let colGapValue = parseInt($("#column-gap-value").val());
+    let gapValue = $(this).val();
+    let colGapValue = $("#column-gap-value").val();
     if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
       let rowAttr = $("#row-gap-type").attr("data-value");
       if (rowAttr === "percent") rowAttr = "%";
@@ -790,8 +919,8 @@ function setUpControlls() {
     }
   });
   $("#column-gap-value").on("input", function () {
-    let gapValue = parseInt($(this).val());
-    let rowGapValue = parseInt($("#row-gap-value").val());
+    let gapValue = $(this).val();
+    let rowGapValue = $("#row-gap-value").val();
     if (!isNaN(gapValue) && gapValue >= 0 && gapValue <= 100) {
       let colAttr = $("#column-gap-type").attr("data-value");
       if (colAttr === "percent") colAttr = "%";
@@ -856,9 +985,20 @@ function setUpControlls() {
       hideMenu($("#type-options"), $("#type-ui-container"));
       return;
     }
-    hideSpacingSettings($("#spacing-setting-ui").parent());
+    if (event.target === $(this).get(0))
+      hideSpacingSettings($("#spacing-setting-ui").parent());
   });
   $("#spacing-range").on("input", function () {
+    let val = $(this).val();
+    let type = $("#spacing-type").attr("data-value");
+    if (currentSpacing !== null) {
+      setSpacing(currentSpacing, val, type);
+    } else if (currentPosProp !== null) {
+      setPositionDetails(currentPosProp, val, type);
+    }
+  });
+  $("#spacing-value").on("input", function () {
+    $("spacing-range").val($(this).val());
     let val = $(this).val();
     let type = $("#spacing-type").attr("data-value");
     if (currentSpacing !== null) {
@@ -901,7 +1041,10 @@ function setUpControlls() {
         type = "";
       } else if ($(this).attr("id").includes("min")) {
         value = "0";
-      } else value = "auto";
+      } else {
+        value = "auto";
+        type = "";
+      }
     }
     setStyle($(this).attr("id"), value, type);
   });
@@ -925,7 +1068,7 @@ function setUpControlls() {
   });
   $("#ratio-custom").on("click", function () {
     $("#ratio").text("Custom");
-    showCustomRatio();
+    showMenu($("#custom-ratio"), $("#custom-ratio"), $(this));
   });
   $("#custom-ratio").on("input", ".number-input", function () {
     $("#ratio").text("Custom");
@@ -957,8 +1100,9 @@ function setUpControlls() {
       $(this)
     );
   });
-  $("#object-position-ui-container").on("click", function () {
-    hideMenu($("#object-position-ui-container"), $("#object-position-menu"));
+  $("#object-position-ui-container").on("click", function (event) {
+    if (event.target === this)
+      hideMenu($("#object-position-ui-container"), $("#object-position-menu"));
   });
   $("#object-position-box").on("click", ".button", function (event) {
     event.stopPropagation();
@@ -1025,27 +1169,23 @@ function setUpControlls() {
   $("#color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#color-alpha-range").val();
-    $("#color-value").val(value);
     setStyle("color", hexToRgba(value, alpha));
   });
   $("#color-value").on("input", function () {
     let value = $(this).val();
     let alpha = $("#color-alpha-range").val();
     if (/^#([0-9a-fA-F]{6})$/.test(value)) {
-      $("#color").val(value);
       setStyle("color", hexToRgba(value, alpha));
     }
   });
   $("#color-alpha-range").on("input", function () {
     let color = $("#color").val();
     let value = $(this).val();
-    $("#color-alpha-value").val(value);
     setStyle("color", hexToRgba(color, value));
   });
   $("#color-alpha-value").on("input", function () {
     let color = $("#color").val();
     let value = $(this).val();
-    $("#color-alpha-range").val(value);
     setStyle("color", hexToRgba(color, value));
   });
   $("#more-decor").on("click", function () {
@@ -1083,25 +1223,21 @@ function setUpControlls() {
   $("#line-color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#line-color-alpha-value").val();
-    $("#line-color-value").val(value);
     setStyle("text-decoration-color", hexToRgba(value, alpha));
   });
   $("#line-color-value").on("input", function () {
     let value = $(this).val();
     let alpha = $("#line-color-alpha-value").val();
     if (/^#([0-9a-fA-F]{6})$/.test(value)) {
-      $("#line-color").val(value);
       setStyle("text-decoration-color", hexToRgba(value, alpha));
     }
   });
   $("#line-color-alpha-range").on("input", function () {
     let value = $(this).val();
-    $("#line-color-alpha-value").val(value);
     setStyle("text-decoration-color", hexToRgba($("#line-color").val(), value));
   });
   $("#line-color-alpha-value").on("input", function () {
     let value = $(this).val();
-    $("#line-color-alpha-range").val(value);
     setStyle("text-decoration-color", hexToRgba($("#line-color").val(), value));
   });
   $("#line-thickness-value").on("input", function () {
@@ -1179,27 +1315,23 @@ function setUpControlls() {
   $("#column-rule-color").on("input", function () {
     let value = $(this).val();
     let alpha = $("#column-alpha-range").val();
-    $("#column-rule-color-value").val(value);
     setStyle("column-rule-color", hexToRgba(value, alpha));
   });
   $("#column-rule-color-value").on("input", function () {
     let value = $(this).val();
     let alpha = $("#column-rule-color").val();
     if (/^#([0-9a-fA-F]{6})$/.test(value)) {
-      $("#column-rule-color").val(value);
       setStyle("column-rule-color", hexToRgba(value, alpha));
     }
   });
   $("#column-alpha-range").on("input", function () {
     let value = $("#column-rule-color").val();
     let alpha = $(this).val();
-    $("#column-alpha-value").val(alpha);
     setStyle("column-rule-color", hexToRgba(value, alpha));
   });
   $("#column-alpha-value").on("input", function () {
     let value = $("#column-rule-color").val();
     let alpha = $(this).val();
-    $("#column-alpha-range").val(alpha);
     setStyle("column-rule-color", hexToRgba(value, alpha));
   });
   $("#column-child-span").on("click", ".button", function () {
@@ -1262,7 +1394,6 @@ function setUpControlls() {
     }
   });
   $("#stroke-color").on("input", function () {
-    $("#stroke-color-value").val($(this).val());
     let value = $(this).val();
     let alpha = $("#stroke-color-alpha").val();
     setStyle("stroke", hexToRgba(value, alpha));
@@ -1271,18 +1402,15 @@ function setUpControlls() {
     let value = $(this).val();
     let alpha = $("#stroke-color-alpha").val();
     if (/^#([0-9a-fA-F]{6})$/.test(value)) {
-      $("#stroke-color").val(value);
       setStyle("stroke", hexToRgba(value, alpha));
     }
   });
   $("#stroke-color-alpha").on("input", function () {
-    $("#stroke-color-alpha-value").val($(this).val());
     let value = $("#stroke-color").val();
     let alpha = $("#stroke-color-alpha").val();
     setStyle("stroke", hexToRgba(value, alpha));
   });
   $("#stroke-color-alpha-value").on("input", function () {
-    $("#stroke-color-alpha").val($(this).val());
     let value = $("#stroke-color").val();
     let alpha = $("#stroke-color-alpha").val();
     setStyle("stroke", hexToRgba(value, alpha));
@@ -1327,12 +1455,6 @@ function setUpControlls() {
       newShadow
     );
   });
-  /* $("#text-shadows").on("click", ".button.edit", function () {
-    editTextShadow(
-      $(this).parent().attr("data-value"),
-      $(this).parent().attr("id")
-    );
-  }); */
   $("#bg-clip").on("click", function () {
     showMenu($("#bg-clip-ui-container"), $("#bg-clip-menu"), $(this));
   });
@@ -1349,47 +1471,98 @@ function setUpControlls() {
     hideMenu($("#bg-clip-ui-container"), $("#bg-clip-menu"));
   });
   $("#bg-color").on("input", function () {
-    $("#bg-color-value").val($(this).val());
     setStyle(
-      "background-color",
+      "background",
       hexToRgba($(this).val(), $("#bg-color-alpha").val())
     );
   });
   $("#bg-color-value").on("input", function () {
-    $("#bg-color").val($(this).val());
     setStyle(
-      "background-color",
+      "background",
       hexToRgba($(this).val(), $("#bg-color-alpha").val())
     );
   });
   $("#bg-color-alpha").on("input", function () {
-    $("#bg-color-alpha-value").val($(this).val());
-    setStyle(
-      "background-color",
-      hexToRgba($("#bg-color").val(), $(this).val())
-    );
+    setStyle("background", hexToRgba($("#bg-color").val(), $(this).val()));
   });
   $("#bg-color-alpha-value").on("input", function () {
-    $("#bg-color-alpha").val($(this).val());
+    setStyle("background", hexToRgba($("#bg-color").val(), $(this).val()));
+  });
+  $("#border-radius-buttons").on("click", ".button", function () {
+    currentBorderRadius = $(this).attr("data-value");
+    $(this).parent().find(".button").removeClass("pressed-button");
+    $(this).addClass("pressed-button");
+    if (currentBorderRadius === "custom") {
+      $("#custom-border-radius").css("display", "grid");
+    } else $("#custom-border-radius").hide();
+  });
+  $("#border-radius-range").on("input", function () {
     setStyle(
-      "background-color",
-      hexToRgba($("#bg-color").val(), $(this).val())
+      "border-radius",
+      $(this).val() + $("#border-radius-type").attr("data-value")
     );
+  });
+  $("#border-radius-value").on("input", function () {
+    setStyle(
+      "border-radius",
+      $(this).val() + $("#border-radius-type").attr("data-value")
+    );
+  });
+  $("#custom-border-radius").on("input", "input[type='text']", function () {
+    let tl = $("#border-radius-tl-value").val();
+    let tr = $("#border-radius-tr-value").val();
+    let br = $("#border-radius-br-value").val();
+    let bl = $("#border-radius-bl-value").val();
+    if (
+      !isNaN(parseFloat(tl)) &&
+      !isNaN(parseFloat(tr)) &&
+      !isNaN(parseFloat(br)) &&
+      !isNaN(parseFloat(bl))
+    )
+      setStyle(
+        "border-radius",
+        `${tl}${$("#border-radius-tl-type").attr("data-value")} ${tr}${$(
+          "#border-radius-tr-type"
+        ).attr("data-value")} ${br}${$("#border-radius-br-type").attr(
+          "data-value"
+        )} ${bl}${$("#border-radius-bl-type").attr("data-value")}`
+      );
+  });
+  $("#border-buttons").on("click", ".button", function () {
+    currentBorder = $(this).attr("data-value");
+    $(this).parent().find(".button").removeClass("pressed-button");
+    $(this).addClass("pressed-button");
+  });
+  $("#border-style").on("click", ".button", function () {
+    $("#border-style").attr("data-value", $(this).attr("data-value"));
+    setBorder();
+  });
+  $("#border-width").on("input", function () {
+    setBorder();
+  });
+  $("#border-color").on("input", function () {
+    setBorder();
+  });
+  $("#border-color-value").on("input", function () {
+    if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+      $("#border-color").val($(this).val());
+      setBorder();
+    }
   });
 }
 
-function checkChild() {
+/* function checkChild() {
   if (checkFlexChild()) $("#flex-child").show();
   else $("#flex-child").hide();
   if (checkGridChild()) $("#grid-child").show();
   else $("#grid-child").hide();
-}
+} */
 
 /**
  * Checks if parent is flex container
  * @returns true if parent is boolean, false otherwise
  */
-function checkFlexChild() {
+/* function checkFlexChild() {
   if (
     selectedDomObject.parent().css("display") === "flex" ||
     selectedDomObject.parent().css("display") === "inline-flex"
@@ -1405,7 +1578,7 @@ function checkGridChild() {
   )
     return true;
   return false;
-}
+} */
 
 function handleTypeSelection(button) {
   let value;
@@ -1413,7 +1586,8 @@ function handleTypeSelection(button) {
   switch (currentType) {
     case "gap":
       value = $("#gap-range").val();
-      setGap(value, type, button);
+      setGap(value, type, button, "row-gap");
+      setGap(value, type, button, "column-gap");
       break;
     case "row-gap":
       value = $("#row-gap-value").val();
@@ -1475,7 +1649,36 @@ function handleTypeSelection(button) {
       value = $("#stroke-width").val();
       setStyle("stroke-width", value, type);
       break;
+    case "border-radius-all":
+      value = $("#border-radius-range").val();
+      setStyle("border-radius", value + type);
+      break;
     default:
+      if (
+        currentType.includes("border-radius") &&
+        currentType !== "border-radius-all"
+      ) {
+        let tl =
+          $("#border-radius-tl-value").val() +
+          $("#border-radius-tl-type").attr("data-value");
+        let tr =
+          $("#border-radius-tr-value").val() +
+          $("#border-radius-tr-type").attr("data-value");
+        let br =
+          $("#border-radius-br-value").val() +
+          $("#border-radius-br-type").attr("data-value");
+        let bl =
+          $("#border-radius-bl-value").val() +
+          $("#border-radius-bl-type").attr("data-value");
+        if (
+          !isNaN(parseFloat(tl)) &&
+          !isNaN(parseFloat(tr)) &&
+          !isNaN(parseFloat(br)) &&
+          !isNaN(parseFloat(bl))
+        )
+          setStyle("border-radius", `${tl} ${tr} ${br} ${bl}`);
+        break;
+      }
       if (currentType.includes("text-shadow")) {
         $("#" + currentType + "-type").text(
           button.attr("data-value").toUpperCase()
@@ -1562,11 +1765,13 @@ function hexToRgba(hex, alpha = 1) {
 }
 
 function rgbaToHex(rgbaString) {
+  if (!rgbaString) return;
   const toHex = (value) => Math.round(value).toString(16).padStart(2, "0");
   if (!rgbaString.includes("rgba")) {
     const match = rgbaString.match(/rgb?\((\d+),\s*(\d+),\s*(\d+)\)/);
 
     if (!match) {
+      console.error(rgbaString);
       throw new Error("Érvénytelen RGBA formátum");
     }
 
@@ -1592,4 +1797,34 @@ function rgbaToHex(rgbaString) {
       alpha: Math.round(a * 100),
     };
   }
+}
+
+function checkBorderRadius(value) {
+  let number = false;
+  let count = 0;
+  for (let i = 0; i < value.length; i++) {
+    if (!isNaN(parseFloat(value[i]))) {
+      if (number) {
+        continue;
+      } else {
+        count++;
+        number = true;
+      }
+    } else {
+      number = false;
+    }
+  }
+  return count > 1 ? "custom" : "all";
+}
+
+function checkBorders(top, right, bottom, left) {
+  if (top === right && top === bottom && top === left) {
+    return "all";
+  }
+  return {
+    top: top !== "none" ? true : false,
+    right: right !== "none" ? true : false,
+    bottom: bottom !== "none" ? true : false,
+    left: left !== "none" ? true : false,
+  };
 }

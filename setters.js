@@ -216,14 +216,13 @@ function setAlignmentWithBox(value, button) {
  * @param {string} type Gap, row-gap, column-gap (default: "gap")
  */
 function setGap(value, gapType, button = null, type = "gap") {
+  console.log(value);
   if (value >= 0 && value <= 100) {
-    selectedDomObject.css(type, value + gapType);
-    saveStyle([{ type: type, value: value + gapType }]);
+    setStyle(type, value, gapType);
     if (button) {
       let objects = button.parent().find(".button");
       handleDisplay(objects, button, type);
     }
-    refreshStylePanel();
   }
 }
 /**
@@ -377,10 +376,27 @@ function setTextShadow() {
     color + " " + x + xType + " " + y + yType + " " + blur + blurType;
   let shadow =
     textShadow === "none" ? newShadow : textShadow + ", " + newShadow;
-  if (!editingTextShadow) setStyle("text-shadow", shadow);
+  setStyle("text-shadow", shadow);
 }
 
-function setBgColor(){
-  let color = hexToRgba($("#bg-color").val(), $("#bg-color-alpha").val())
-  console.log(color)
+function setBorder() {
+  let borderStyle = $("#border-style").attr("data-value");
+  let borderWidth =
+    $("#border-width").val() + $("#border-width-type").attr("data-value");
+  let borderColor = hexToRgba(
+    $("#border-color").val(),
+    $("#border-color-alpha").val()
+  );
+  let border =
+    borderStyle !== "none"
+      ? `${borderWidth} ${borderStyle} ${borderColor}`
+      : "none";
+  if (currentBorder !== "all") {
+    setStyle(currentBorder, border);
+  } else {
+    setStyle("border-left", border);
+    setStyle("border-right", border);
+    setStyle("border-top", border);
+    setStyle("border-bottom", border);
+  }
 }

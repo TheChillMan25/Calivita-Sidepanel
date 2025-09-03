@@ -226,6 +226,7 @@ hr {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+    align-items: center;
   .setting-name {
     justify-content: center;
   }
@@ -242,7 +243,7 @@ hr {
 
 .button:hover,
 .toggle:hover {
-  color: #73bbff;
+  color: whitesmoke;
 }
 .ui-container {
   display: none;
@@ -533,19 +534,27 @@ input[type="range"]::-moz-range-thumb {
   grid-template-columns: 1fr 3fr;
 }
 
-#object-position-settings {
+#object-position-settings,
+#bg-img-position,
+#bg-rg-position {
   display: flex;
   gap: 0.5rem;
 }
-#object-position-box {
+#object-position-box,
+#bg-img-position-box,
+#bg-rg-position-box {
   grid-template-columns: 1.5rem 1.5rem 1.5rem;
   grid-template-rows: 1.5rem 1.5rem 1.5rem;
 }
-#object-position-box .button {
+#object-position-box .button,
+#bg-img-position-box .buttton,
+#bg-rg-position .button {
   padding: 0.2rem;
 }
 
-#object-position-axis {
+#object-position-axis,
+#bg-img-position-axis,
+#bg-rg-position-axis {
   display: grid;
   grid-template-columns: auto auto;
   gap: 0.5rem;
@@ -609,7 +618,11 @@ select {
 #stroke-color-container,
 #text-shadow-color-container,
 #bg-color-container,
-#bg-color-alpha-container {
+#bg-color-alpha-container,
+#bg-gradient-color-container,
+#bg-gradient-color-alpha-container,
+#border-color-container,
+#border-color-alpha-container {
   display: grid;
   grid-template-columns: auto auto;
   justify-items: center;
@@ -651,7 +664,9 @@ select {
 
 #text-primary div,
 #text-secondary div,
-#breaking-container div {
+#breaking-container div,
+#bg-width,
+#bg-height {
   display: grid;
   grid-template-columns: auto auto;
   .setting-name {
@@ -744,4 +759,73 @@ select {
     display: flex;
     justify-self: right;
   }
+}
+
+#border-radius-container {
+  display: flex;
+  gap: 0.3rem;
+  input[type="range"] {
+    width: 100%;
+  }
+}
+
+#custom-border-radius {
+  display: none;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+  justify-self: center;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    .number-input {
+      width: 3rem;
+    }
+  }
+}
+
+#border-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+
+  > .setting-name:first-child {
+    grid-column: span 2;
+  }
+
+  #border-buttons {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 0.2rem;
+    align-items: center;
+    .button {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+
+  #border-settings {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: auto auto;
+    > div {
+      display: flex;
+    }
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#divider-color-container{
+  display: flex;
+  grid-column: span 3;
 }
